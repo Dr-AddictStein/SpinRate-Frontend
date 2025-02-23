@@ -5,6 +5,7 @@ import Loader from '../../Components/Loader';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import { useLogout } from '../../hooks/useLogout';
 import Navbar from './Component/Navbar';
+import Footer from './Component/Footer';
 
 const HomeLayout = () => {
 
@@ -21,6 +22,8 @@ const HomeLayout = () => {
     <div className="">
       <Navbar />
       <Outlet />
+
+      <Footer />
       {isLoginModalOpen && (
         <LoginModal closeModal={() => setIsLoginModalOpen(false)} />
       )}
