@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Menu, X } from "lucide-react"; // Icons for menu toggle
-import logo from "../../../assets/logo.png";
+import logo from "../../../assets/spinrate.png";
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -9,7 +9,7 @@ const Navbar = () => {
         <nav className="bg-[#2098F3] fixed top-0 left-0 w-full flex justify-between items-center px-6 lg:px-10 sm:px-10 py-4 shadow-md z-50">
             {/* Logo */}
             <div className="flex items-center">
-                <img src={logo} alt="Company Logo" className="h-10 w-14 object-contain" />
+                <img src={logo} alt="Company Logo" className="h-12 w-12 rounded-full object-contain" />
             </div>
 
             {/* Desktop Menu */}

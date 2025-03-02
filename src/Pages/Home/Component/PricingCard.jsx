@@ -6,7 +6,7 @@ const PricingCard = () => {
 
             <h1 className="text-center  lg:text-3xl text-2xl pb-14 font-semibold">One simple and Affordable Plan</h1>
 
-            <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
+            <div className="flex flex-col md:flex-row gap-10 justify-center items-center">
 
                 {/* Monthly Plan */}
                 <div className="relative bg-white p-6 rounded-xl shadow-md border hover:border-[#2098F3] transition duration-300 w-80">
