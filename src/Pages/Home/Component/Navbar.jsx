@@ -6,7 +6,7 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <nav className="bg-[#3549F2] fixed top-0 left-0 w-full flex justify-between items-center px-6 lg:px-10 sm:px-10 py-4 shadow-md z-50">
+        <nav className="bg-[#2098F3] fixed top-0 left-0 w-full flex justify-between items-center px-6 lg:px-10 sm:px-10 py-4 shadow-md z-50">
             {/* Logo */}
             <div className="flex items-center">
                 <img src={logo} alt="Company Logo" className="h-10 w-14 object-contain" />
@@ -41,7 +41,7 @@ const Navbar = () => {
 
             {/* Mobile Dropdown Menu */}
             {isOpen && (
-                <div className="absolute top-16 left-0 w-full bg-[#3549F2] shadow-md md:hidden flex flex-col items-center space-y-4 py-5">
+                <div className="absolute top-16 left-0 w-full bg-[#2098F3] shadow-md md:hidden flex flex-col items-center space-y-4 py-5">
                     <button className="bg-[#FF8684] cursor-pointer w-3/4 text-white font-bold px-4 py-2 rounded-md">
                         GET STARTED
                     </button>

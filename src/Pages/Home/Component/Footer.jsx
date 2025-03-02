@@ -2,7 +2,7 @@ import { Instagram, Youtube, Facebook, Twitter } from "lucide-react";
 
 const Footer = () => {
     return (
-        <footer className="bg-[#000848] text-white py-10 px-6">
+        <footer className="bg-[#2098F3] text-white py-10 px-6">
             <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
                 {/* Company Info */}
                 <div>
@@ -26,7 +26,7 @@ const Footer = () => {
                     <h3 className="text-lg font-semibold mb-4">Newsletter</h3>
                     <p className="text-sm mb-2">Subscribe to our newsletter for updates.</p>
                     <input type="email" placeholder="Enter your email" className="w-full border-white border p-2 rounded text-white" />
-                    <button className="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded w-full">Subscribe</button>
+                    <button className="mt-2 bg-black hover:bg-blue-700 text-white px-4 py-2 rounded w-full">Subscribe</button>
                 </div>
 
                 {/* Social Media */}
@@ -42,7 +42,7 @@ const Footer = () => {
             </div>
 
             {/* Copyright Section */}
-            <div className="text-center text-sm mt-8 border-t border-gray-700 pt-4">
+            <div className="text-center text-sm mt-8 border-t border-white pt-4">
                 &copy; {new Date().getFullYear()} Your Company. All rights reserved.
             </div>
         </footer>

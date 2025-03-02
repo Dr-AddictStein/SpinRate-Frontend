@@ -11,10 +11,10 @@ export default function Overview() {
             {stats.map((stat, index) => (
                 <div
                     key={index}
-                    className="bg-white shadow-xl s rounded-lg p-6 h-[150px] w-full text-center border-2 border-gray-200"
+                    className="bg-white hover:border hover:border-[#2098F3] hover:shadow-2xl shadow-xl s rounded-lg p-6 h-[150px] w-full text-center border-2 border-gray-200"
                 >
 
-                    <div className="text-blue-600 text-3xl font-bold">{stat.value}</div>
+                    <div className="text-[#2098F3] text-3xl font-bold">{stat.value}</div>
                     <p className="text-gray-600 mt-2">{stat.text}</p>
                 </div>
             ))}

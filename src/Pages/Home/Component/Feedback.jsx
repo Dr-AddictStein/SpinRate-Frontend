@@ -44,9 +44,9 @@ const Feedback = () => {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -50 }}
                         transition={{ duration: 0.5 }}
-                        className="bg-white p-6 rounded-lg border border-gray-100 shadow-md"
+                        className="bg-white  hover:border-[#2098F3] hover:border p-6 rounded-4xl border border-gray-100 shadow-md"
                     >
-                        <h3 className="text-lg font-semibold">{testimonials[currentIndex].name}</h3>
+                        <h3 className="text-lg text-[#2098F3] font-semibold">{testimonials[currentIndex].name}</h3>
                         <p className="text-sm text-gray-500">{testimonials[currentIndex].role}</p>
                         <p className="mt-4 text-gray-700">{testimonials[currentIndex].review}</p>
                         <div className="mt-2 flex">
@@ -59,13 +59,13 @@ const Feedback = () => {
                     {/* Navigation Arrows */}
                     <button
                         onClick={prevSlide}
-                        className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full"
+                        className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-[#2098F3] p-2 rounded-full"
                     >
                         <ChevronLeft size={24} />
                     </button>
                     <button
                         onClick={nextSlide}
-                        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full"
+                        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-[#2098F3] p-2 rounded-full"
                     >
                         <ChevronRight size={24} />
                     </button>

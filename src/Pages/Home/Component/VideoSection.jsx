@@ -8,7 +8,7 @@ export default function VideoSection() {
                 {/* Embedded Video */}
                 <div className="w-full md:w-auto">
                     <iframe
-                        className="w-full h-[250px] sm:h-[300px] md:w-[380px] md:h-[400px] lg:w-[380px] lg:h-[500px]"
+                        className="w-full h-[250px] sm:h-[300px] md:w-[480px] md:h-[400px] lg:w-[480px] lg:h-[500px]"
                         src="https://www.youtube.com/embed/W-ND-zTvFB8?si=waDEbDFOuY0LGij4"
                         title="YouTube video player"
                         frameBorder="0"
@@ -48,7 +48,7 @@ export default function VideoSection() {
                         </p>
                     </ul>
 
-                    <button className="bg-[#649DFC] cursor-pointer text-gray-800 px-6 py-3 rounded-md shadow-md hover:bg-blue-300 transition w-full sm:w-auto">
+                    <button className="bg-[#2098F3] cursor-pointer text-white px-6 py-3 rounded-md shadow-md hover:bg-blue-400 transition w-full sm:w-auto">
                         Start free trial
                     </button>
                 </div>

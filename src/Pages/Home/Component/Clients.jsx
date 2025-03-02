@@ -7,7 +7,7 @@ const Clients = () => {
             <div className="container mx-auto max-w-screen-lg">
                 <h2 className="text-center  lg:text-2xl pb-4  text-lg font-semibold">
                     This month, our clients already reached an average of <br />
-                    <span className="text-lg sm:text-xl md:text-2xl font-bold">
+                    <span className="text-lg text-[#2098F3] sm:text-xl md:text-2xl font-bold">
                         +300 Google Reviews
                     </span>
                 </h2>
