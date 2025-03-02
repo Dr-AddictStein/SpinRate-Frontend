@@ -11,9 +11,9 @@ const Banner = () => {
             <div className="md:w-1/2 text-center md:text-left space-y-3">
                 <h1 className="font-bold md:text-2xl text-xl text-white"> Increase
                     your Google Reviews without doing anything</h1>
-                <h1 className="text-3xl md:text-5xl font-bold leading-tight">
+                <h1 className="text-3xl text-white md:text-5xl font-bold leading-tight">
                     Boost your <br />
-                    <span className="text-white">Google Reviews</span> with Gamification
+                    <span className="text-white">Google Reviews with Gamification</span >
                 </h1>
                 <p className="text-lg text-gray-200">
                     We've transformed how
