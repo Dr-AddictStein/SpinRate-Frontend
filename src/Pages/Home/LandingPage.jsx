@@ -1,6 +1,10 @@
 import Banner from "./Component/Banner";
+import ClientReviews from "./Component/ClientReviews";
 import Clients from "./Component/Clients";
+import CloudManagement from "./Component/CloudManagement";
+import Features from "./Component/FeatureCard";
 import Feedback from "./Component/Feedback";
+import IntegrationCard from "./Component/IntegrationCard";
 import Overview from "./Component/Overview";
 import PricingCard from "./Component/PricingCard";
 import QRReviewSection from "./Component/QRReviewSection";
@@ -19,36 +23,34 @@ const LandingPage = () => {
         <Banner />
       </div>
 
-
       <div className="">
-        <Clients />
+        <Features />
       </div>
-
-      <div className="pt-14">
+      <div className="">
         <VideoSection />
       </div>
 
 
-      <div className="py-10">
-        <Overview />
+      <div className="">
+        <CloudManagement />
       </div>
 
-      <div className="py-10">
-        <QRReviewSection />
+      <div className="">
+        <IntegrationCard />
       </div>
 
-      <div className="py-10">
-        <Feedback />
+      <div className="">
+        <ClientReviews />
       </div>
 
 
-      <div className="py-10">
+      <div className="">
 
         <PricingCard />
       </div>
 
 
-      <div className="py-10">
+      <div className="">
 
         <Setting />
       </div>

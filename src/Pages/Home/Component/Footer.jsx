@@ -1,57 +1,164 @@
-import { Instagram, Youtube, Facebook, Twitter } from "lucide-react";
+import React from "react";
+import { Facebook, Twitter, Linkedin } from "lucide-react";
+import logo from "../../../assets/Design_sans_titre__10_-ai-brush-removebg-5gtqgd1e.png";
 
 const Footer = () => {
     return (
-        <footer className="bg-[#2098F3] text-white py-10 px-6">
-            <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-                {/* Company Info */}
-                <div>
-                    <h3 className="text-lg font-semibold mb-4">Company</h3>
-                    <p className="text-sm leading-relaxed">Providing top-notch services to grow your business and boost your online presence.</p>
-                </div>
-
-                {/* Quick Links */}
-                <div>
-                    <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-                    <ul className="text-sm space-y-2">
-                        <li><a href="#" className="hover:underline focus:outline-none focus:ring-2 focus:ring-white">Home</a></li>
-                        <li><a href="#" className="hover:underline focus:outline-none focus:ring-2 focus:ring-white">About</a></li>
-                        <li><a href="#" className="hover:underline focus:outline-none focus:ring-2 focus:ring-white">Services</a></li>
-                        <li><a href="#" className="hover:underline focus:outline-none focus:ring-2 focus:ring-white">Contact</a></li>
-                    </ul>
-                </div>
-
-                {/* Newsletter */}
-                <div>
-                    <h3 className="text-lg font-semibold mb-4">Newsletter</h3>
-                    <p className="text-sm mb-2">Subscribe to our newsletter for updates.</p>
-                    <div className="flex flex-col space-y-2">
-                        <input
-                            type="email"
-                            placeholder="Enter your email"
-                            className="w-full border border-white p-2 rounded bg-transparent text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-white"
+        <footer className="bg-white py-16 border-t border-gray-100">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+                    {/* Company Info */}
+                    <div>
+                        <img
+                            src={logo}
+                            alt="Klane Logo"
+                            className="h-20 md:h-28 w-auto object-contain transition-transform duration-300 hover:scale-105 -my-2"
                         />
-                        <button className="bg-black hover:bg-gray-800 transition-colors text-white px-4 py-2 rounded w-full">
-                            Subscribe
-                        </button>
+                        <p className="text-gray-600 mb-6">
+                            Duis cursus, mi quis viverra ornare, eros dolor interdum nulla utimp erdiet commodo diam libero vitae nibh et jus cursus id rutrum lore imperdiet ut sem vitae risus tristique posuere
+                        </p>
+                        <div className="flex space-x-4 mt-4">
+                            <a
+                                href="#"
+                                aria-label="Facebook"
+                                className="w-8 h-8 rounded-full flex items-center justify-center border border-blue-300 text-blue-500 hover:bg-blue-50 transition-colors"
+                            >
+                                <Facebook size={18} />
+                            </a>
+                            <a
+                                href="#"
+                                aria-label="Twitter"
+                                className="w-8 h-8 rounded-full flex items-center justify-center border border-blue-300 text-blue-500 hover:bg-blue-50 transition-colors"
+                            >
+                                <Twitter size={18} />
+                            </a>
+                            <a
+                                href="#"
+                                aria-label="Google"
+                                className="w-8 h-8 rounded-full flex items-center justify-center border border-blue-300 text-blue-500 hover:bg-blue-50 transition-colors"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    width="18"
+                                    height="18"
+                                    fill="currentColor"
+                                >
+                                    <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z" />
+                                </svg>
+                            </a>
+                            <a
+                                href="#"
+                                aria-label="LinkedIn"
+                                className="w-8 h-8 rounded-full flex items-center justify-center border border-blue-300 text-blue-500 hover:bg-blue-50 transition-colors"
+                            >
+                                <Linkedin size={18} />
+                            </a>
+                        </div>
                     </div>
-                </div>
 
-                {/* Social Media */}
-                <div>
-                    <h3 className="text-lg font-semibold mb-4">Follow Us</h3>
-                    <div className="flex space-x-4">
-                        <a href="#" aria-label="Instagram" className="hover:text-gray-200 transition-colors"><Instagram size={24} /></a>
-                        <a href="#" aria-label="YouTube" className="hover:text-gray-200 transition-colors"><Youtube size={24} /></a>
-                        <a href="#" aria-label="Facebook" className="hover:text-gray-200 transition-colors"><Facebook size={24} /></a>
-                        <a href="#" aria-label="Twitter" className="hover:text-gray-200 transition-colors"><Twitter size={24} /></a>
+                    {/* Company Links */}
+                    <div>
+                        <h3 className="text-xl font-bold text-gray-900 mb-6">Company</h3>
+                        <ul className="space-y-4">
+                            <li>
+                                <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
+                                    <span className="text-blue-500 mr-2">›</span>
+                                    About Us
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
+                                    <span className="text-blue-500 mr-2">›</span>
+                                    Blog
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
+                                    <span className="text-blue-500 mr-2">›</span>
+                                    Our Team
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
+                                    <span className="text-blue-500 mr-2">›</span>
+                                    Services
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
+                                    <span className="text-blue-500 mr-2">›</span>
+                                    Contact Us
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Useful Links */}
+                    <div>
+                        <h3 className="text-xl font-bold text-gray-900 mb-6">Useful Links</h3>
+                        <ul className="space-y-4">
+                            <li>
+                                <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
+                                    <span className="text-blue-500 mr-2">›</span>
+                                    Pricing
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
+                                    <span className="text-blue-500 mr-2">›</span>
+                                    App Download
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
+                                    <span className="text-blue-500 mr-2">›</span>
+                                    How It Works
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
+                                    <span className="text-blue-500 mr-2">›</span>
+                                    Terms & Conditions
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
+                                    <span className="text-blue-500 mr-2">›</span>
+                                    Privacy Policy
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Download Link */}
+                    <div>
+                        <h3 className="text-xl font-bold text-gray-900 mb-6">Download Link</h3>
+                        <div className="space-y-4">
+                            <a href="#" className="block">
+                                <img
+                                    src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg"
+                                    alt="Download on App Store"
+                                    className="h-12"
+                                />
+                            </a>
+                            <a href="#" className="block">
+                                <img
+                                    src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+                                    alt="Get it on Google Play"
+                                    className="h-12"
+                                />
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            {/* Copyright Section */}
-            <div className="text-center text-sm mt-8 border-t border-white pt-4">
-                &copy; {new Date().getFullYear()} Your Company. All rights reserved.
+            {/* Copyright Bar */}
+            <div className="border-t border-gray-200 mt-12 pt-8">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-600">
+                    <p>© Klane is Proudly Owned by <a href="#" className="text-blue-500 hover:underline">HiboTheme</a></p>
+                </div>
             </div>
         </footer>
     );
