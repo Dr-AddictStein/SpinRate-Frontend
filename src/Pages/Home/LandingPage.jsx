@@ -35,7 +35,7 @@ const LandingPage = () => {
       </div>
 
       <div className="">
-        <VideoSection />
+        {/* <VideoSection /> */}
       </div>
 
       <div className="">

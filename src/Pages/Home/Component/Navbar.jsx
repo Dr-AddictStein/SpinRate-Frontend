@@ -45,13 +45,6 @@ const Navbar = () => {
                     {/* Desktop menu */}
                     <div className="hidden md:block">
                         <div className="ml-10 flex items-center space-x-8">
-                            <Link to="/" className="text-gray-800 hover:text-indigo-600 font-medium text-sm uppercase tracking-wider transition-colors duration-200 border-b-2 border-transparent hover:border-indigo-600 pb-1">Home</Link>
-                            <Link to="/features" className="text-gray-800 hover:text-indigo-600 font-medium text-sm uppercase tracking-wider transition-colors duration-200 border-b-2 border-transparent hover:border-indigo-600 pb-1">Features</Link>
-                            <Link to="/services" className="text-gray-800 hover:text-indigo-600 font-medium text-sm uppercase tracking-wider transition-colors duration-200 border-b-2 border-transparent hover:border-indigo-600 pb-1">Services</Link>
-                            <Link to="/pricing" className="text-gray-800 hover:text-indigo-600 font-medium text-sm uppercase tracking-wider transition-colors duration-200 border-b-2 border-transparent hover:border-indigo-600 pb-1">Pricing</Link>
-                            <Link to="/testimonials" className="text-gray-800 hover:text-indigo-600 font-medium text-sm uppercase tracking-wider transition-colors duration-200 border-b-2 border-transparent hover:border-indigo-600 pb-1">Testimonials</Link>
-                            <Link to="/blog" className="text-gray-800 hover:text-indigo-600 font-medium text-sm uppercase tracking-wider transition-colors duration-200 border-b-2 border-transparent hover:border-indigo-600 pb-1">Blog</Link>
-                            <Link to="/contact" className="text-gray-800 hover:text-indigo-600 font-medium text-sm uppercase tracking-wider transition-colors duration-200 border-b-2 border-transparent hover:border-indigo-600 pb-1">Contact</Link>
                         </div>
                     </div>
 
@@ -84,13 +77,6 @@ const Navbar = () => {
                 className={`md:hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}
             >
                 <div className="px-4 pt-2 pb-4 space-y-2 bg-white shadow-lg rounded-b-lg">
-                    <Link to="/" className="block px-3 py-2 text-gray-800 hover:text-indigo-600 font-medium rounded-md hover:bg-gray-50 transition-colors duration-200">Home</Link>
-                    <Link to="/features" className="block px-3 py-2 text-gray-800 hover:text-indigo-600 font-medium rounded-md hover:bg-gray-50 transition-colors duration-200">Features</Link>
-                    <Link to="/services" className="block px-3 py-2 text-gray-800 hover:text-indigo-600 font-medium rounded-md hover:bg-gray-50 transition-colors duration-200">Services</Link>
-                    <Link to="/pricing" className="block px-3 py-2 text-gray-800 hover:text-indigo-600 font-medium rounded-md hover:bg-gray-50 transition-colors duration-200">Pricing</Link>
-                    <Link to="/testimonials" className="block px-3 py-2 text-gray-800 hover:text-indigo-600 font-medium rounded-md hover:bg-gray-50 transition-colors duration-200">Testimonials</Link>
-                    <Link to="/blog" className="block px-3 py-2 text-gray-800 hover:text-indigo-600 font-medium rounded-md hover:bg-gray-50 transition-colors duration-200">Blog</Link>
-                    <Link to="/contact" className="block px-3 py-2 text-gray-800 hover:text-indigo-600 font-medium rounded-md hover:bg-gray-50 transition-colors duration-200">Contact</Link>
                     <Link
                         to="/dashboard"
                         className="block w-full px-3 py-3 text-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg mt-3 transition-colors duration-200"
