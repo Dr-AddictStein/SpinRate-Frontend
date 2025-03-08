@@ -1,24 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet, Navigate } from "react-router-dom";
 import Sidebar from "./Component/Sidebar";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import Loader from "../../Components/Loader";
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-
+import LoginModal from "../../Components/LoginModal";
 const DashboardLayout = () => {
   const { user, isInitialized } = useAuthContext();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [loginModal,setLoginModal]=useState(true);
 
   // Show loading state while auth is initializing
-  // if (!isInitialized) {
-  //   return (
-  //     <div className="w-full h-screen flex items-center justify-center">
-  //       <Loader text={"Loading..."} />
-  //     </div>
-  //   );
-  // }
+  if (!isInitialized) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+        <Loader text={"Loading..."} />
+      </div>
+    );
+  }
+
+  useEffect(()=>{
+    if(user?.user?._id){
+      setLoginModal(false);
+    }
+  },[user])
 
   // Redirect if no user after initialization
   // if (!user) {
@@ -37,6 +44,10 @@ const DashboardLayout = () => {
   return (
     <div className="w-full min-h-screen bg-gray-50 flex">
       {/* Mobile menu toggle button - only visible on mobile */}
+
+      {loginModal && <LoginModal />}
+
+
       <button 
         onClick={toggleMobileMenu}
         className="lg:hidden fixed top-4 left-4 z-50 p-3 rounded-md bg-white shadow-md text-gray-600 hover:bg-gray-100"
@@ -88,6 +99,8 @@ const DashboardLayout = () => {
       >
         <Sidebar collapsed={!sidebarOpen} toggleSidebar={toggleSidebar} />
       </motion.div>
+
+
       
       {/* Main Content Area */}
       <main className="flex-1 overflow-y-auto bg-gray-50 p-6 lg:p-8">

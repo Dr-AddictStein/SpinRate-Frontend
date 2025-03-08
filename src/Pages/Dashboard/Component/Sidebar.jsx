@@ -23,7 +23,7 @@ import {
 import { motion } from 'framer-motion';
 import { useAuthContext } from '../../../hooks/useAuthContext';
 import { useLogout } from '../../../hooks/useLogout';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import logo from '../../../assets/Design_sans_titre__10_-ai-brush-removebg-5gtqgd1e.png';
 
 const MenuItem = ({ icon: Icon, text, path, active, collapsed, badge, onClick }) => {
@@ -104,9 +104,9 @@ const SearchBox = ({ collapsed }) => {
 
 const Sidebar = ({ collapsed = false, toggleSidebar }) => {
     const { user } = useAuthContext();
+    const { logout } = useLogout();
     const location = useLocation();
     const currentPath = location.pathname;
-    const [showProfile, setShowProfile] = useState(false);
 
     // Define all menu items with their paths
     const menuItems = [
@@ -141,13 +141,13 @@ const Sidebar = ({ collapsed = false, toggleSidebar }) => {
             <div className={`${collapsed ? 'py-2' : 'py-3 px-4'} flex items-center border-b border-gray-100 relative`}>
                 {!collapsed ? (
                     <>
-                        <div className='flex-1 flex justify-center overflow-hidden'>
+                        <Link to={'/'} className='flex-1 flex justify-center overflow-hidden'>
                             <img 
                                 src={logo} 
                                 alt="SpinRate Logo" 
-                                className="h-16 w-auto object-contain max-w-[80%]"
+                                className="h-32 w-auto object-contain max-w-[80%]"
                             />
-                        </div>
+                        </Link>
                         <button 
                             onClick={toggleSidebar}
                             className="flex-shrink-0 p-1.5 rounded-md text-gray-500 hover:bg-gray-50 ml-1"
@@ -167,40 +167,22 @@ const Sidebar = ({ collapsed = false, toggleSidebar }) => {
                 )}
             </div>
 
-            {/* Search Box */}
-            <SearchBox collapsed={collapsed} />
+            
 
-            {/* User Profile - more compact */}
-            <div className={`px-4 py-2 border-b border-gray-100 relative ${collapsed ? 'flex justify-center' : ''}`}>
-                <div 
-                    className={`${collapsed ? '' : 'flex items-center'} cursor-pointer`}
-                    onClick={() => setShowProfile(!showProfile)}
-                >
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center text-white font-medium text-sm">
-                        {user ? user.email.charAt(0).toUpperCase() : 'U'}
+            {/* User Profile */}
+            <div className={`px-4 py-3 border-b border-gray-100 ${collapsed ? 'flex justify-center items-center' : ''}`}>
+                <div className={`${collapsed ? '' : 'flex items-start'}`}>
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center text-white font-medium text-sm flex-shrink-0">
+                        {user ? user?.user?.userName.charAt(0).toUpperCase() : 'U'}
                     </div>
                     {!collapsed && (
                         <div className="ml-2 flex-1">
-                            <p className="text-sm font-medium text-gray-700 truncate max-w-[160px]">{user ? user.email : 'User'}</p>
-                            <p className="text-xs text-gray-500">Admin</p>
+                            <p className="text-sm font-medium text-gray-700 truncate max-w-[160px]">{user?.user?.fullName || 'User'}</p>
+                            <p className="text-xs text-gray-600">{user?.user?.email}</p>
+                            {/* <p className="text-xs text-gray-500">{user?.user?.userName}</p> */}
                         </div>
                     )}
                 </div>
-                
-                {/* Profile dropdown */}
-                {showProfile && (
-                    <div className={`absolute ${collapsed ? 'left-full ml-2' : 'right-4 left-4'} top-12 bg-white rounded-lg shadow-lg z-50 border border-gray-100`}>
-                        <div className="p-3 border-b border-gray-100">
-                            <p className="font-medium text-gray-800">{user ? user.email : 'User'}</p>
-                            <p className="text-sm text-gray-500">Admin Account</p>
-                        </div>
-                        <div className="p-2">
-                            <button className="w-full text-left px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 rounded-md">Profile Settings</button>
-                            <button className="w-full text-left px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 rounded-md">Account</button>
-                            <button className="w-full text-left px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded-md">Sign Out</button>
-                        </div>
-                    </div>
-                )}
             </div>
 
             {/* Menu Items - adjusted spacing */}
