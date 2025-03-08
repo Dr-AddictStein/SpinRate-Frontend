@@ -92,7 +92,7 @@ const Navbar = () => {
                     <Link to="/blog" className="block px-3 py-2 text-gray-800 hover:text-indigo-600 font-medium rounded-md hover:bg-gray-50 transition-colors duration-200">Blog</Link>
                     <Link to="/contact" className="block px-3 py-2 text-gray-800 hover:text-indigo-600 font-medium rounded-md hover:bg-gray-50 transition-colors duration-200">Contact</Link>
                     <Link
-                        to="/get-started"
+                        to="/dashboard"
                         className="block w-full px-3 py-3 text-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg mt-3 transition-colors duration-200"
                     >
                         Get Started
