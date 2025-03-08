@@ -71,7 +71,7 @@ const LoginModal = ({ closeModal }) => {
                     },
                 }}
             />
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/10 backdrop-blur-md">
                 <div className="relative w-full max-w-md mx-4">
                     {authLoader ? (
                         <div className="bg-white rounded-2xl shadow-2xl p-8 flex flex-col items-center justify-center">

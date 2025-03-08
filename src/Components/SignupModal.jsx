@@ -19,13 +19,13 @@ const SignupModal = ({ closeModal }) => {
     const [authLoader, setAuthLoader] = useState(false);
     const [showLoginModal, setShowLoginModal] = useState(false);
 
-    const [signUpData, setSignUpData] = useState({ fullName: '', userName: '', teamName: "", email: '', password: '' });
+    const [signUpData, setSignUpData] = useState({ fullName: '', userName: '', email: '', password: '' });
 
     const handleSignup = async (e) => {
         e.preventDefault();
         setAuthLoader(true);
         try {
-            const response = await signup(signUpData.fullName, signUpData.userName, signUpData.teamName, signUpData.email, signUpData.password);
+            const response = await signup(signUpData.fullName, signUpData.userName, signUpData.email, signUpData.password);
             if (response === "Email already exists.!.") {
                 toast.error("Email already exists");
                 setTimeout(() => {
