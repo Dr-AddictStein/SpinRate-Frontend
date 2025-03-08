@@ -5,12 +5,13 @@ import { useAuthContext } from "../../hooks/useAuthContext";
 import Loader from "../../Components/Loader";
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import LoginModal from "../../Components/LoginModal";
+import SignupModal from "../../Components/SignupModal";
+
 const DashboardLayout = () => {
   const { user, isInitialized } = useAuthContext();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [loginModal,setLoginModal]=useState(true);
+  const [showSignupModal, setShowSignupModal] = useState(false);
 
   // Show loading state while auth is initializing
   if (!isInitialized) {
@@ -21,16 +22,14 @@ const DashboardLayout = () => {
     );
   }
 
-  useEffect(()=>{
-    if(user?.user?._id){
-      setLoginModal(false);
+  useEffect(() => {
+    // Show signup modal if user is not authenticated
+    if (!user?.user?._id) {
+      setShowSignupModal(true);
+    } else {
+      setShowSignupModal(false);
     }
-  },[user])
-
-  // Redirect if no user after initialization
-  // if (!user) {
-  //   return <Navigate to="/" replace />;
-  // }
+  }, [user]);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -43,11 +42,12 @@ const DashboardLayout = () => {
   // If we're here, we're authenticated
   return (
     <div className="w-full min-h-screen bg-gray-50 flex">
+      {/* Signup Modal */}
+      {showSignupModal && (
+        <SignupModal closeModal={() => setShowSignupModal(false)} />
+      )}
+
       {/* Mobile menu toggle button - only visible on mobile */}
-
-      {loginModal && <LoginModal />}
-
-
       <button 
         onClick={toggleMobileMenu}
         className="lg:hidden fixed top-4 left-4 z-50 p-3 rounded-md bg-white shadow-md text-gray-600 hover:bg-gray-100"
@@ -99,8 +99,6 @@ const DashboardLayout = () => {
       >
         <Sidebar collapsed={!sidebarOpen} toggleSidebar={toggleSidebar} />
       </motion.div>
-
-
       
       {/* Main Content Area */}
       <main className="flex-1 overflow-y-auto bg-gray-50 p-6 lg:p-8">

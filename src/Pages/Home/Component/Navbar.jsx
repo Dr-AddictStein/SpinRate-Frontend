@@ -49,12 +49,18 @@ const Navbar = () => {
                     </div>
 
                     {/* Get Started button */}
-                    <div className="hidden md:block">
+                    <div className="hidden md:block flex items-center space-x-4">
                         <Link
                             to="/dashboard"
                             className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg px-6 py-3 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
                         >
                             Get Started
+                        </Link>
+                        <Link
+                            to="/dashboard"
+                            className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg px-6 py-3 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
+                        >
+                            Sign In
                         </Link>
                     </div>
 
@@ -82,6 +88,12 @@ const Navbar = () => {
                         className="block w-full px-3 py-3 text-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg mt-3 transition-colors duration-200"
                     >
                         Get Started
+                    </Link>
+                    <Link
+                        to="/dashboard"
+                        className="block w-full px-3 py-3 text-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg mt-3 transition-colors duration-200"
+                    >
+                        Sign In
                     </Link>
                 </div>
             </div>

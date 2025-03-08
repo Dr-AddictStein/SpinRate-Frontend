@@ -28,17 +28,18 @@ const Hero = () => {
     }, []);
 
     return (
-        <section className="relative bg-white pt-24 md:pt-32 pb-20 md:pb-32 overflow-x-hidden">
+        <section className="relative bg-white pt-24 md:pt-16 pb-20 md:pb-32 overflow-x-hidden">
             {/* Enhanced decorative elements */}
             <div className="absolute top-20 right-1/4 w-32 h-32 bg-blue-100 rounded-full opacity-50 floating" />
             <div className="absolute bottom-20 left-1/4 w-20 h-20 bg-indigo-100 rounded-full opacity-60 floating" />
             <div className="absolute top-40 left-10 w-12 h-40 bg-indigo-50 rounded-full opacity-40 floating" />
             <div className="absolute bottom-40 right-10 w-24 h-24 bg-purple-100 rounded-full opacity-30 floating" />
 
-            {/* Modern lines decoration */}
+            {/* Modern lines decoration - MOVED FURTHER LEFT */}
             <div className="absolute top-1/3 right-0 w-40 h-2 bg-blue-400 opacity-70 floating" />
             <div className="absolute top-2/3 left-0 w-32 h-2 bg-indigo-300 opacity-60 floating" />
-            <div className="absolute bottom-1/4 right-1/4 w-24 h-2 bg-purple-300 opacity-50 floating" />
+            {/* This is the line causing the issue - moved further left and adjusted position */}
+            <div className="absolute bottom-1/4 left-16 w-24 h-2 bg-purple-300 opacity-50 floating" />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Mobile: Show phone on top for small screens */}
@@ -74,12 +75,12 @@ const Hero = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
-                    {/* Left Column: Text Content */}
+                    {/* Left Column: Text Content - Added margin bottom for spacing */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
-                        className="md:col-span-6 space-y-6 md:space-y-8 z-10"
+                        className="md:col-span-6 space-y-6 md:space-y-8 z-10 mb-8"
                     >
                         {/* Enhanced tag line */}
                         <motion.div
@@ -122,12 +123,12 @@ const Hero = () => {
                             </motion.h1>
                         </div>
 
-                        {/* Description text - BIGGER */}
+                        {/* Description text - BIGGER & Added padding bottom */}
                         <motion.p
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.8, delay: 1.2 }}
-                            className="text-lg md:text-xl text-gray-600 max-w-3xl leading-relaxed"
+                            className="text-lg md:text-xl text-gray-600 max-w-3xl leading-relaxed pb-6"
                         >
                             Boost your Google Reviews and online visibility without asking for reviews. Our reward-driven experience encourages clients to scan a qr code, to leave a review and spin the wheel !
                         </motion.p>

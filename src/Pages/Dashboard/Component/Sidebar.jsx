@@ -18,7 +18,12 @@ import {
     Search,
     User,
     ChevronLeft,
-    ChevronRight
+    ChevronRight,
+    User2,
+    User2Icon,
+    GroupIcon,
+    UserRound,
+    Wallet2
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuthContext } from '../../../hooks/useAuthContext';
@@ -111,13 +116,9 @@ const Sidebar = ({ collapsed = false, toggleSidebar }) => {
     // Define all menu items with their paths
     const menuItems = [
         { text: "Analytics", icon: BarChart, path: "/dashboard", badge: false },
-        { text: "Rate", icon: TrendingUp, path: "/dashboard/rate", badge: false },
-        { text: "My Team", icon: BookCopy, path: "/dashboard/myTeam", badge: false },
-        { text: "Leaderboard", icon: Award, path: "/dashboard/leaderboard", badge: false },
-        { text: "History", icon: History, path: "/dashboard/history", badge: false },
-        { text: "Home", icon: Home, path: "/" },
+        { text: "Customers", icon: UserRound, path: "/dashboard/customers", badge: false },
         { text: "Settings", icon: Settings, path: "/dashboard/settings" },
-        { text: "Help", icon: HelpCircle, path: "/dashboard/help" },
+        { text: "Subscription", icon: Wallet2, path: "/dashboard/subscription", badge: false },
     ];
 
     // Helper function to check if a path is active

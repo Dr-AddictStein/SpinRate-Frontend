@@ -3,8 +3,9 @@ import HomeLayout from "../Pages/Home/HomeLayout";
 import LandingPage from "../Pages/Home/LandingPage";
 import DashboardLayout from "../Pages/Dashboard/DashboardLayout";
 import DashboardHome from "../Pages/Dashboard/DashboardHome";
-
-
+import DashboardCustomers from "../Pages/Dashboard/DashboardCustomers";
+import DashboardSubscription from "../Pages/Dashboard/DashboardSubscription"; 
+import DashboardSettings from "../Pages/Dashboard/DashboardSettings";
 
 // Define your route objects
 const routes = [
@@ -25,6 +26,18 @@ const routes = [
       {
         path: "",
         element: <DashboardHome />,
+      },
+      {
+        path: "customers",
+        element: <DashboardCustomers />,
+      },
+      {
+        path: "subscription",
+        element: <DashboardSubscription />,
+      },
+      {
+        path: "settings",
+        element: <DashboardSettings />,
       },
     ],
   },

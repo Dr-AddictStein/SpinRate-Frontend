@@ -3,8 +3,9 @@ import { useSignup } from "../hooks/useSignup";
 import { useLogin } from "../hooks/useLogin";
 import { useLogout } from '../hooks/useLogout.js';
 import { toast, Toaster } from "react-hot-toast";
-import { X, User, Lock, Mail, UserPlus, Users, ArrowLeft } from 'lucide-react';
+import { X, User, Lock, Mail, UserPlus, Users } from 'lucide-react';
 import Loader from './Loader.jsx';
+import LoginModal from './LoginModal.jsx';
 import { Link } from 'react-router-dom';
 
 const SignupModal = ({ closeModal }) => {
@@ -16,14 +17,15 @@ const SignupModal = ({ closeModal }) => {
     const [userSubmissions, setUserSubmissions] = useState(null);
     const [userLoader, setUserLoader] = useState(false);
     const [authLoader, setAuthLoader] = useState(false);
+    const [showLoginModal, setShowLoginModal] = useState(false);
 
-    const [signUpData, setSignUpData] = useState({ fullName: '', userName: '',  email: '', password: '' });
+    const [signUpData, setSignUpData] = useState({ fullName: '', userName: '', teamName: "", email: '', password: '' });
 
     const handleSignup = async (e) => {
         e.preventDefault();
         setAuthLoader(true);
         try {
-            const response = await signup(signUpData.fullName, signUpData.userName, signUpData.email, signUpData.password);
+            const response = await signup(signUpData.fullName, signUpData.userName, signUpData.teamName, signUpData.email, signUpData.password);
             if (response === "Email already exists.!.") {
                 toast.error("Email already exists");
                 setTimeout(() => {
@@ -45,13 +47,21 @@ const SignupModal = ({ closeModal }) => {
             else {
                 toast.success("Registration successful!");
                 setAuthLoader(false);
-                closeModal();
+                if (closeModal) closeModal();
             }
         } catch (error) {
             toast.error(error.message);
             setAuthLoader(false);
         }
     };
+
+    const switchToLogin = () => {
+        setShowLoginModal(true);
+    };
+
+    if (showLoginModal) {
+        return <LoginModal closeModal={closeModal} />;
+    }
 
     return (
         <div className="">
@@ -79,7 +89,8 @@ const SignupModal = ({ closeModal }) => {
                                 <div className="flex justify-between items-center">
                                     <h2 className="text-2xl font-bold">Create Account</h2>
                                     <Link 
-                                        to={'/'}
+                                        to="/"
+                                        onClick={closeModal}
                                         className="p-1 rounded-full hover:bg-white hover:bg-opacity-20 transition-colors"
                                     >
                                         <X size={20} />
@@ -172,14 +183,16 @@ const SignupModal = ({ closeModal }) => {
                                 </form>
                                 
                                 <div className="mt-6 text-center">
-                                    <button
-                                        type="button"
-                                        className="text-indigo-600 hover:text-indigo-800 font-medium inline-flex items-center text-sm"
-                                        onClick={closeModal}
-                                    >
-                                        <ArrowLeft size={16} className="mr-1" />
-                                        Back to login
-                                    </button>
+                                    <p className="text-sm text-gray-600">
+                                        Already have an account?{' '}
+                                        <button
+                                            type="button"
+                                            className="text-indigo-600 hover:text-indigo-800 font-medium"
+                                            onClick={switchToLogin}
+                                        >
+                                            Sign in
+                                        </button>
+                                    </p>
                                 </div>
                             </div>
                         </div>

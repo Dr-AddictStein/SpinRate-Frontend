@@ -7,7 +7,6 @@ import { X, LogIn, User, Lock, ArrowRight, Mail } from 'lucide-react';
 import SignupModal from './SignupModal.jsx';
 import AuthLoader from './Loader.jsx';
 import Loader from './Loader.jsx';
-import { Link } from 'react-router-dom';
 
 const LoginModal = ({ closeModal }) => {
     const { signup } = useSignup();
@@ -51,6 +50,7 @@ const LoginModal = ({ closeModal }) => {
                 setUserLoader(true);
                 setUserLoader(false);
                 setIsSignupModalOpen(false);
+                if (closeModal) closeModal();
             }
         } catch (error) {
             toast.error(error.message);
@@ -71,7 +71,7 @@ const LoginModal = ({ closeModal }) => {
                     },
                 }}
             />
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/10 backdrop-blur-md">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md">
                 <div className="relative w-full max-w-md mx-4">
                     {authLoader ? (
                         <div className="bg-white rounded-2xl shadow-2xl p-8 flex flex-col items-center justify-center">
@@ -83,12 +83,12 @@ const LoginModal = ({ closeModal }) => {
                             <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-white">
                                 <div className="flex justify-between items-center">
                                     <h2 className="text-2xl font-bold">Welcome Back</h2>
-                                    <Link 
-                                        to={'/'}
+                                    <button 
+                                        onClick={closeModal}
                                         className="p-1 rounded-full hover:bg-white hover:bg-opacity-20 transition-colors"
                                     >
                                         <X size={20} />
-                                    </Link>
+                                    </button>
                                 </div>
                                 <p className="mt-1 text-blue-100 text-sm">Sign in to your account</p>
                             </div>
@@ -188,7 +188,10 @@ const LoginModal = ({ closeModal }) => {
             </div>
             
             {isSignupModalOpen && (
-                <SignupModal closeModal={() => setIsSignupModalOpen(false)} />
+                <SignupModal 
+                    closeModal={() => setIsSignupModalOpen(false)} 
+                    switchToLogin={() => setIsSignupModalOpen(false)}
+                />
             )}
         </div>
     )
