@@ -43,11 +43,11 @@ const LandingPage = () => {
       </div>
 
       <div className="">
-        <CloudManagement />
+        {/* <CloudManagement /> */}
       </div>
 
       <div className="">
-        <IntegrationCard />
+        {/* <IntegrationCard /> */}
       </div>
 
       <div className="">
@@ -64,7 +64,7 @@ const LandingPage = () => {
 
 
       <div className="">
-        <Setting />
+        {/* <Setting /> */}
       </div>
 
     </>
