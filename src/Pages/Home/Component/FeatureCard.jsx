@@ -5,13 +5,13 @@ const FeatureCard = ({ icon, title, description, index }) => {
   const controls = useAnimation();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
-  
+
   useEffect(() => {
     if (isInView) {
       controls.start('visible');
     }
   }, [controls, isInView]);
-  
+
   return (
     <motion.div
       ref={ref}
@@ -19,20 +19,20 @@ const FeatureCard = ({ icon, title, description, index }) => {
       animate={controls}
       variants={{
         hidden: { opacity: 0, y: 50 },
-        visible: { 
-          opacity: 1, 
+        visible: {
+          opacity: 1,
           y: 0,
-          transition: { 
-            duration: 0.6, 
+          transition: {
+            duration: 0.6,
             delay: index * 0.2,
             ease: [0.25, 0.1, 0.25, 1.0]
-          } 
+          }
         }
       }}
       className="relative group bg-white rounded-2xl shadow-lg p-8 transition-all duration-500 hover:shadow-xl overflow-hidden"
     >
       {/* Animated background gradient */}
-      <motion.div 
+      <motion.div
         className="absolute inset-0 bg-gradient-to-tr from-blue-50 to-indigo-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"
         animate={{
           background: [
@@ -43,21 +43,21 @@ const FeatureCard = ({ icon, title, description, index }) => {
         }}
         transition={{ duration: 5, repeat: Infinity }}
       />
-      
+
       {/* Icon container with floating animation */}
-      <motion.div 
+      <motion.div
         className="mx-auto mb-6 w-20 h-20 flex items-center justify-center bg-blue-50 rounded-full"
         animate={{ y: [0, -5, 0] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
       >
         {icon}
       </motion.div>
-      
+
       {/* Title with underline animation */}
       <div className="text-center mb-4">
         <h3 className="text-xl font-bold text-gray-900 relative inline-block">
           {title}
-          <motion.span 
+          <motion.span
             className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-500"
             initial={{ width: 0 }}
             whileInView={{ width: '100%' }}
@@ -65,10 +65,10 @@ const FeatureCard = ({ icon, title, description, index }) => {
           />
         </h3>
       </div>
-      
+
       {/* Description */}
       <p className="text-gray-600 text-center">{description}</p>
-      
+
       {/* Decorative circles */}
       <div className="absolute -bottom-3 -right-3 w-12 h-12 rounded-full bg-blue-100 opacity-30" />
       <div className="absolute -top-4 -left-4 w-8 h-8 rounded-full bg-indigo-100 opacity-30" />
@@ -80,13 +80,13 @@ const Features = () => {
   const titleControls = useAnimation();
   const titleRef = useRef(null);
   const isTitleInView = useInView(titleRef, { once: true });
-  
+
   useEffect(() => {
     if (isTitleInView) {
       titleControls.start('visible');
     }
   }, [titleControls, isTitleInView]);
-  
+
   const featuresData = [
     {
       icon: (
@@ -95,8 +95,8 @@ const Features = () => {
           <path d="M17 14h.01" />
         </svg>
       ),
-      title: "Trusted Grow Solutions",
-      description: "Duis cursus, mi quis viverra ornare, erosrdum nulla ut diam libero vitae erat'ene faucibus nibh et justo",
+      title: "Boost your google reviews",
+      description: "Engage customers with a fun prize wheel that boosts your SEO, increases visibility, and attracts new clients",
     },
     {
       icon: (
@@ -106,8 +106,8 @@ const Features = () => {
           <path d="m8 4 4 6 4-2 3 4" />
         </svg>
       ),
-      title: "Digital Data Analytics",
-      description: "Duis cursus, mi quis viverra ornare, erosrdum nulla ut diam libero vitae erat'ene faucibus nibh et justo",
+      title: "Build Customer Loyalty & Drive Retention",
+      description: "Easily customize your prize wheel and use collected data to create targeted campaigns that keep customers coming back and build long-term loyalty.",
     },
     {
       icon: (
@@ -115,39 +115,39 @@ const Features = () => {
           <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
         </svg>
       ),
-      title: "Strategy Buildup Software",
-      description: "Duis cursus, mi quis viverra ornare, erosrdum nulla ut diam libero vitae erat'ene faucibus nibh et justo",
+      title: "Grow Your Turnover",
+      description: "Boost sales by turning customer engagement into repeat business and more reviews with our easy prize wheel.",
     }
   ];
 
   return (
     <section className="py-20 relative overflow-hidden bg-gray-50">
       {/* Animated background elements */}
-      <motion.div 
+      <motion.div
         className="absolute top-40 left-0 w-64 h-64 rounded-full bg-blue-200 opacity-10 -z-10"
-        animate={{ 
+        animate={{
           x: [0, 20, 0],
           y: [0, -30, 0],
         }}
         transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
       />
-      <motion.div 
+      <motion.div
         className="absolute bottom-40 right-0 w-96 h-96 rounded-full bg-indigo-200 opacity-10 -z-10"
-        animate={{ 
+        animate={{
           x: [0, -30, 0],
           y: [0, 20, 0],
         }}
         transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
       />
-      <motion.div 
+      <motion.div
         className="absolute top-1/4 right-1/4 w-32 h-32 rounded-full bg-cyan-200 opacity-10 -z-10"
-        animate={{ 
+        animate={{
           x: [0, 40, 0],
           y: [0, 10, 0],
         }}
         transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
       />
-      
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           {/* Features label */}
@@ -159,7 +159,7 @@ const Features = () => {
           >
             Features
           </motion.div>
-          
+
           {/* Main heading */}
           <motion.div
             ref={titleRef}
@@ -172,19 +172,19 @@ const Features = () => {
             className="relative"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-              Utilize Your Marketing Data 
+              Simple and fun
               <br />
               <motion.span
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
               >
-                Anywhere
+                for customers
               </motion.span>
             </h2>
-            
+
             {/* Animated accent element */}
-            <motion.div 
+            <motion.div
               className="absolute -right-10 top-0 md:top-2"
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -198,11 +198,11 @@ const Features = () => {
             </motion.div>
           </motion.div>
         </div>
-        
+
         {/* Features grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {featuresData.map((feature, index) => (
-            <FeatureCard 
+            <FeatureCard
               key={index}
               icon={feature.icon}
               title={feature.title}
@@ -212,6 +212,20 @@ const Features = () => {
           ))}
         </div>
       </div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 1.4 }}
+        className="pt-2 md:pt-5 w-full flex justify-center"
+      >
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className=" px-6 py-3 md:px-8 md:py-4 bg-blue-500 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-600 transition-colors duration-300"
+        >
+          Start now
+        </motion.button>
+      </motion.div>
     </section>
   );
 };

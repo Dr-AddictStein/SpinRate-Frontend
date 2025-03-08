@@ -30,14 +30,14 @@ const Navbar = () => {
     return (
         <nav className="fixed w-full z-50 transition-all duration-300 bg-white shadow-md">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center h-16 md:h-20">
                     {/* Logo */}
                     <div className="flex-shrink-0">
                         <Link to="/" className="flex items-center">
                             <img 
                                 src={logo} 
                                 alt="Klane Logo" 
-                                className="h-20 md:h-28 w-auto object-contain transition-transform duration-300 hover:scale-105 -my-2" 
+                                className="h-20 md:h-28 lg:h-32 xl:h-36 w-auto object-contain transition-transform duration-300 hover:scale-105 -my-8 md:-my-10 lg:-my-12 xl:-my-14" 
                             />
                         </Link>
                     </div>

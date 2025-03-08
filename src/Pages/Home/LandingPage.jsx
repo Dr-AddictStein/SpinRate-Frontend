@@ -10,6 +10,8 @@ import PricingCard from "./Component/PricingCard";
 import QRReviewSection from "./Component/QRReviewSection";
 import Setting from "./Component/Setting";
 import VideoSection from "./Component/VideoSection";
+import StatsSection from "./Component/StatsSection";
+import CalendlySection from "./Component/CalendlySection";
 
 
 
@@ -19,7 +21,7 @@ const LandingPage = () => {
 
   return (
     <>
-      <div className="pt-10">
+      <div className="">
         <Banner />
       </div>
 
@@ -30,6 +32,9 @@ const LandingPage = () => {
         <VideoSection />
       </div>
 
+      <div className="">
+        <StatsSection />
+      </div>
 
       <div className="">
         <CloudManagement />
@@ -43,15 +48,16 @@ const LandingPage = () => {
         <ClientReviews />
       </div>
 
+      <div className="">
+        <CalendlySection />
+      </div>
 
       <div className="">
-
         <PricingCard />
       </div>
 
 
       <div className="">
-
         <Setting />
       </div>
 
