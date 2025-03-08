@@ -13,15 +13,6 @@ const DashboardLayout = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
 
-  // Show loading state while auth is initializing
-  if (!isInitialized) {
-    return (
-      <div className="w-full h-screen flex items-center justify-center">
-        <Loader text={"Loading..."} />
-      </div>
-    );
-  }
-
   useEffect(() => {
     // Show signup modal if user is not authenticated
     if (!user?.user?._id) {
@@ -38,6 +29,15 @@ const DashboardLayout = () => {
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
+
+  // Show loading state while auth is initializing
+  if (!isInitialized) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+        <Loader text={"Loading..."} />
+      </div>
+    );
+  }
 
   // If we're here, we're authenticated
   return (
