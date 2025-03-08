@@ -58,7 +58,7 @@ const Navbar = () => {
                     {/* Get Started button */}
                     <div className="hidden md:block">
                         <Link
-                            to="/get-started"
+                            to="/dashboard"
                             className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg px-6 py-3 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
                         >
                             Get Started
