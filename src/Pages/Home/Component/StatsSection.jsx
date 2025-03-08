@@ -75,12 +75,12 @@ const StatsSection = () => {
     },
     {
       icon: RotateCw,
-      value: "x2",
+      value: "x6",
       description: "Bring your customers back"
     },
     {
       icon: Users,
-      value: "+75%",
+      value: "+85%",
       description: "Increase your customer database"
     },
     {

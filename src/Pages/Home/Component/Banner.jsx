@@ -129,7 +129,7 @@ const Hero = () => {
                             transition={{ duration: 0.8, delay: 1.2 }}
                             className="text-lg md:text-xl text-gray-600 max-w-3xl leading-relaxed"
                         >
-                            Boost your Google Reviews and online visibility with an engaging, reward-driven experience that keeps customers coming back for more.
+                            Boost your Google Reviews and online visibility without asking for reviews. Our reward-driven experience encourages clients to scan a qr code, to leave a review and spin the wheel !
                         </motion.p>
 
                         {/* CTA Button - ENHANCED */}

@@ -12,6 +12,7 @@ import Setting from "./Component/Setting";
 import VideoSection from "./Component/VideoSection";
 import StatsSection from "./Component/StatsSection";
 import CalendlySection from "./Component/CalendlySection";
+import HowItWorks from "./Component/HowItWorks";
 
 
 
@@ -21,13 +22,18 @@ const LandingPage = () => {
 
   return (
     <>
-      <div className="">
+      <div className="pt-10">
         <Banner />
       </div>
 
       <div className="">
         <Features />
       </div>
+
+      <div className="">
+        <HowItWorks />
+      </div>
+
       <div className="">
         <VideoSection />
       </div>
