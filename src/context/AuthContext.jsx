@@ -1,6 +1,17 @@
-import { createContext, useEffect, useReducer } from "react";
+import { createContext, useEffect, useReducer, useContext } from "react";
 
 export const AuthContext = createContext();
+
+// Custom hook for easy access to auth context
+export const useAuth = () => {
+    const context = useContext(AuthContext);
+    
+    if (!context) {
+        throw Error('useAuth must be used inside an AuthContextProvider');
+    }
+    
+    return context;
+};
 
 export const authReducer = (state, action) => {
     switch (action.type) {
@@ -24,7 +35,7 @@ export const validateUser = async (dispatch) => {
     }
 
     try {
-        const response = await fetch("https://spin-rate-backend.vercel.app/api/user/checkUser", {
+        const response = await fetch("http://localhost:4000/api/user/checkUser", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
