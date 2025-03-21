@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import { Check, Info, Upload, Copy, Download, Grid, Trash2, Plus } from 'lucide-react';
 import { motion } from 'framer-motion';
+import GamePreviewModal from './Component/GamePreviewModal';
 
 const WheelGameDashboard = () => {
+  // Toggle preview modal
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
+  const openPreviewModal = () => setIsPreviewModalOpen(true);
+  const closePreviewModal = () => setIsPreviewModalOpen(false);
+
   const [googleReviewLink, setGoogleReviewLink] = useState('');
   const [customerInstruction, setCustomerInstruction] = useState('');
   const [mainColors, setMainColors] = useState({
@@ -77,11 +83,21 @@ const WheelGameDashboard = () => {
             className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 shadow-lg"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            onClick={openPreviewModal}
           >
             <Grid className="w-5 h-5" />
             <span>Preview Game</span>
           </motion.button>
         </div>
+        <GamePreviewModal
+          isOpen={isPreviewModalOpen}
+          onClose={closePreviewModal}
+          gameData={{
+            lots,
+            mainColors,
+            customerInstruction
+          }}
+        />
       </motion.div>
 
       {/* Google Review Link */}
