@@ -1,14 +1,21 @@
-import React, { useState } from 'react';
-import { Check, Info, Upload, Copy, Download, Grid, Trash2, Plus } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Check, Info, Upload, Copy, Download, Grid } from 'lucide-react';
 import { motion } from 'framer-motion';
 import GamePreviewModal from './Component/GamePreviewModal';
+import { useAuthContext } from '../../hooks/useAuthContext';
+import wheelApi from './API/wheelApi.js';
+import { toast } from 'react-toastify';
 
 const WheelGameDashboard = () => {
+  const { user, isInitialized } = useAuthContext();
+
   // Toggle preview modal
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   const openPreviewModal = () => setIsPreviewModalOpen(true);
   const closePreviewModal = () => setIsPreviewModalOpen(false);
 
+  // State variables for wheel configuration
+  const [wheelId, setWheelId] = useState(null);
   const [googleReviewLink, setGoogleReviewLink] = useState('');
   const [customerInstruction, setCustomerInstruction] = useState('');
   const [mainColors, setMainColors] = useState({
@@ -27,9 +34,10 @@ const WheelGameDashboard = () => {
     { name: '', odds: '1', promoCode: '' }
   ]);
   const [logoFile, setLogoFile] = useState(null);
+  const [logoPreview, setLogoPreview] = useState(null);
   const [activeSection, setActiveSection] = useState(null);
   const [isWheelSaved, setIsWheelSaved] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
 
   // Animation variants
   const containerVariants = {
@@ -51,19 +59,147 @@ const WheelGameDashboard = () => {
     }
   };
 
-  // Handle form submission
-  const handleSubmit = () => {
-    // This will be implemented when connecting to the backend
-    console.log({
-      googleReviewLink,
-      customerInstruction,
-      mainColors,
-      lots,
-      logoFile
-    });
+  // Fetch user's wheel configuration when component mounts
+  useEffect(() => {
+    if (user?.user?._id) {
+      fetchUserWheel();
+    }
+  }, [user]);
 
-    // Set wheel as saved to show QR code and download options
-    setIsWheelSaved(true);
+  // Fetch the user's wheel configuration from the backend
+  const fetchUserWheel = async () => {
+    if (!user?.user?._id) return;
+
+    try {
+      setIsLoading(true);
+      const response = await wheelApi.getWheelsByUserId(user.user._id);
+
+      if (response.wheels && response.wheels.length > 0) {
+        // User has at least one wheel saved
+        const wheel = response.wheels[0]; // Get the first wheel
+
+        // Update state with wheel data
+        setWheelId(wheel._id);
+        setGoogleReviewLink(wheel.googleReviewLink || '');
+        setCustomerInstruction(wheel.customerInstruction || '');
+
+        // Set colors
+        if (wheel.mainColors) {
+          setMainColors(wheel.mainColors);
+        }
+
+        // Set lots (ensure we have exactly 8)
+        if (wheel.lots && wheel.lots.length > 0) {
+          // Create a new array with the existing lots
+          const wheelLots = [...wheel.lots];
+
+          // If less than 8 lots, add empty ones
+          while (wheelLots.length < 8) {
+            wheelLots.push({ name: '', odds: '1', promoCode: '' });
+          }
+
+          // Set at most 8 lots
+          setLots(wheelLots.slice(0, 8));
+        }
+
+        // Set logo preview if available
+        if (wheel.logoUrl) {
+          setLogoPreview(wheel.logoUrl);
+        }
+
+        setIsWheelSaved(true);
+      }
+    } catch (error) {
+      console.error("Error fetching wheel:", error);
+      toast.error("Failed to load your wheel configuration");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Handle logo file upload
+  const handleLogoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setLogoFile(file);
+      // Create a preview URL
+      setLogoPreview(URL.createObjectURL(file));
+    }
+  };
+
+  // Reset lots to default values
+  const handleResetForm = () => {
+    setLots([
+      { name: '', odds: '1', promoCode: '' },
+      { name: '', odds: '1', promoCode: '' },
+      { name: '', odds: '1', promoCode: '' },
+      { name: '', odds: '1', promoCode: '' },
+      { name: '', odds: '1', promoCode: '' },
+      { name: '', odds: '1', promoCode: '' },
+      { name: '', odds: '1', promoCode: '' },
+      { name: '', odds: '1', promoCode: '' }
+    ]);
+    toast.success("Default values reset");
+  };
+
+  // Handle form submission
+  const handleSubmit = async () => {
+    if (!user?.user?._id) {
+      toast.error("You must be logged in to save a wheel");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+
+      // First, upload the logo if a new one is selected
+      let logoUrl = logoPreview;
+      if (logoFile) {
+        try {
+          const uploadResponse = await wheelApi.uploadFile(logoFile);
+          if (uploadResponse.filePath) {
+            logoUrl = uploadResponse.filePath;
+          }
+        } catch (uploadError) {
+          console.error("Error uploading logo:", uploadError);
+          toast.error("Failed to upload logo image");
+          // Continue with the wheel save even if logo upload fails
+        }
+      }
+
+      // Prepare wheel data
+      const wheelData = {
+        userId: user.user._id,
+        googleReviewLink,
+        customerInstruction,
+        mainColors,
+        lots,
+        logoUrl
+      };
+
+      // Either create a new wheel or update an existing one
+      let response;
+      if (wheelId) {
+        // Update existing wheel
+        response = await wheelApi.updateWheel(wheelId, wheelData);
+        toast.success("Wheel updated successfully");
+      } else {
+        // Create new wheel
+        response = await wheelApi.createWheel(wheelData);
+        if (response.wheel?._id) {
+          setWheelId(response.wheel._id);
+        }
+        toast.success("Wheel created successfully");
+      }
+
+      // Show saved UI elements
+      setIsWheelSaved(true);
+    } catch (error) {
+      console.error("Error saving wheel:", error);
+      toast.error(error.message || "Failed to save wheel");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -84,20 +220,12 @@ const WheelGameDashboard = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={openPreviewModal}
+            disabled={isLoading}
           >
             <Grid className="w-5 h-5" />
             <span>Preview Game</span>
           </motion.button>
         </div>
-        <GamePreviewModal
-          isOpen={isPreviewModalOpen}
-          onClose={closePreviewModal}
-          gameData={{
-            lots,
-            mainColors,
-            customerInstruction
-          }}
-        />
       </motion.div>
 
       {/* Google Review Link */}
@@ -124,6 +252,7 @@ const WheelGameDashboard = () => {
               onChange={(e) => setGoogleReviewLink(e.target.value)}
               placeholder="https://www.google.com/search?hl=en-BDXgbcbdxq=Michiko,+20+FL+des+"
               className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out"
+              disabled={isLoading}
             />
             {googleReviewLink && (
               <motion.div
@@ -139,6 +268,13 @@ const WheelGameDashboard = () => {
               className="absolute right-12 text-gray-400 hover:text-gray-600"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
+              onClick={() => {
+                if (googleReviewLink) {
+                  navigator.clipboard.writeText(googleReviewLink);
+                  toast.success("Google Review Link copied!");
+                }
+              }}
+              disabled={!googleReviewLink || isLoading}
             >
               <Copy className="w-5 h-5" />
             </motion.button>
@@ -171,6 +307,7 @@ const WheelGameDashboard = () => {
                 placeholder="If empty default text: 'Give us a review'"
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-200"
                 maxLength={20}
+                disabled={isLoading}
               />
               <span className="absolute right-3 top-3 text-xs text-gray-500">
                 {customerInstruction.length}/20
@@ -179,8 +316,6 @@ const WheelGameDashboard = () => {
           </div>
         </div>
       </motion.div>
-
-
 
       {/* Main Colors */}
       <motion.div
@@ -216,6 +351,7 @@ const WheelGameDashboard = () => {
                   value={mainColors.color1}
                   onChange={(e) => setMainColors({ ...mainColors, color1: e.target.value })}
                   className="w-full h-10 cursor-pointer rounded-lg border-2 border-gray-300"
+                  disabled={isLoading}
                 />
                 <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded">
                   {mainColors.color1.toUpperCase()}
@@ -243,6 +379,7 @@ const WheelGameDashboard = () => {
                   value={mainColors.color2}
                   onChange={(e) => setMainColors({ ...mainColors, color2: e.target.value })}
                   className="w-full h-10 cursor-pointer rounded-lg border-2 border-gray-300"
+                  disabled={isLoading}
                 />
                 <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded">
                   {mainColors.color2.toUpperCase()}
@@ -270,6 +407,7 @@ const WheelGameDashboard = () => {
                   value={mainColors.color3}
                   onChange={(e) => setMainColors({ ...mainColors, color3: e.target.value })}
                   className="w-full h-10 cursor-pointer rounded-lg border-2 border-gray-300"
+                  disabled={isLoading}
                 />
                 <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded">
                   {mainColors.color3.toUpperCase()}
@@ -307,11 +445,12 @@ const WheelGameDashboard = () => {
                 type="file"
                 id="logo-file"
                 className="hidden"
-                onChange={(e) => setLogoFile(e.target.files[0])}
+                onChange={handleLogoChange}
+                disabled={isLoading}
               />
               <label
                 htmlFor="logo-file"
-                className="cursor-pointer flex items-center justify-center bg-white border-2 border-dashed border-gray-300 rounded-lg py-4 px-4 w-full transition duration-300 ease-in-out hover:border-green-500 hover:bg-green-50"
+                className={`cursor-pointer flex items-center justify-center bg-white border-2 border-dashed border-gray-300 rounded-lg py-4 px-4 w-full transition duration-300 ease-in-out hover:border-green-500 hover:bg-green-50 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 <div className="flex flex-col items-center">
                   <Upload className="w-8 h-8 text-gray-400 mb-2" />
@@ -334,8 +473,8 @@ const WheelGameDashboard = () => {
               className="w-32 h-24 bg-gray-100 rounded-lg border border-gray-200 flex items-center justify-center overflow-hidden shadow-inner"
               whileHover={{ scale: 1.05 }}
             >
-              {logoFile ? (
-                <img src={URL.createObjectURL(logoFile)} alt="Logo preview" className="max-w-full max-h-full object-contain" />
+              {logoPreview ? (
+                <img src={logoPreview} alt="Logo preview" className="max-w-full max-h-full object-contain" />
               ) : (
                 <img src="/api/placeholder/96/64" alt="Logo preview" className="max-w-full max-h-full opacity-50" />
               )}
@@ -407,6 +546,7 @@ const WheelGameDashboard = () => {
                   }}
                   placeholder={`Prize ${index + 1}`}
                   className="w-full p-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition duration-200"
+                  disabled={isLoading}
                 />
                 {lot.name && (
                   <motion.div
@@ -429,6 +569,7 @@ const WheelGameDashboard = () => {
                     setLots(newLots);
                   }}
                   className="w-full p-3 text-center border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition duration-200"
+                  disabled={isLoading}
                 />
               </div>
               <div className="col-span-5">
@@ -442,6 +583,7 @@ const WheelGameDashboard = () => {
                   }}
                   placeholder="Promo Code (optional)"
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition duration-200"
+                  disabled={isLoading}
                 />
               </div>
             </motion.div>
@@ -453,6 +595,8 @@ const WheelGameDashboard = () => {
             className="bg-amber-100 text-amber-700 py-2 px-4 rounded-lg flex items-center space-x-2 font-medium hover:bg-amber-200"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            onClick={handleResetForm}
+            disabled={isLoading}
           >
             <span>Reset Default Values</span>
           </motion.button>
@@ -473,8 +617,9 @@ const WheelGameDashboard = () => {
               whileHover={{ scale: 1.05, boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)' }}
               whileTap={{ scale: 0.95 }}
               onClick={handleSubmit}
+              disabled={isLoading}
             >
-              Save the Wheel
+              {isLoading ? 'Saving...' : 'Save the Wheel'}
             </motion.button>
           ) : (
             <>
@@ -483,8 +628,10 @@ const WheelGameDashboard = () => {
                   className="bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-10 rounded-lg font-medium text-lg shadow-lg"
                   whileHover={{ scale: 1.05, boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)' }}
                   whileTap={{ scale: 0.95 }}
+                  onClick={handleSubmit}
+                  disabled={isLoading}
                 >
-                  Save the Wheel
+                  {isLoading ? 'Saving...' : 'Save the Wheel'}
                 </motion.button>
 
                 <motion.div
@@ -494,6 +641,7 @@ const WheelGameDashboard = () => {
                   transition={{ duration: 0.3, delay: 0.2 }}
                   whileHover={{ y: -5, boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}
                 >
+                  {/* QR code would go here - placeholder for now */}
                   <img src="/api/placeholder/140/140" alt="QR Code" className="w-32 h-32" />
                 </motion.div>
               </div>
@@ -511,6 +659,7 @@ const WheelGameDashboard = () => {
                       className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg flex items-center justify-center space-x-2 shadow-md"
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
+                      disabled={isLoading}
                     >
                       <Download className="w-4 h-4" />
                       <span>Download SVG</span>
@@ -519,6 +668,7 @@ const WheelGameDashboard = () => {
                       className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg flex items-center justify-center space-x-2 shadow-md"
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
+                      disabled={isLoading}
                     >
                       <Download className="w-4 h-4" />
                       <span>Download PNG</span>
@@ -533,6 +683,7 @@ const WheelGameDashboard = () => {
                       className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg flex items-center justify-center space-x-2 shadow-md"
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
+                      disabled={isLoading}
                     >
                       <Download className="w-4 h-4" />
                       <span>English Poster</span>
@@ -541,22 +692,12 @@ const WheelGameDashboard = () => {
                       className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg flex items-center justify-center space-x-2 shadow-md"
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
+                      disabled={isLoading}
                     >
                       <Download className="w-4 h-4" />
                       <span>French Poster</span>
                     </motion.button>
                   </div>
-                </div>
-
-                <div className="pt-3">
-                  <motion.button
-                    className="w-full border border-gray-300 hover:border-gray-400 bg-white text-gray-700 py-2 px-4 rounded-lg flex items-center justify-center space-x-2"
-                    whileHover={{ scale: 1.02, backgroundColor: '#f9fafb' }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Copy className="w-4 h-4" />
-                    <span>Copy Game URL</span>
-                  </motion.button>
                 </div>
               </motion.div>
             </>
@@ -571,6 +712,17 @@ const WheelGameDashboard = () => {
       >
         <p>Last updated: {new Date().toLocaleDateString()}</p>
       </motion.div>
+
+      {/* Preview Modal */}
+      <GamePreviewModal
+        isOpen={isPreviewModalOpen}
+        onClose={closePreviewModal}
+        gameData={{
+          lots,
+          mainColors,
+          customerInstruction
+        }}
+      />
     </motion.div>
   );
 };
