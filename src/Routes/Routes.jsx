@@ -6,6 +6,7 @@ import DashboardHome from "../Pages/Dashboard/DashboardHome";
 import DashboardCustomers from "../Pages/Dashboard/DashboardCustomers";
 import DashboardSubscription from "../Pages/Dashboard/DashboardSubscription"; 
 import DashboardSettings from "../Pages/Dashboard/DashboardSettings";
+import WheelGamePage from "../Pages/Home/WheelGamePage";
 
 // Define your route objects
 const routes = [
@@ -40,6 +41,10 @@ const routes = [
         element: <DashboardSettings />,
       },
     ],
+  },
+  {
+    path: "/wheelGame/:id",
+    element: <WheelGamePage />,
   },
 ];
 

@@ -207,7 +207,7 @@ const WheelGameDashboard = () => {
   // Generate QR code URL
   const getQrCodeUrl = () => {
     if (!wheelId) return '';
-    return `http://localhost:5173/wheelGame/${wheelId}`;
+    return `https://spinrate.netlify.app/wheelGame/${wheelId}`;
   };
 
   // Download QR code as SVG

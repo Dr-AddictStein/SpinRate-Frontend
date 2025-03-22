@@ -11,7 +11,7 @@ export const useSignup = () => {
     setError(null);
 
     const response = await fetch(
-      `http://localhost:4000/api/user/signup`,
+      `https://spin-rate-backend.vercel.app/api/user/signup`,
       {
         method: "POST",
         headers: { "content-type": "application/json" },

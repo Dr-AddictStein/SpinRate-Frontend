@@ -41,7 +41,7 @@ const DashboardLayout = () => {
 
   // If we're here, we're authenticated
   return (
-    <div className="w-full min-h-screen bg-gray-50 flex">
+    <div className="w-full min-h-screen bg-gray-50 flex overflow-hidden">
       {/* Signup Modal */}
       {showSignupModal && (
         <SignupModal closeModal={() => setShowSignupModal(false)} />
@@ -76,7 +76,7 @@ const DashboardLayout = () => {
             className="fixed inset-0 z-40 lg:hidden"
           >
             <div className="absolute inset-0 bg-gray-600 bg-opacity-75" onClick={toggleMobileMenu}></div>
-            <div className="relative flex-1 flex flex-col max-w-xs w-full bg-white">
+            <div className="relative flex-1 flex flex-col max-w-xs w-full h-full bg-white overflow-y-hidden">
               <div className="absolute top-0 right-0 -mr-12 pt-2">
                 <button
                   className="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
@@ -101,7 +101,7 @@ const DashboardLayout = () => {
       </motion.div>
       
       {/* Main Content Area */}
-      <main className="flex-1 overflow-y-auto bg-gray-50 p-6 lg:p-8">
+      <main className={`flex-1 overflow-y-auto bg-gray-50 p-6 lg:p-8  transition-all duration-300`}>
         <div className="max-w-7xl mx-auto">
           {/* Add some top padding on mobile to account for the menu button */}
           <div className="lg:pt-0 pt-10">

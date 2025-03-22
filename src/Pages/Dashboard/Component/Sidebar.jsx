@@ -137,7 +137,7 @@ const Sidebar = ({ collapsed = false, toggleSidebar }) => {
     };
 
     return (
-        <div className={`h-screen bg-white border-r border-gray-200 flex flex-col transition-all duration-300 ${collapsed ? 'w-20' : 'w-64'}`}>
+        <div className={`fixed h-screen bg-white border-r border-gray-200 flex flex-col transition-all duration-300 z-30 ${collapsed ? 'w-20' : 'w-64'}`}>
             {/* Logo Section with toggle button - compact space but larger logo */}
             <div className={`${collapsed ? 'py-2' : 'py-3 px-4'} flex items-center border-b border-gray-100 relative`}>
                 {!collapsed ? (
@@ -202,7 +202,7 @@ const Sidebar = ({ collapsed = false, toggleSidebar }) => {
             </div>
 
             {/* Sign Out Button at the bottom */}
-            <div className={`mt-auto mb-6 ${collapsed ? 'px-2' : 'px-4'}`}>
+            <div className={`${collapsed ? 'px-2' : 'px-4'} py-4 border-t border-gray-100`}>
                 <MenuItem
                     icon={LogOut}
                     text="Sign Out"
