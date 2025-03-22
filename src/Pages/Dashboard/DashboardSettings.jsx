@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Check, Info, Upload, Copy, Download, Grid } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
+import { jsPDF } from 'jspdf';
 import GamePreviewModal from './Component/GamePreviewModal';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import wheelApi from './API/wheelApi.js';
@@ -273,160 +274,307 @@ const WheelGameDashboard = () => {
   const downloadEnglishPoster = () => {
     if (!wheelId) return;
     
-    // Create a poster with the QR code
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+    setIsLoading(true);
+    toast.info("Preparing your poster...");
     
-    // Set poster dimensions (8.5x11 inches at 96 DPI)
-    canvas.width = 816;  // 8.5 inches * 96 DPI
-    canvas.height = 1056; // 11 inches * 96 DPI
+    // Get QR code as image
+    const getQRCodeImage = () => {
+      return new Promise((resolve) => {
+        const svgElement = document.getElementById('wheel-qr-code');
+        if (svgElement) {
+          const svgData = new XMLSerializer().serializeToString(svgElement);
+          const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+          const svgUrl = URL.createObjectURL(svgBlob);
+          
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0);
+            resolve(canvas.toDataURL('image/png'));
+            URL.revokeObjectURL(svgUrl);
+          };
+          img.src = svgUrl;
+        } else {
+          resolve(null);
+        }
+      });
+    };
     
-    // Fill background
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Add header
-    ctx.fillStyle = '#4338ca'; // indigo color
-    ctx.fillRect(0, 0, canvas.width, 120);
-    
-    // Add headline text
-    ctx.font = 'bold 48px Arial';
-    ctx.fillStyle = 'white';
-    ctx.textAlign = 'center';
-    ctx.fillText('SPIN & WIN', canvas.width / 2, 75);
-    
-    // Draw QR code (we'll use the QRCode library to create an image)
-    const svgElement = document.getElementById('wheel-qr-code');
-    if (svgElement) {
-      const svgData = new XMLSerializer().serializeToString(svgElement);
-      const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-      const svgUrl = URL.createObjectURL(svgBlob);
+    // Load the template poster
+    const templateImg = new Image();
+    templateImg.crossOrigin = "Anonymous"; // Handle CORS if needed
+    templateImg.onload = async () => {
+      // Create canvas for composite image
+      const canvas = document.createElement('canvas');
+      canvas.width = templateImg.width;
+      canvas.height = templateImg.height;
+      const ctx = canvas.getContext('2d');
       
-      const img = new Image();
-      img.onload = () => {
-        // Draw QR code centered
-        const qrSize = 300;
-        ctx.drawImage(img, (canvas.width - qrSize) / 2, 220, qrSize, qrSize);
-        
-        // Add instructions
-        ctx.font = 'bold 36px Arial';
-        ctx.fillStyle = '#1f2937';
-        ctx.textAlign = 'center';
-        ctx.fillText('Scan to Play!', canvas.width / 2, 580);
-        
-        // Add call to action
-        ctx.font = '24px Arial';
-        ctx.fillStyle = '#4b5563';
-        ctx.fillText('Leave a review and spin the wheel', canvas.width / 2, 630);
-        ctx.fillText('for a chance to win amazing prizes!', canvas.width / 2, 665);
-        
-        // Add website URL
-        ctx.font = 'bold 20px Arial';
-        ctx.fillStyle = '#6b7280';
-        ctx.fillText(getQrCodeUrl(), canvas.width / 2, 720);
-        
-        // Add footer
-        ctx.fillStyle = '#4338ca'; // indigo color
-        ctx.fillRect(0, canvas.height - 80, canvas.width, 80);
-        
-        // Add footer text
-        ctx.font = '20px Arial';
-        ctx.fillStyle = 'white';
-        ctx.textAlign = 'center';
-        ctx.fillText('Thank you for your support!', canvas.width / 2, canvas.height - 40);
-        
-        // Convert to PNG and download
-        const pngUrl = canvas.toDataURL('image/png');
-        const downloadLink = document.createElement('a');
-        downloadLink.href = pngUrl;
-        downloadLink.download = `wheel-poster-english-${wheelId}.png`;
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-        URL.revokeObjectURL(svgUrl);
-      };
+      // Draw the template image
+      ctx.drawImage(templateImg, 0, 0);
       
-      img.src = svgUrl;
-    }
+      // Get QR code image
+      const qrCodeDataUrl = await getQRCodeImage();
+      if (qrCodeDataUrl) {
+        const qrImg = new Image();
+        qrImg.onload = () => {
+          // Draw QR code below the PLAY button
+          // Adjusted position based on your feedback - more to the right
+          const qrSize = templateImg.width * 0.22; // QR code size
+          
+          // Position the QR code more to the right, below the PLAY button
+          // Based on the image, PLAY button is around 60% from the left
+          // Moving further to the right as requested
+          const qrX = templateImg.width * 0.72 - qrSize / 2; // Moved further right (from 0.6 to 0.67)
+          const qrY = templateImg.height * 0.78; // Position below the PLAY button
+          
+          ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
+          
+          // Add logo at the top if available
+          if (logoPreview) {
+            const logoImg = new Image();
+            logoImg.crossOrigin = "Anonymous";
+            logoImg.onload = () => {
+              // Draw logo near the top (position based on the template)
+              // The logo should go above the "Spin now" text
+              const logoMaxWidth = templateImg.width * 0.3; // Maximum logo width
+              const logoMaxHeight = templateImg.height * 0.1; // Maximum logo height
+              
+              // Calculate logo dimensions while preserving aspect ratio
+              const logoAspect = logoImg.width / logoImg.height;
+              let logoWidth, logoHeight;
+              
+              if (logoAspect > 1) {
+                // Wider logo
+                logoWidth = Math.min(logoMaxWidth, logoImg.width);
+                logoHeight = logoWidth / logoAspect;
+              } else {
+                // Taller logo
+                logoHeight = Math.min(logoMaxHeight, logoImg.height);
+                logoWidth = logoHeight * logoAspect;
+              }
+              
+              // Position logo near the top center, above the main text
+              const logoX = (templateImg.width - logoWidth) / 2;
+              const logoY = templateImg.height * 0.05; // 5% from the top
+              
+              ctx.drawImage(logoImg, logoX, logoY, logoWidth, logoHeight);
+              
+              // Generate PDF
+              generatePDF(canvas, 'English');
+            };
+            logoImg.onerror = () => {
+              toast.error("Failed to load logo image");
+              // Still generate PDF without logo
+              generatePDF(canvas, 'English');
+              setIsLoading(false);
+            };
+            logoImg.src = logoPreview;
+          } else {
+            // No logo, proceed directly to PDF generation
+            generatePDF(canvas, 'English');
+          }
+        };
+        qrImg.onerror = () => {
+          toast.error("Failed to load QR code image");
+          setIsLoading(false);
+        };
+        qrImg.src = qrCodeDataUrl;
+      }
+    };
+    templateImg.onerror = () => {
+      toast.error("Failed to load the English poster template");
+      setIsLoading(false);
+    };
+    templateImg.src = '/English Poster.png'; // Path to the template in public folder
   };
   
   const downloadFrenchPoster = () => {
     if (!wheelId) return;
     
-    // Create a poster with the QR code
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+    setIsLoading(true);
+    toast.info("Préparation de votre affiche...");
     
-    // Set poster dimensions (8.5x11 inches at 96 DPI)
-    canvas.width = 816;  // 8.5 inches * 96 DPI
-    canvas.height = 1056; // 11 inches * 96 DPI
+    // Get QR code as image
+    const getQRCodeImage = () => {
+      return new Promise((resolve) => {
+        const svgElement = document.getElementById('wheel-qr-code');
+        if (svgElement) {
+          const svgData = new XMLSerializer().serializeToString(svgElement);
+          const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+          const svgUrl = URL.createObjectURL(svgBlob);
+          
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0);
+            resolve(canvas.toDataURL('image/png'));
+            URL.revokeObjectURL(svgUrl);
+          };
+          img.src = svgUrl;
+        } else {
+          resolve(null);
+        }
+      });
+    };
     
-    // Fill background
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Add header
-    ctx.fillStyle = '#4338ca'; // indigo color
-    ctx.fillRect(0, 0, canvas.width, 120);
-    
-    // Add headline text
-    ctx.font = 'bold 48px Arial';
-    ctx.fillStyle = 'white';
-    ctx.textAlign = 'center';
-    ctx.fillText('TOURNEZ & GAGNEZ', canvas.width / 2, 75);
-    
-    // Draw QR code (we'll use the QRCode library to create an image)
-    const svgElement = document.getElementById('wheel-qr-code');
-    if (svgElement) {
-      const svgData = new XMLSerializer().serializeToString(svgElement);
-      const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-      const svgUrl = URL.createObjectURL(svgBlob);
+    // Load the template poster
+    const templateImg = new Image();
+    templateImg.crossOrigin = "Anonymous"; // Handle CORS if needed
+    templateImg.onload = async () => {
+      // Create canvas for composite image
+      const canvas = document.createElement('canvas');
+      canvas.width = templateImg.width;
+      canvas.height = templateImg.height;
+      const ctx = canvas.getContext('2d');
       
-      const img = new Image();
-      img.onload = () => {
-        // Draw QR code centered
-        const qrSize = 300;
-        ctx.drawImage(img, (canvas.width - qrSize) / 2, 220, qrSize, qrSize);
-        
-        // Add instructions
-        ctx.font = 'bold 36px Arial';
-        ctx.fillStyle = '#1f2937';
-        ctx.textAlign = 'center';
-        ctx.fillText('Scannez pour jouer!', canvas.width / 2, 580);
-        
-        // Add call to action
-        ctx.font = '24px Arial';
-        ctx.fillStyle = '#4b5563';
-        ctx.fillText('Laissez un avis et tournez la roue', canvas.width / 2, 630);
-        ctx.fillText('pour gagner des prix incroyables!', canvas.width / 2, 665);
-        
-        // Add website URL
-        ctx.font = 'bold 20px Arial';
-        ctx.fillStyle = '#6b7280';
-        ctx.fillText(getQrCodeUrl(), canvas.width / 2, 720);
-        
-        // Add footer
-        ctx.fillStyle = '#4338ca'; // indigo color
-        ctx.fillRect(0, canvas.height - 80, canvas.width, 80);
-        
-        // Add footer text
-        ctx.font = '20px Arial';
-        ctx.fillStyle = 'white';
-        ctx.textAlign = 'center';
-        ctx.fillText('Merci pour votre soutien!', canvas.width / 2, canvas.height - 40);
-        
-        // Convert to PNG and download
-        const pngUrl = canvas.toDataURL('image/png');
-        const downloadLink = document.createElement('a');
-        downloadLink.href = pngUrl;
-        downloadLink.download = `wheel-poster-french-${wheelId}.png`;
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-        URL.revokeObjectURL(svgUrl);
-      };
+      // Draw the template image
+      ctx.drawImage(templateImg, 0, 0);
       
-      img.src = svgUrl;
+      // Get QR code image
+      const qrCodeDataUrl = await getQRCodeImage();
+      if (qrCodeDataUrl) {
+        const qrImg = new Image();
+        qrImg.onload = () => {
+          // Draw QR code below the PLAY button
+          // Adjusted position based on your feedback - more to the right
+          const qrSize = templateImg.width * 0.22; // QR code size
+          
+          // Position the QR code more to the right, below the PLAY button
+          // Based on the image, PLAY button is around 60% from the left
+          // Moving further to the right as requested
+          const qrX = templateImg.width * 0.72 - qrSize / 2; // Moved further right (from 0.6 to 0.67)
+          const qrY = templateImg.height * 0.78; // Position below the PLAY button
+          
+          ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
+          
+          // Add logo at the top if available
+          if (logoPreview) {
+            const logoImg = new Image();
+            logoImg.crossOrigin = "Anonymous";
+            logoImg.onload = () => {
+              // Draw logo near the top (position based on the template)
+              // The logo should go above the "Spin now" text
+              const logoMaxWidth = templateImg.width * 0.3; // Maximum logo width
+              const logoMaxHeight = templateImg.height * 0.1; // Maximum logo height
+              
+              // Calculate logo dimensions while preserving aspect ratio
+              const logoAspect = logoImg.width / logoImg.height;
+              let logoWidth, logoHeight;
+              
+              if (logoAspect > 1) {
+                // Wider logo
+                logoWidth = Math.min(logoMaxWidth, logoImg.width);
+                logoHeight = logoWidth / logoAspect;
+              } else {
+                // Taller logo
+                logoHeight = Math.min(logoMaxHeight, logoImg.height);
+                logoWidth = logoHeight * logoAspect;
+              }
+              
+              // Position logo near the top center, above the main text
+              const logoX = (templateImg.width - logoWidth) / 2;
+              const logoY = templateImg.height * 0.05; // 5% from the top
+              
+              ctx.drawImage(logoImg, logoX, logoY, logoWidth, logoHeight);
+              
+              // Generate PDF
+              generatePDF(canvas, 'French');
+            };
+            logoImg.onerror = () => {
+              toast.error("Failed to load logo image");
+              // Still generate PDF without logo
+              generatePDF(canvas, 'French');
+              setIsLoading(false);
+            };
+            logoImg.src = logoPreview;
+          } else {
+            // No logo, proceed directly to PDF generation
+            generatePDF(canvas, 'French');
+          }
+        };
+        qrImg.onerror = () => {
+          toast.error("Failed to load QR code image");
+          setIsLoading(false);
+        };
+        qrImg.src = qrCodeDataUrl;
+      }
+    };
+    templateImg.onerror = () => {
+      toast.error("Failed to load the French poster template");
+      setIsLoading(false);
+    };
+    templateImg.src = '/French Poster.png'; // Path to the template in public folder
+  };
+  
+  // Generate PDF from canvas
+  const generatePDF = (canvas, language) => {
+    try {
+      // Get canvas data as image
+      const imgData = canvas.toDataURL('image/png');
+      
+      // Calculate PDF dimensions for A4 paper
+      const pdfWidth = 210; // A4 width in mm
+      const pdfHeight = 297; // A4 height in mm
+      
+      // Calculate image dimensions to fit A4
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const ratio = imgWidth / imgHeight;
+      
+      let finalWidth, finalHeight;
+      if (ratio > pdfWidth / pdfHeight) {
+        // Image is wider than A4 ratio
+        finalWidth = pdfWidth;
+        finalHeight = pdfWidth / ratio;
+      } else {
+        // Image is taller than A4 ratio
+        finalHeight = pdfHeight;
+        finalWidth = pdfHeight * ratio;
+      }
+      
+      // Center the image on the page
+      const xOffset = (pdfWidth - finalWidth) / 2;
+      const yOffset = (pdfHeight - finalHeight) / 2;
+      
+      // Create PDF with A4 size
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+      
+      // Add the image to the PDF, centered
+      pdf.addImage(imgData, 'PNG', xOffset, yOffset, finalWidth, finalHeight);
+      
+      // Save the PDF
+      pdf.save(`wheel-poster-${language.toLowerCase()}-${wheelId}.pdf`);
+      
+      toast.success(`${language} poster has been downloaded as PDF`);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      toast.error('Error generating PDF. Downloading as image instead.');
+      
+      // Fallback to PNG download
+      const pngUrl = canvas.toDataURL('image/png');
+      const downloadLink = document.createElement('a');
+      downloadLink.href = pngUrl;
+      downloadLink.download = `wheel-poster-${language.toLowerCase()}-${wheelId}.png`;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    } finally {
+      setIsLoading(false);
     }
   };
 
