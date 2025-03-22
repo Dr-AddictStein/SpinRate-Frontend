@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Check, Info, Upload, Copy, Download, Grid } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { QRCodeSVG } from 'qrcode.react';
 import GamePreviewModal from './Component/GamePreviewModal';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import wheelApi from './API/wheelApi.js';
@@ -199,6 +200,233 @@ const WheelGameDashboard = () => {
       toast.error(error.message || "Failed to save wheel");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // Generate QR code URL
+  const getQrCodeUrl = () => {
+    if (!wheelId) return '';
+    return `http://localhost:5173/wheelGame/${wheelId}`;
+  };
+
+  // Download QR code as SVG
+  const downloadQRCodeAsSVG = () => {
+    if (!wheelId) return;
+    
+    const svgElement = document.getElementById('wheel-qr-code');
+    if (svgElement) {
+      const svgData = new XMLSerializer().serializeToString(svgElement);
+      const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+      const svgUrl = URL.createObjectURL(svgBlob);
+      
+      const downloadLink = document.createElement('a');
+      downloadLink.href = svgUrl;
+      downloadLink.download = `wheel-qr-code-${wheelId}.svg`;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+      URL.revokeObjectURL(svgUrl);
+    }
+  };
+
+  // Download QR code as PNG
+  const downloadQRCodeAsPNG = () => {
+    if (!wheelId) return;
+    
+    const svgElement = document.getElementById('wheel-qr-code');
+    if (svgElement) {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      
+      // Create an image from the SVG
+      const img = new Image();
+      const svgData = new XMLSerializer().serializeToString(svgElement);
+      const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+      const svgUrl = URL.createObjectURL(svgBlob);
+      
+      img.onload = () => {
+        // Set canvas dimensions
+        canvas.width = img.width * 2;  // Scale up for better quality
+        canvas.height = img.height * 2;
+        
+        // Draw white background and the image
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        
+        // Convert to PNG and download
+        const pngUrl = canvas.toDataURL('image/png');
+        const downloadLink = document.createElement('a');
+        downloadLink.href = pngUrl;
+        downloadLink.download = `wheel-qr-code-${wheelId}.png`;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        URL.revokeObjectURL(svgUrl);
+      };
+      
+      img.src = svgUrl;
+    }
+  };
+
+  // Download poster functions
+  const downloadEnglishPoster = () => {
+    if (!wheelId) return;
+    
+    // Create a poster with the QR code
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Set poster dimensions (8.5x11 inches at 96 DPI)
+    canvas.width = 816;  // 8.5 inches * 96 DPI
+    canvas.height = 1056; // 11 inches * 96 DPI
+    
+    // Fill background
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Add header
+    ctx.fillStyle = '#4338ca'; // indigo color
+    ctx.fillRect(0, 0, canvas.width, 120);
+    
+    // Add headline text
+    ctx.font = 'bold 48px Arial';
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'center';
+    ctx.fillText('SPIN & WIN', canvas.width / 2, 75);
+    
+    // Draw QR code (we'll use the QRCode library to create an image)
+    const svgElement = document.getElementById('wheel-qr-code');
+    if (svgElement) {
+      const svgData = new XMLSerializer().serializeToString(svgElement);
+      const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+      const svgUrl = URL.createObjectURL(svgBlob);
+      
+      const img = new Image();
+      img.onload = () => {
+        // Draw QR code centered
+        const qrSize = 300;
+        ctx.drawImage(img, (canvas.width - qrSize) / 2, 220, qrSize, qrSize);
+        
+        // Add instructions
+        ctx.font = 'bold 36px Arial';
+        ctx.fillStyle = '#1f2937';
+        ctx.textAlign = 'center';
+        ctx.fillText('Scan to Play!', canvas.width / 2, 580);
+        
+        // Add call to action
+        ctx.font = '24px Arial';
+        ctx.fillStyle = '#4b5563';
+        ctx.fillText('Leave a review and spin the wheel', canvas.width / 2, 630);
+        ctx.fillText('for a chance to win amazing prizes!', canvas.width / 2, 665);
+        
+        // Add website URL
+        ctx.font = 'bold 20px Arial';
+        ctx.fillStyle = '#6b7280';
+        ctx.fillText(getQrCodeUrl(), canvas.width / 2, 720);
+        
+        // Add footer
+        ctx.fillStyle = '#4338ca'; // indigo color
+        ctx.fillRect(0, canvas.height - 80, canvas.width, 80);
+        
+        // Add footer text
+        ctx.font = '20px Arial';
+        ctx.fillStyle = 'white';
+        ctx.textAlign = 'center';
+        ctx.fillText('Thank you for your support!', canvas.width / 2, canvas.height - 40);
+        
+        // Convert to PNG and download
+        const pngUrl = canvas.toDataURL('image/png');
+        const downloadLink = document.createElement('a');
+        downloadLink.href = pngUrl;
+        downloadLink.download = `wheel-poster-english-${wheelId}.png`;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        URL.revokeObjectURL(svgUrl);
+      };
+      
+      img.src = svgUrl;
+    }
+  };
+  
+  const downloadFrenchPoster = () => {
+    if (!wheelId) return;
+    
+    // Create a poster with the QR code
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Set poster dimensions (8.5x11 inches at 96 DPI)
+    canvas.width = 816;  // 8.5 inches * 96 DPI
+    canvas.height = 1056; // 11 inches * 96 DPI
+    
+    // Fill background
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Add header
+    ctx.fillStyle = '#4338ca'; // indigo color
+    ctx.fillRect(0, 0, canvas.width, 120);
+    
+    // Add headline text
+    ctx.font = 'bold 48px Arial';
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'center';
+    ctx.fillText('TOURNEZ & GAGNEZ', canvas.width / 2, 75);
+    
+    // Draw QR code (we'll use the QRCode library to create an image)
+    const svgElement = document.getElementById('wheel-qr-code');
+    if (svgElement) {
+      const svgData = new XMLSerializer().serializeToString(svgElement);
+      const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+      const svgUrl = URL.createObjectURL(svgBlob);
+      
+      const img = new Image();
+      img.onload = () => {
+        // Draw QR code centered
+        const qrSize = 300;
+        ctx.drawImage(img, (canvas.width - qrSize) / 2, 220, qrSize, qrSize);
+        
+        // Add instructions
+        ctx.font = 'bold 36px Arial';
+        ctx.fillStyle = '#1f2937';
+        ctx.textAlign = 'center';
+        ctx.fillText('Scannez pour jouer!', canvas.width / 2, 580);
+        
+        // Add call to action
+        ctx.font = '24px Arial';
+        ctx.fillStyle = '#4b5563';
+        ctx.fillText('Laissez un avis et tournez la roue', canvas.width / 2, 630);
+        ctx.fillText('pour gagner des prix incroyables!', canvas.width / 2, 665);
+        
+        // Add website URL
+        ctx.font = 'bold 20px Arial';
+        ctx.fillStyle = '#6b7280';
+        ctx.fillText(getQrCodeUrl(), canvas.width / 2, 720);
+        
+        // Add footer
+        ctx.fillStyle = '#4338ca'; // indigo color
+        ctx.fillRect(0, canvas.height - 80, canvas.width, 80);
+        
+        // Add footer text
+        ctx.font = '20px Arial';
+        ctx.fillStyle = 'white';
+        ctx.textAlign = 'center';
+        ctx.fillText('Merci pour votre soutien!', canvas.width / 2, canvas.height - 40);
+        
+        // Convert to PNG and download
+        const pngUrl = canvas.toDataURL('image/png');
+        const downloadLink = document.createElement('a');
+        downloadLink.href = pngUrl;
+        downloadLink.download = `wheel-poster-french-${wheelId}.png`;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        URL.revokeObjectURL(svgUrl);
+      };
+      
+      img.src = svgUrl;
     }
   };
 
@@ -641,9 +869,38 @@ const WheelGameDashboard = () => {
                   transition={{ duration: 0.3, delay: 0.2 }}
                   whileHover={{ y: -5, boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}
                 >
-                  {/* QR code would go here - placeholder for now */}
-                  <img src="/api/placeholder/140/140" alt="QR Code" className="w-32 h-32" />
+                  {wheelId ? (
+                    <QRCodeSVG
+                      id="wheel-qr-code"
+                      value={getQrCodeUrl()}
+                      size={128}
+                      level="H"
+                      includeMargin={true}
+                      imageSettings={{
+                        src: logoPreview || '',
+                        x: undefined,
+                        y: undefined,
+                        height: 24,
+                        width: 24,
+                        excavate: true,
+                      }}
+                    />
+                  ) : (
+                    <div className="text-gray-400 text-center">
+                      <div className="text-3xl mb-2">🎮</div>
+                      <div className="text-sm">Save wheel to generate QR code</div>
+                    </div>
+                  )}
                 </motion.div>
+                
+                {wheelId && (
+                  <div className="text-center">
+                    <div className="text-sm font-medium text-gray-600 mb-1">Scan to Play</div>
+                    <div className="text-xs text-gray-500 break-all max-w-[200px]">
+                      {getQrCodeUrl()}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <motion.div
@@ -659,7 +916,8 @@ const WheelGameDashboard = () => {
                       className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg flex items-center justify-center space-x-2 shadow-md"
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
-                      disabled={isLoading}
+                      onClick={downloadQRCodeAsSVG}
+                      disabled={isLoading || !wheelId}
                     >
                       <Download className="w-4 h-4" />
                       <span>Download SVG</span>
@@ -668,7 +926,8 @@ const WheelGameDashboard = () => {
                       className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg flex items-center justify-center space-x-2 shadow-md"
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
-                      disabled={isLoading}
+                      onClick={downloadQRCodeAsPNG}
+                      disabled={isLoading || !wheelId}
                     >
                       <Download className="w-4 h-4" />
                       <span>Download PNG</span>
@@ -683,7 +942,8 @@ const WheelGameDashboard = () => {
                       className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg flex items-center justify-center space-x-2 shadow-md"
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
-                      disabled={isLoading}
+                      onClick={downloadEnglishPoster}
+                      disabled={isLoading || !wheelId}
                     >
                       <Download className="w-4 h-4" />
                       <span>English Poster</span>
@@ -692,7 +952,8 @@ const WheelGameDashboard = () => {
                       className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg flex items-center justify-center space-x-2 shadow-md"
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
-                      disabled={isLoading}
+                      onClick={downloadFrenchPoster}
+                      disabled={isLoading || !wheelId}
                     >
                       <Download className="w-4 h-4" />
                       <span>French Poster</span>
