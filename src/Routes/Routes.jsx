@@ -7,6 +7,7 @@ import DashboardCustomers from "../Pages/Dashboard/DashboardCustomers";
 import DashboardSubscription from "../Pages/Dashboard/DashboardSubscription"; 
 import DashboardSettings from "../Pages/Dashboard/DashboardSettings";
 import WheelGamePage from "../Pages/Home/WheelGamePage";
+import TermsAndConditions from "../Pages/Home/TermsAndConditions";
 
 // Define your route objects
 const routes = [
@@ -45,6 +46,10 @@ const routes = [
   {
     path: "/wheelGame/:id",
     element: <WheelGamePage />,
+  },
+  {
+    path: "/terms-and-conditions",
+    element: <TermsAndConditions />,
   },
 ];
 
