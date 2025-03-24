@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -9,6 +9,7 @@ const API_URL = 'https://spin-rate-backend.vercel.app/api';
 
 const WheelGamePage = () => {
   const { id } = useParams(); // Get wheel ID from URL
+  const navigate = useNavigate(); // Add navigate for redirection
   const [wheel, setWheel] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -468,26 +469,43 @@ const WheelGamePage = () => {
       if (id && result) {
         // Prepare the user data
         const userData = {
-          wheelId: id,
-          prize: result.name,
-          promoCode: result.promoCode || '',
           email: userInfo.email,
           phone: userInfo.phone,
-          timestamp: new Date().toISOString()
+          wheelId: id,
+          prize: result.name || 'No Prize' // Send the prize name to the backend
         };
         
-        // Send data to the API
-        await axios.post(`${API_URL}/customer/addCustomer`, userData);
+        // Send data to the local API endpoint
+        const response = await axios.post('https://spin-rate-backend.vercel.app/api/customer/create', userData);
         
-        // Show success message
-        toast.success('Your information has been submitted!');
+        if (response.data && response.data.customer) {
+          // Show success message
+          toast.success('Thank you! Your information has been submitted successfully.');
+          
+          // Close the modal
+          setShowUserInfoModal(false);
+          
+          // Navigate to landing page after a short delay
+          setTimeout(() => {
+            navigate('/');
+          }, 1500);
+        }
+      } else {
+        // If no result is available, show an error
+        toast.error('No prize information available. Please try spinning the wheel again.');
       }
     } catch (err) {
       console.error('Error submitting user info:', err);
-      toast.error('Failed to submit your information. Please try again.');
-    } finally {
-      // Close the modal regardless of success/failure
-      setShowUserInfoModal(false);
+      
+      // Display specific error message from backend if available
+      if (err.response && err.response.data && err.response.data.error) {
+        toast.error(`Error: ${err.response.data.error}`);
+      } else {
+        toast.error('Failed to submit your information. Please try again.');
+      }
+      
+      // Keep the modal open if there's an error
+      // so the user can try again or correct their info
     }
   };
   
