@@ -27,7 +27,7 @@ const routes = [
     children: [
       {
         path: "",
-        element: <DashboardHome />,
+        element: <DashboardCustomers />,
       },
       {
         path: "customers",

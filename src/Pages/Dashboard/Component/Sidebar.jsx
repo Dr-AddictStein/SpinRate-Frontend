@@ -115,7 +115,6 @@ const Sidebar = ({ collapsed = false, toggleSidebar }) => {
 
     // Define all menu items with their paths
     const menuItems = [
-        { text: "Analytics", icon: BarChart, path: "/dashboard", badge: false },
         { text: "Customers", icon: UserRound, path: "/dashboard/customers", badge: false },
         { text: "Settings", icon: Settings, path: "/dashboard/settings" },
         { text: "Subscription", icon: Wallet2, path: "/dashboard/subscription", badge: false },
