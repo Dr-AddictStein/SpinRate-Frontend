@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { CheckCircle, XCircle, MoreVertical, Check, X, Trash2, Gift, User, Calendar, Mail, Phone, Award, UserPlus, Eye } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { useAuthContext } from '../../context/AuthContext';
+import { useAuthContext } from '../../hooks/useAuthContext';
 const DashboardCustomers = () => {
   const {user} = useAuthContext();
   const [customers, setCustomers] = useState([]);
