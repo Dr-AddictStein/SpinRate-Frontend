@@ -2,8 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { CheckCircle, XCircle, MoreVertical, Check, X, Trash2, Gift, User, Calendar, Mail, Phone, Award, UserPlus, Eye } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-
+import { useAuthContext } from '../../context/AuthContext';
 const DashboardCustomers = () => {
+  const {user} = useAuthContext();
   const [customers, setCustomers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -38,7 +39,7 @@ const DashboardCustomers = () => {
   const fetchCustomers = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get('https://spin-rate-backend.vercel.app/api/customer/getCustomerByUserId/67dddcc1ead1e965b87a9c94');
+      const response = await axios.get(`https://spin-rate-backend.vercel.app/api/customer/getCustomerByUserId/${user?.user?._id}`);
 
       if (response.data && response.data.customers) {
         setCustomers(response.data.customers);
@@ -56,8 +57,10 @@ const DashboardCustomers = () => {
   };
   
   useEffect(() => {
-    fetchCustomers();
-  }, []);
+    if (user?.user?._id) {
+      fetchCustomers();
+    }
+  }, [user?.user?._id]);
 
   // Format date to DD-MM-YYYY
   const formatDate = (dateString) => {
