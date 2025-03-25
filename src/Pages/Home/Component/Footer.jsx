@@ -1,8 +1,11 @@
 import React from "react";
 import { Facebook, Twitter, Linkedin } from "lucide-react";
 import logo from "../../../assets/Design_sans_titre__10_-ai-brush-removebg-5gtqgd1e.png";
+import { useTranslation } from "../../../hooks/useTranslation";
 
 const Footer = () => {
+    const { t } = useTranslation();
+    
     return (
         <footer className="bg-white py-16 border-t border-gray-100">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -15,7 +18,7 @@ const Footer = () => {
                             className="h-20 md:h-28 w-auto object-contain transition-transform duration-300 hover:scale-105 -my-2"
                         />
                         <p className="text-gray-600 mb-6">
-                            Duis cursus, mi quis viverra ornare, eros dolor interdum nulla utimp erdiet commodo diam libero vitae nibh et jus cursus id rutrum lore imperdiet ut sem vitae risus tristique posuere
+                            {t('footerText')}
                         </p>
                         <div className="flex space-x-4 mt-4">
                             <a
@@ -59,36 +62,36 @@ const Footer = () => {
 
                     {/* Company Links */}
                     <div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-6">Company</h3>
+                        <h3 className="text-xl font-bold text-gray-900 mb-6">{t('company')}</h3>
                         <ul className="space-y-4">
                             <li>
                                 <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
                                     <span className="text-blue-500 mr-2">›</span>
-                                    About Us
+                                    {t('aboutUs')}
                                 </a>
                             </li>
                             <li>
                                 <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
                                     <span className="text-blue-500 mr-2">›</span>
-                                    Blog
+                                    {t('blog')}
                                 </a>
                             </li>
                             <li>
                                 <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
                                     <span className="text-blue-500 mr-2">›</span>
-                                    Our Team
+                                    {t('ourTeam')}
                                 </a>
                             </li>
                             <li>
                                 <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
                                     <span className="text-blue-500 mr-2">›</span>
-                                    Services
+                                    {t('services')}
                                 </a>
                             </li>
                             <li>
                                 <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
                                     <span className="text-blue-500 mr-2">›</span>
-                                    Contact Us
+                                    {t('contactUs')}
                                 </a>
                             </li>
                         </ul>
@@ -96,36 +99,36 @@ const Footer = () => {
 
                     {/* Useful Links */}
                     <div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-6">Useful Links</h3>
+                        <h3 className="text-xl font-bold text-gray-900 mb-6">{t('usefulLinks')}</h3>
                         <ul className="space-y-4">
                             <li>
                                 <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
                                     <span className="text-blue-500 mr-2">›</span>
-                                    Pricing
+                                    {t('pricing')}
                                 </a>
                             </li>
                             <li>
                                 <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
                                     <span className="text-blue-500 mr-2">›</span>
-                                    App Download
+                                    {t('appDownload')}
                                 </a>
                             </li>
                             <li>
                                 <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
                                     <span className="text-blue-500 mr-2">›</span>
-                                    How It Works
+                                    {t('howItWorks')}
                                 </a>
                             </li>
                             <li>
                                 <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
                                     <span className="text-blue-500 mr-2">›</span>
-                                    Terms & Conditions
+                                    {t('termsAndConditions')}
                                 </a>
                             </li>
                             <li>
                                 <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
                                     <span className="text-blue-500 mr-2">›</span>
-                                    Privacy Policy
+                                    {t('privacyPolicy')}
                                 </a>
                             </li>
                         </ul>
@@ -133,7 +136,7 @@ const Footer = () => {
 
                     {/* Download Link */}
                     <div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-6">Download Link</h3>
+                        <h3 className="text-xl font-bold text-gray-900 mb-6">{t('downloadLink')}</h3>
                         <div className="space-y-4">
                             <a href="#" className="block">
                                 <img
@@ -157,7 +160,7 @@ const Footer = () => {
             {/* Copyright Bar */}
             <div className="border-t border-gray-200 mt-12 pt-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-600">
-                    <p>© Klane is Proudly Owned by <a href="#" className="text-blue-500 hover:underline">HiboTheme</a></p>
+                    <p>{t('copyright')} <a href="#" className="text-blue-500 hover:underline">HiboTheme</a></p>
                 </div>
             </div>
         </footer>

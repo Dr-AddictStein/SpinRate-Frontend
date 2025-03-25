@@ -6,11 +6,14 @@ import './widerLayout.css'
 import { RouterProvider } from 'react-router-dom'
 import { router } from './Routes/Routes'
 import { AuthContextProvider } from './context/AuthContext'
+import { LanguageProvider } from './context/LanguageContext'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthContextProvider>
-      <RouterProvider router={router} />
+      <LanguageProvider>
+        <RouterProvider router={router} />
+      </LanguageProvider>
     </AuthContextProvider>
   </StrictMode>,
 )

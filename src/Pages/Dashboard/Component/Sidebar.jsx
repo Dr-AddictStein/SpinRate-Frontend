@@ -30,10 +30,13 @@ import { useAuthContext } from '../../../hooks/useAuthContext';
 import { useLogout } from '../../../hooks/useLogout';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import logo from '../../../assets/Design_sans_titre__10_-ai-brush-removebg-5gtqgd1e.png';
+import { useTranslation } from '../../../hooks/useTranslation';
 
-const MenuItem = ({ icon: Icon, text, path, active, collapsed, badge, onClick }) => {
+const MenuItem = ({ icon: Icon, text, translationKey, path, active, collapsed, badge, onClick }) => {
     const navigate = useNavigate();
     const { logout } = useLogout();
+    const { t } = useTranslation();
+    const displayText = translationKey ? t(translationKey) : text;
 
     const handleClick = () => {
         if (onClick) {
@@ -41,7 +44,7 @@ const MenuItem = ({ icon: Icon, text, path, active, collapsed, badge, onClick })
             return;
         }
         
-        if (text === "Sign Out") {
+        if (translationKey === "logout") {
             logout();
         } else if (path) {
             navigate(path);
@@ -68,7 +71,7 @@ const MenuItem = ({ icon: Icon, text, path, active, collapsed, badge, onClick })
             
             {!collapsed && (
                 <span className={`ml-2 text-sm transition-opacity duration-200 ${active ? 'text-blue-700' : 'text-gray-700'}`}>
-                    {text}
+                    {displayText}
                 </span>
             )}
         </motion.div>
@@ -77,6 +80,7 @@ const MenuItem = ({ icon: Icon, text, path, active, collapsed, badge, onClick })
 
 const SearchBox = ({ collapsed }) => {
     const [isExpanded, setIsExpanded] = useState(false);
+    const { t } = useTranslation();
     
     if (collapsed && !isExpanded) {
         return (
@@ -96,7 +100,7 @@ const SearchBox = ({ collapsed }) => {
             <div className="relative">
                 <input 
                     type="text" 
-                    placeholder="Search..." 
+                    placeholder={t('search')}
                     className="w-full pl-8 pr-3 py-1.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm"
                     autoFocus={collapsed && isExpanded}
                     onBlur={() => collapsed && setIsExpanded(false)}
@@ -112,12 +116,13 @@ const Sidebar = ({ collapsed = false, toggleSidebar }) => {
     const { logout } = useLogout();
     const location = useLocation();
     const currentPath = location.pathname;
+    const { t } = useTranslation();
 
     // Define all menu items with their paths
     const menuItems = [
-        { text: "Customers", icon: UserRound, path: "/dashboard/customers", badge: false },
-        { text: "Settings", icon: Settings, path: "/dashboard/settings" },
-        { text: "Subscription", icon: Wallet2, path: "/dashboard/subscription", badge: false },
+        { translationKey: "customers", icon: UserRound, path: "/dashboard/customers", badge: false },
+        { translationKey: "settings", icon: Settings, path: "/dashboard/settings" },
+        { translationKey: "subscription", icon: Wallet2, path: "/dashboard/subscription", badge: false },
     ];
 
     // Helper function to check if a path is active
@@ -189,9 +194,9 @@ const Sidebar = ({ collapsed = false, toggleSidebar }) => {
             <div className={`mt-1 flex-grow overflow-y-auto ${collapsed ? 'px-2' : 'px-4'}`}>
                 {menuItems.map(item => (
                     <MenuItem
-                        key={item.text}
+                        key={item.translationKey}
                         icon={item.icon}
-                        text={item.text}
+                        translationKey={item.translationKey}
                         path={item.path}
                         active={isActive(item.path)}
                         collapsed={collapsed}
@@ -204,7 +209,7 @@ const Sidebar = ({ collapsed = false, toggleSidebar }) => {
             <div className={`${collapsed ? 'px-2' : 'px-4'} py-4 border-t border-gray-100`}>
                 <MenuItem
                     icon={LogOut}
-                    text="Sign Out"
+                    translationKey="logout"
                     path={null}
                     active={false}
                     collapsed={collapsed}

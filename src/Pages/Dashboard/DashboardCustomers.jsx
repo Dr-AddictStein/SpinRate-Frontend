@@ -3,8 +3,11 @@ import { CheckCircle, XCircle, MoreVertical, Check, X, Trash2, Gift, User, Calen
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useAuthContext } from '../../hooks/useAuthContext';
+import { useTranslation } from '../../hooks/useTranslation';
+
 const DashboardCustomers = () => {
-  const {user} = useAuthContext();
+  const { user } = useAuthContext();
+  const { t } = useTranslation();
   const [customers, setCustomers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -223,7 +226,7 @@ const DashboardCustomers = () => {
       <div className="flex justify-center items-center h-screen bg-gray-50">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-xl font-medium text-gray-700">Loading customer data...</p>
+          <p className="text-xl font-medium text-gray-700">{t('loading')}</p>
         </div>
       </div>
     );
@@ -235,7 +238,7 @@ const DashboardCustomers = () => {
         <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded shadow-md" role="alert">
           <div className="flex items-center">
             <X className="h-6 w-6 mr-3" />
-            <p><strong className="font-bold">Error! </strong> {error}</p>
+            <p><strong className="font-bold">{t('errorMessage')} </strong> {error}</p>
           </div>
         </div>
       </div>
@@ -249,17 +252,17 @@ const DashboardCustomers = () => {
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Customer Management</h1>
-              <p className="mt-2 text-sm text-gray-500">Manage your wheel game participants and their prizes</p>
+              <h1 className="text-3xl font-bold text-gray-900">{t('customerManagement')}</h1>
+              <p className="mt-2 text-sm text-gray-500">{t('manageParticipants')}</p>
             </div>
             <div className="bg-white px-4 py-2 rounded-lg shadow-sm flex items-center">
-              <span className="text-gray-700 font-medium">Total Customers: </span>
+              <span className="text-gray-700 font-medium">{t('totalCustomers')}: </span>
               <span className="text-indigo-600 font-bold mr-4">{customers.length}</span>
               <button
                 onClick={handleExportCSV}
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
-                Export to CSV
+                {t('exportToCSV')}
               </button>
             </div>
           </div>
@@ -269,14 +272,14 @@ const DashboardCustomers = () => {
         <div className="flex space-x-4 mb-4">
           <input
             type="text"
-            placeholder="Search by Email"
+            placeholder={t('searchByEmail')}
             value={searchEmail}
             onChange={(e) => setSearchEmail(e.target.value)}
             className="border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
           <input
             type="text"
-            placeholder="Search by Phone"
+            placeholder={t('searchByPhone')}
             value={searchPhone}
             onChange={(e) => setSearchPhone(e.target.value)}
             className="border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -286,7 +289,7 @@ const DashboardCustomers = () => {
         {/* Pagination Controls */}
         <div className="flex justify-between items-center mt-4">
           <div className="flex items-center space-x-2">
-            <span>Rows per page:</span>
+            <span>{t('rowsPerPage')}:</span>
             <select
               value={rowsPerPage}
               onChange={(e) => setRowsPerPage(Number(e.target.value))}
@@ -303,15 +306,15 @@ const DashboardCustomers = () => {
               disabled={currentPage === 1}
               className="text-gray-500 hover:text-indigo-600 focus:outline-none"
             >
-              Previous
+              {t('previous')}
             </button>
-            <span>Page {currentPage} of {totalPages}</span>
+            <span>{t('page')} {currentPage} {t('of')} {totalPages}</span>
             <button
               onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
               className="text-gray-500 hover:text-indigo-600 focus:outline-none"
             >
-              Next
+              {t('next')}
             </button>
           </div>
         </div>
@@ -321,8 +324,8 @@ const DashboardCustomers = () => {
           <div className="bg-white rounded-xl shadow-md p-6 text-center">
             <div className="flex flex-col items-center justify-center py-12">
               <User className="h-16 w-16 text-gray-300 mb-4" />
-              <h3 className="text-xl font-medium text-gray-900">No customers found</h3>
-              <p className="mt-2 text-gray-500">No customer data is available at this time.</p>
+              <h3 className="text-xl font-medium text-gray-900">{t('noCustomersFound')}</h3>
+              <p className="mt-2 text-gray-500">{t('noCustomerData')}</p>
             </div>
           </div>
         ) : (
@@ -334,30 +337,30 @@ const DashboardCustomers = () => {
                     <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       <div className="flex items-center space-x-1">
                         <Calendar className="h-4 w-4" />
-                        <span>Date</span>
+                        <span>{t('date')}</span>
                       </div>
                     </th>
                     <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       <div className="flex items-center space-x-1">
                         <Mail className="h-4 w-4" />
-                        <span>Email</span>
+                        <span>{t('email')}</span>
                       </div>
                     </th>
                     <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       <div className="flex items-center space-x-1">
                         <Phone className="h-4 w-4" />
-                        <span>Phone</span>
+                        <span>{t('phone')}</span>
                       </div>
                     </th>
                     <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       <div className="flex items-center space-x-1">
                         <Award className="h-4 w-4" />
-                        <span>Prize</span>
+                        <span>{t('prize')}</span>
                       </div>
                     </th>
-                    <th scope="col" className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                    <th scope="col" className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Enriched</th>
-                    <th scope="col" className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    <th scope="col" className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">{t('status')}</th>
+                    <th scope="col" className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">{t('enriched')}</th>
+                    <th scope="col" className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">{t('actions')}</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -374,22 +377,22 @@ const DashboardCustomers = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-center">
                         {customer.status ? (
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                            <CheckCircle className="text-green-500 h-4 w-4 mr-1" /> Taken
+                            <CheckCircle className="text-green-500 h-4 w-4 mr-1" /> {t('taken')}
                           </span>
                         ) : (
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                            <XCircle className="text-yellow-500 h-4 w-4 mr-1" /> Pending
+                            <XCircle className="text-yellow-500 h-4 w-4 mr-1" /> {t('pending')}
                           </span>
                         )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-center">
                         {customer.enriched ? (
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                            <CheckCircle className="text-green-500 h-4 w-4 mr-1" /> Yes
+                            <CheckCircle className="text-green-500 h-4 w-4 mr-1" /> {t('yes')}
                           </span>
                         ) : (
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                            <XCircle className="text-gray-500 h-4 w-4 mr-1" /> No
+                            <XCircle className="text-gray-500 h-4 w-4 mr-1" /> {t('no')}
                           </span>
                         )}
                       </td>
@@ -426,7 +429,7 @@ const DashboardCustomers = () => {
                   className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 flex items-center"
                 >
                   <Gift className="h-4 w-4 mr-2" />
-                  Mark Prize as Taken
+                  {t('markPrizeAsTaken')}
                 </button>
               )}
               
@@ -436,7 +439,7 @@ const DashboardCustomers = () => {
                 className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 flex items-center"
               >
                 <Eye className="h-4 w-4 mr-2" />
-                View Details
+                {t('viewDetails')}
               </button>
               
               {/* Enrich Client option - always visible, changes to "Update Client" if already enriched */}
@@ -447,12 +450,12 @@ const DashboardCustomers = () => {
                 {customers.find(c => c._id === activeMenu)?.enriched ? (
                   <>
                     <User className="h-4 w-4 mr-2" />
-                    Update Client Info
+                    {t('updateClientInfo')}
                   </>
                 ) : (
                   <>
                     <UserPlus className="h-4 w-4 mr-2" />
-                    Enrich Client
+                    {t('enrichClient')}
                   </>
                 )}
               </button>
@@ -462,7 +465,7 @@ const DashboardCustomers = () => {
                 className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center"
               >
                 <Trash2 className="h-4 w-4 mr-2" />
-                Delete
+                {t('delete')}
               </button>
             </div>
           </div>
@@ -476,7 +479,7 @@ const DashboardCustomers = () => {
             <div className="bg-indigo-600 px-6 py-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-medium text-white">
-                  {currentCustomer.enriched ? 'Update' : 'Enrich'} Customer Information
+                  {currentCustomer.enriched ? t('updateCustomerInfo') : t('enrichCustomerInfo')}
                 </h3>
                 <button
                   onClick={() => setShowEnrichModal(false)}
@@ -490,13 +493,13 @@ const DashboardCustomers = () => {
             <div className="p-6">
               <div className="mb-4 p-3 bg-indigo-50 rounded-md">
                 <p className="text-sm text-indigo-800">
-                  <span className="font-medium">Email:</span> {currentCustomer.email}
+                  <span className="font-medium">{t('email')}:</span> {currentCustomer.email}
                 </p>
                 <p className="text-sm text-indigo-800">
-                  <span className="font-medium">Phone:</span> {currentCustomer.phone}
+                  <span className="font-medium">{t('phone')}:</span> {currentCustomer.phone}
                 </p>
                 <p className="text-sm text-indigo-800">
-                  <span className="font-medium">Prize:</span> {currentCustomer.prize}
+                  <span className="font-medium">{t('prize')}:</span> {currentCustomer.prize}
                 </p>
               </div>
 
@@ -504,7 +507,7 @@ const DashboardCustomers = () => {
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">First Name</label>
+                      <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">{t('firstName')}</label>
                       <input
                         type="text"
                         id="firstName"
@@ -516,7 +519,7 @@ const DashboardCustomers = () => {
                       />
                     </div>
                     <div>
-                      <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">Last Name</label>
+                      <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">{t('lastName')}</label>
                       <input
                         type="text"
                         id="lastName"
@@ -530,7 +533,7 @@ const DashboardCustomers = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="birthdate" className="block text-sm font-medium text-gray-700">Birthdate</label>
+                    <label htmlFor="birthdate" className="block text-sm font-medium text-gray-700">{t('birthdate')}</label>
                     <input
                       type="date"
                       id="birthdate"
@@ -543,7 +546,7 @@ const DashboardCustomers = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address</label>
+                    <label htmlFor="address" className="block text-sm font-medium text-gray-700">{t('address')}</label>
                     <textarea
                       id="address"
                       name="address"
@@ -562,13 +565,13 @@ const DashboardCustomers = () => {
                     onClick={() => setShowEnrichModal(false)}
                     className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
-                    Cancel
+                    {t('cancel')}
                   </button>
                   <button
                     type="submit"
                     className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
-                    {currentCustomer.enriched ? 'Update' : 'Save'} Information
+                    {currentCustomer.enriched ? t('updateInformation') : t('saveInformation')}
                   </button>
                 </div>
               </form>
@@ -583,7 +586,7 @@ const DashboardCustomers = () => {
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full overflow-hidden">
             <div className="bg-indigo-600 px-6 py-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-medium text-white">Customer Details</h3>
+                <h3 className="text-lg font-medium text-white">{t('viewDetails')}</h3>
                 <button
                   onClick={() => setShowDetailsModal(false)}
                   className="text-white hover:text-gray-200"
@@ -597,14 +600,14 @@ const DashboardCustomers = () => {
               <div className="mb-4 space-y-4">
                 {/* Contact Information */}
                 <div>
-                  <h4 className="text-md font-semibold text-gray-800 mb-2 border-b pb-1">Contact Information</h4>
+                  <h4 className="text-md font-semibold text-gray-800 mb-2 border-b pb-1">{t('contactInformation')}</h4>
                   <div className="grid grid-cols-2 gap-2 mb-3">
                     <div className="space-y-1">
-                      <p className="text-xs text-gray-500">Email</p>
+                      <p className="text-xs text-gray-500">{t('email')}</p>
                       <p className="text-sm font-medium">{currentCustomer.email}</p>
                     </div>
                     <div className="space-y-1">
-                      <p className="text-xs text-gray-500">Phone</p>
+                      <p className="text-xs text-gray-500">{t('phone')}</p>
                       <p className="text-sm font-medium">{currentCustomer.phone}</p>
                     </div>
                   </div>
@@ -612,22 +615,22 @@ const DashboardCustomers = () => {
 
                 {/* Prize Information */}
                 <div>
-                  <h4 className="text-md font-semibold text-gray-800 mb-2 border-b pb-1">Prize Information</h4>
+                  <h4 className="text-md font-semibold text-gray-800 mb-2 border-b pb-1">{t('prizeInformation')}</h4>
                   <div className="grid grid-cols-2 gap-2 mb-3">
                     <div className="space-y-1">
-                      <p className="text-xs text-gray-500">Prize</p>
+                      <p className="text-xs text-gray-500">{t('prize')}</p>
                       <p className="text-sm font-medium">{currentCustomer.prize}</p>
                     </div>
                     <div className="space-y-1">
-                      <p className="text-xs text-gray-500">Status</p>
+                      <p className="text-xs text-gray-500">{t('status')}</p>
                       <p className="inline-flex items-center text-sm font-medium">
                         {currentCustomer.status ? (
                           <span className="inline-flex items-center text-green-600">
-                            <CheckCircle className="h-4 w-4 mr-1" /> Taken
+                            <CheckCircle className="h-4 w-4 mr-1" /> {t('taken')}
                           </span>
                         ) : (
                           <span className="inline-flex items-center text-yellow-600">
-                            <XCircle className="h-4 w-4 mr-1" /> Pending
+                            <XCircle className="h-4 w-4 mr-1" /> {t('pending')}
                           </span>
                         )}
                       </p>
@@ -638,23 +641,23 @@ const DashboardCustomers = () => {
                 {/* Personal Information - only shown if enriched */}
                 {currentCustomer.enriched && (
                   <div>
-                    <h4 className="text-md font-semibold text-gray-800 mb-2 border-b pb-1">Personal Information</h4>
+                    <h4 className="text-md font-semibold text-gray-800 mb-2 border-b pb-1">{t('personalInformation')}</h4>
                     <div className="grid grid-cols-2 gap-2 mb-3">
                       <div className="space-y-1">
-                        <p className="text-xs text-gray-500">First Name</p>
+                        <p className="text-xs text-gray-500">{t('firstName')}</p>
                         <p className="text-sm font-medium">{currentCustomer.firstName}</p>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-xs text-gray-500">Last Name</p>
+                        <p className="text-xs text-gray-500">{t('lastName')}</p>
                         <p className="text-sm font-medium">{currentCustomer.lastName}</p>
                       </div>
                     </div>
                     <div className="space-y-1 mb-2">
-                      <p className="text-xs text-gray-500">Birth Date</p>
+                      <p className="text-xs text-gray-500">{t('birthdate')}</p>
                       <p className="text-sm font-medium">{formatDate(currentCustomer.birthDate)}</p>
                     </div>
                     <div className="space-y-1">
-                      <p className="text-xs text-gray-500">Address</p>
+                      <p className="text-xs text-gray-500">{t('address')}</p>
                       <p className="text-sm font-medium">{currentCustomer.address}</p>
                     </div>
                   </div>
@@ -662,14 +665,14 @@ const DashboardCustomers = () => {
 
                 {/* Dates */}
                 <div>
-                  <h4 className="text-md font-semibold text-gray-800 mb-2 border-b pb-1">Dates</h4>
+                  <h4 className="text-md font-semibold text-gray-800 mb-2 border-b pb-1">{t('dates')}</h4>
                   <div className="grid grid-cols-2 gap-2">
                     <div className="space-y-1">
-                      <p className="text-xs text-gray-500">Created</p>
+                      <p className="text-xs text-gray-500">{t('created')}</p>
                       <p className="text-sm font-medium">{formatDate(currentCustomer.createdAt)}</p>
                     </div>
                     <div className="space-y-1">
-                      <p className="text-xs text-gray-500">Last Updated</p>
+                      <p className="text-xs text-gray-500">{t('lastUpdated')}</p>
                       <p className="text-sm font-medium">{formatDate(currentCustomer.updatedAt)}</p>
                     </div>
                   </div>
@@ -682,7 +685,7 @@ const DashboardCustomers = () => {
                   onClick={() => setShowDetailsModal(false)}
                   className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                  Close
+                  {t('close')}
                 </button>
               </div>
             </div>
