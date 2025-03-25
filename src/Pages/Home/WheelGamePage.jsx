@@ -5,7 +5,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import spinRateLogo from "../../assets/Design_sans_titre__10_-ai-brush-removebg-5gtqgd1e.png";
 
-const API_URL = 'https://spin-rate-backend.vercel.app/api';
+const API_URL = 'http://localhost:4000/api';
 
 const WheelGamePage = () => {
   const { id } = useParams(); // Get wheel ID from URL
@@ -88,283 +88,250 @@ const WheelGamePage = () => {
     
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const radius = Math.min(centerX, centerY) - 20;
     
-    // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Get wheel data
-    const colors = [
-      wheel.mainColors?.color1 || '#FF6B6B', // Modern vibrant red
-      wheel.mainColors?.color2 || '#4ECDC4', // Teal
-      wheel.mainColors?.color3 || '#FFD166'  // Vibrant yellow
-    ];
-    
-    const displayLots = wheel.lots && wheel.lots.length > 0 
-      ? wheel.lots 
-      : Array(8).fill({ name: 'Prize', odds: '1', promoCode: '' });
-    
-    // Create modern gradient background for the wheel
-    const bgGradient = ctx.createRadialGradient(
-      centerX, centerY, radius * 0.1,
-      centerX, centerY, radius * 1.1
-    );
-    bgGradient.addColorStop(0, '#1A1A2E'); // Deep blue center
-    bgGradient.addColorStop(1, '#0F0F1B'); // Almost black outer
-    
-    // Draw outer glow effect
-    const glowSize = 15;
-    ctx.shadowBlur = glowSize;
-    ctx.shadowColor = '#4361EE'; // Bright blue glow
-    
-    // Draw background circle with glow
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius * 1.1, 0, 2 * Math.PI);
-    ctx.fillStyle = bgGradient;
-    ctx.fill();
-    
-    // Reset shadow for crisp rendering of other elements
-    ctx.shadowBlur = 0;
-    
-    // Add modern metallic ring around edge
-    const ringGradient = ctx.createLinearGradient(
-      centerX - radius, centerY - radius,
-      centerX + radius, centerY + radius
-    );
-    ringGradient.addColorStop(0, '#FFD700'); // Gold
-    ringGradient.addColorStop(0.5, '#FFF8E1'); // Light gold/silver
-    ringGradient.addColorStop(1, '#FFD700'); // Gold again
-    
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius * 1.1, 0, 2 * Math.PI);
-    ctx.lineWidth = 12;
-    ctx.strokeStyle = ringGradient;
-    ctx.stroke();
-    
-    // Add inner ring with neon effect
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius * 0.85, 0, 2 * Math.PI);
-    ctx.lineWidth = 4;
-    ctx.strokeStyle = '#4361EE'; // Neon blue
-    ctx.stroke();
-    
-    // Add light reflection on ring (3D effect)
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius * 1.1, Math.PI * 1.7, Math.PI * 2.2);
-    ctx.lineWidth = 5;
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
-    ctx.stroke();
-    
-    // Draw segments
-    const segmentAngle = (2 * Math.PI) / displayLots.length;
-    
-    // Top of the wheel is at 270 degrees (Math.PI * 1.5) in our canvas coordinate system
-    const topPosition = Math.PI * 1.5;
-    const startOffset = topPosition - (segmentAngle / 2);
-    
-    displayLots.forEach((lot, index) => {
-      const startAngle = startOffset + (index * segmentAngle);
-      const endAngle = startOffset + ((index + 1) * segmentAngle);
-      const midAngle = startAngle + (segmentAngle / 2);
+    // Dynamically set canvas size based on container size
+    const calculateSize = () => {
+      // Get the parent container width (accounting for any padding)
+      const containerWidth = canvas.parentElement.clientWidth;
       
-      // Select color from the palette, cycling through the available colors
-      const segmentColor = colors[index % colors.length];
+      // Set canvas dimensions to match container width (for perfect square)
+      canvas.width = containerWidth;
+      canvas.height = containerWidth;
       
-      // Create advanced gradient for segments
-      const gradient = ctx.createRadialGradient(
-        centerX, centerY, radius * 0.3,
-        centerX, centerY, radius * 0.85
+      // Force a redraw with the new dimensions
+      drawWheel();
+    };
+    
+    // Calculate size initially
+    calculateSize();
+    
+    // Add resize listener specific to this effect
+    window.addEventListener('resize', calculateSize);
+    
+    // Function to draw the wheel (extracted to be called after resize)
+    function drawWheel() {
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const radius = Math.min(centerX, centerY) * 0.92; // Increased radius proportion
+      
+      // Clear canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Get wheel data
+      const colors = [
+        wheel.mainColors?.color1 || '#FF6B6B', // Modern vibrant red
+        wheel.mainColors?.color2 || '#4ECDC4', // Teal
+        wheel.mainColors?.color3 || '#FFD166'  // Vibrant yellow
+      ];
+      
+      const displayLots = wheel.lots && wheel.lots.length > 0 
+        ? wheel.lots 
+        : Array(8).fill({ name: 'Prize', odds: '1', promoCode: '' });
+      
+      // Add modern metallic ring around edge
+      const ringGradient = ctx.createLinearGradient(
+        centerX - radius, centerY - radius,
+        centerX + radius, centerY + radius
       );
+      ringGradient.addColorStop(0, '#FFD700'); // Gold
+      ringGradient.addColorStop(0.5, '#FFF8E1'); // Light gold/silver
+      ringGradient.addColorStop(1, '#FFD700'); // Gold again
       
-      // Calculate darker version of color for gradient
-      const darkerColor = adjustColor(segmentColor, -30);
-      const lighterColor = adjustColor(segmentColor, 30);
-      
-      // Three-color gradient for more depth
-      gradient.addColorStop(0, lighterColor);
-      gradient.addColorStop(0.7, segmentColor);
-      gradient.addColorStop(1, darkerColor);
-      
-      // Draw segment
       ctx.beginPath();
-      ctx.moveTo(centerX, centerY);
-      ctx.arc(centerX, centerY, radius * 0.85, startAngle, endAngle);
-      ctx.closePath();
-      
-      ctx.fillStyle = gradient;
-      ctx.fill();
-      
-      // Add 3D effect to segments with bright edge
-      ctx.beginPath();
-      ctx.moveTo(centerX, centerY);
-      ctx.arc(centerX, centerY, radius * 0.85, startAngle, endAngle);
-      ctx.closePath();
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+      ctx.arc(centerX, centerY, radius * 1.02, 0, 2 * Math.PI); // Slightly adjusted radius
+      ctx.lineWidth = 10; // Reduced thickness for better fit
+      ctx.strokeStyle = ringGradient;
       ctx.stroke();
       
-      // Draw divider lines with neon glow effect
+      // Add outer shadow to the ring for better visibility
+      ctx.shadowBlur = 8; // Reduced shadow blur
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
       ctx.beginPath();
-      ctx.moveTo(centerX, centerY);
-      ctx.lineTo(
-        centerX + Math.cos(startAngle) * radius * 0.85,
-        centerY + Math.sin(startAngle) * radius * 0.85
-      );
+      ctx.arc(centerX, centerY, radius * 1.03, 0, 2 * Math.PI); // Slightly increased
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+      ctx.stroke();
+      ctx.shadowBlur = 0;
       
-      // Create gradient for divider lines
-      const dividerGradient = ctx.createLinearGradient(
-        centerX, centerY,
-        centerX + Math.cos(startAngle) * radius * 0.85,
-        centerY + Math.sin(startAngle) * radius * 0.85
-      );
-      dividerGradient.addColorStop(0, 'rgba(255, 255, 255, 0.1)');
-      dividerGradient.addColorStop(1, 'rgba(255, 255, 255, 0.8)');
-      
-      ctx.strokeStyle = dividerGradient;
-      ctx.lineWidth = 2;
+      // Add inner ring with neon effect
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius * 0.95, 0, 2 * Math.PI); // Reduced radius
+      ctx.lineWidth = 3; // Reduced width
+      ctx.strokeStyle = '#4361EE'; // Neon blue
       ctx.stroke();
       
-      // Add text
-      ctx.save();
-      ctx.translate(centerX, centerY);
-      ctx.rotate(midAngle);
+      // Add light reflection on ring (3D effect)
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius * 1.05, Math.PI * 1.7, Math.PI * 2.2); // Adjusted radius
+      ctx.lineWidth = 5;
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+      ctx.stroke();
       
-      // Text path
-      const textDistance = radius * 0.6;
+      // Draw segments
+      const segmentAngle = (2 * Math.PI) / displayLots.length;
       
-      // Modern text styling
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#FFFFFF';
-      ctx.font = 'bold 18px "Montserrat", "Arial", sans-serif';
+      // Top of the wheel is at 270 degrees (Math.PI * 1.5) in our canvas coordinate system
+      const topPosition = Math.PI * 1.5;
+      const startOffset = topPosition - (segmentAngle / 2);
       
-      // Add text shadow for better readability
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
-      ctx.shadowBlur = 5;
-      ctx.shadowOffsetX = 1;
-      ctx.shadowOffsetY = 1;
-      
-      // Draw text
-      ctx.fillText(lot.name || 'Prize', textDistance, 6);
-      
-      // Draw a modern highlight icon based on index
-      const iconDistance = radius * 0.4;
-      ctx.fillStyle = '#FFFFFF';
-      
-      // Different icons or shapes for different segments
-      if (index % 3 === 0) {
-        // Star
-        const starSize = 10;
-        drawStar(ctx, iconDistance, 0, 5, starSize, starSize/2);
-      } else if (index % 3 === 1) {
-        // Circle
+      displayLots.forEach((lot, index) => {
+        const startAngle = startOffset + (index * segmentAngle);
+        const endAngle = startOffset + ((index + 1) * segmentAngle);
+        const midAngle = startAngle + (segmentAngle / 2);
+        
+        // Select color from the palette, cycling through the available colors
+        const segmentColor = colors[index % colors.length];
+        
+        // Create advanced gradient for segments
+        const gradient = ctx.createRadialGradient(
+          centerX, centerY, 0, // Start from center
+          centerX, centerY, radius * 0.85
+        );
+        
+        // Calculate darker version of color for gradient
+        const darkerColor = adjustColor(segmentColor, -30);
+        const lighterColor = adjustColor(segmentColor, 30);
+        
+        // Three-color gradient for more depth
+        gradient.addColorStop(0, lighterColor);
+        gradient.addColorStop(0.7, segmentColor);
+        gradient.addColorStop(1, darkerColor);
+        
+        // Draw segment - extended all the way to center
         ctx.beginPath();
-        ctx.arc(iconDistance, 0, 6, 0, Math.PI * 2);
-        ctx.fill();
-      } else {
-        // Diamond
-        ctx.beginPath();
-        ctx.moveTo(iconDistance, -6);
-        ctx.lineTo(iconDistance + 6, 0);
-        ctx.lineTo(iconDistance, 6);
-        ctx.lineTo(iconDistance - 6, 0);
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius * 0.98, startAngle, endAngle); // Increased segment radius
         ctx.closePath();
+        
+        ctx.fillStyle = gradient;
+        ctx.fill();
+        
+        // Add 3D effect to segments with bright edge
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius * 0.98, startAngle, endAngle); // Increased segment radius
+        ctx.closePath();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+        ctx.stroke();
+        
+        // Draw divider lines with neon glow effect
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(
+          centerX + Math.cos(startAngle) * radius * 0.98, // Increased radius
+          centerY + Math.sin(startAngle) * radius * 0.98 // Increased radius
+        );
+        
+        // Create gradient for divider lines
+        const dividerGradient = ctx.createLinearGradient(
+          centerX, centerY,
+          centerX + Math.cos(startAngle) * radius * 0.98, // Increased radius
+          centerY + Math.sin(startAngle) * radius * 0.98 // Increased radius
+        );
+        dividerGradient.addColorStop(0, 'rgba(255, 255, 255, 0.1)');
+        dividerGradient.addColorStop(1, 'rgba(255, 255, 255, 0.8)');
+        
+        ctx.strokeStyle = dividerGradient;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        
+        // Add text
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.rotate(midAngle);
+        
+        // Text path - adjusted based on segment size and number of segments
+        const textDistance = radius * 0.68; // Adjusted for larger wheel
+        
+        // Determine font size dynamically based on the number of segments and radius
+        const segmentCount = displayLots.length;
+        const radiusBasedFontSize = Math.max(radius * 0.08, 24); // Increased base font size
+        
+        let fontSize = radiusBasedFontSize; // Default font size based on radius
+        
+        // Further adjust based on segment count
+        if (segmentCount > 10) {
+          fontSize = radiusBasedFontSize * 0.85;
+        } else if (segmentCount > 8) {
+          fontSize = radiusBasedFontSize * 0.92;
+        }
+        
+        // Modern text styling with larger font
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = `bold ${Math.floor(fontSize)}px "Arial", sans-serif`;
+        
+        // Apply all text rendering techniques for maximum readability
+        ctx.textBaseline = 'middle'; // Better text vertical alignment
+        
+        // Create a strong high-contrast outline
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.9)';
+        ctx.lineWidth = Math.max(4, Math.floor(fontSize / 6)); // Scale outline with font size
+        ctx.lineJoin = 'round'; // Smoother text outline
+        
+        // Add strong text shadow
+        ctx.shadowColor = 'rgba(0, 0, 0, 1)';
+        ctx.shadowBlur = Math.max(5, Math.floor(fontSize / 4)); // Scale blur with font size
+        ctx.shadowOffsetX = 2;
+        ctx.shadowOffsetY = 2;
+        
+        // Get text metrics to check width - limit text length if needed
+        let displayText = lot.name || 'Prize';
+        const metrics = ctx.measureText(displayText);
+        
+        // If text is too wide for segment, truncate it
+        const maxTextWidth = radius * 0.4; // Maximum allowed text width
+        if (metrics.width > maxTextWidth) {
+          // Truncate text
+          let truncatedText = displayText;
+          while (ctx.measureText(truncatedText + "...").width > maxTextWidth && truncatedText.length > 0) {
+            truncatedText = truncatedText.substring(0, truncatedText.length - 1);
+          }
+          displayText = truncatedText + "...";
+        }
+        
+        // Draw text with outline for maximum contrast
+        ctx.strokeText(displayText, textDistance, 0); // Adjusted y coordinate to center text
+        ctx.fillText(displayText, textDistance, 0); // Adjusted y coordinate to center text
+        
+        // Reset shadow
+        ctx.shadowColor = 'transparent';
+        
+        ctx.restore();
+      });
+      
+      // Draw decorative elements around the wheel
+      // Animated-looking elements around the rim
+      for (let i = 0; i < displayLots.length * 3; i++) {
+        const angle = i * Math.PI / (displayLots.length * 1.5);
+        const dotSize = i % 3 === 0 ? 4 : 2;
+        
+        ctx.beginPath();
+        ctx.arc(
+          centerX + Math.cos(angle) * (radius * 0.97), // Adjusted inward slightly
+          centerY + Math.sin(angle) * (radius * 0.97), // Adjusted inward slightly
+          dotSize,
+          0,
+          2 * Math.PI
+        );
+        
+        // Alternate colors for more visual interest
+        if (i % 2 === 0) {
+          ctx.fillStyle = '#4CC9F0'; // Light blue
+        } else {
+          ctx.fillStyle = '#F72585'; // Pink
+        }
         ctx.fill();
       }
       
-      // Reset shadow
-      ctx.shadowColor = 'transparent';
-      
-      ctx.restore();
-    });
-    
-    // Draw center embellishment (modern futuristic hub)
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius * 0.25, 0, 2 * Math.PI);
-    const centerGradient = ctx.createRadialGradient(
-      centerX - 10, centerY - 10, 5,
-      centerX, centerY, radius * 0.25
-    );
-    centerGradient.addColorStop(0, '#FFF9C4'); // Light yellow
-    centerGradient.addColorStop(0.7, '#FFD700'); // Gold
-    centerGradient.addColorStop(1, '#FFA000'); // Darker gold/amber
-    ctx.fillStyle = centerGradient;
-    ctx.fill();
-    
-    // Add metallic effect to center
-    ctx.lineWidth = 4;
-    ctx.strokeStyle = '#FFFFFF';
-    ctx.stroke();
-    
-    // Add inner circle
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius * 0.18, 0, 2 * Math.PI);
-    const innerCenterGradient = ctx.createRadialGradient(
-      centerX, centerY, 0,
-      centerX, centerY, radius * 0.18
-    );
-    innerCenterGradient.addColorStop(0, '#4361EE'); // Bright blue
-    innerCenterGradient.addColorStop(1, '#3A0CA3'); // Deep purple
-    ctx.fillStyle = innerCenterGradient;
-    ctx.fill();
-    
-    // Add reflective highlight to center (3D effect)
-    ctx.beginPath();
-    ctx.arc(centerX - (radius * 0.08), centerY - (radius * 0.08), radius * 0.06, 0, 2 * Math.PI);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-    ctx.fill();
-    
-    // Draw decorative elements around the wheel
-    // Animated-looking elements around the rim
-    for (let i = 0; i < displayLots.length * 3; i++) {
-      const angle = i * Math.PI / (displayLots.length * 1.5);
-      const dotSize = i % 3 === 0 ? 4 : 2;
-      
-      ctx.beginPath();
-      ctx.arc(
-        centerX + Math.cos(angle) * (radius * 1.02),
-        centerY + Math.sin(angle) * (radius * 1.02),
-        dotSize,
-        0,
-        2 * Math.PI
-      );
-      
-      // Alternate colors for more visual interest
-      if (i % 2 === 0) {
-        ctx.fillStyle = '#4CC9F0'; // Light blue
-      } else {
-        ctx.fillStyle = '#F72585'; // Pink
-      }
-      ctx.fill();
+      // Don't draw the center button on canvas - it will be an HTML element overlay
     }
     
-    // Helper function to draw a star
-    function drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius) {
-      let rot = Math.PI / 2 * 3;
-      let x = cx;
-      let y = cy;
-      let step = Math.PI / spikes;
-
-      ctx.beginPath();
-      ctx.moveTo(cx, cy - outerRadius);
-      
-      for (let i = 0; i < spikes; i++) {
-        x = cx + Math.cos(rot) * outerRadius;
-        y = cy + Math.sin(rot) * outerRadius;
-        ctx.lineTo(x, y);
-        rot += step;
-
-        x = cx + Math.cos(rot) * innerRadius;
-        y = cy + Math.sin(rot) * innerRadius;
-        ctx.lineTo(x, y);
-        rot += step;
-      }
-      
-      ctx.lineTo(cx, cy - outerRadius);
-      ctx.closePath();
-      ctx.fill();
-    }
+    // Clean up event listener when component unmounts
+    return () => {
+      window.removeEventListener('resize', calculateSize);
+    };
     
   }, [wheel, rotationDegrees]);
   
@@ -431,10 +398,9 @@ const WheelGamePage = () => {
     }, 5000); // Match this timing with the animation duration
   };
   
-  // Close result modal
+  // Close result modal - no longer needed since we don't transition to user info modal
   const closeResultModal = () => {
     setShowResultModal(false);
-    setShowUserInfoModal(true);
   };
   
   // Handle button click in instruction modal
@@ -476,7 +442,7 @@ const WheelGamePage = () => {
         };
         
         // Send data to the local API endpoint
-        const response = await axios.post('https://spin-rate-backend.vercel.app/api/customer/create', userData);
+        const response = await axios.post('http://localhost:4000/api/customer/create', userData);
         
         if (response.data && response.data.customer) {
           // Show success message
@@ -539,9 +505,9 @@ const WheelGamePage = () => {
   const instruction = wheel?.customerInstruction || "Give us a review";
   
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 py-6 px-3 sm:py-10 sm:px-4">
-      <div className="max-w-3xl mx-auto">
-        <div className="bg-white rounded-xl shadow-xl overflow-hidden relative">
+    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 py-4 px-2"> {/* Reduced padding to allow more space */}
+      <div className="mx-auto w-full"> {/* Removed max-width constraint to use full width */}
+        <div className="bg-white rounded-xl shadow-xl overflow-visible relative p-2 sm:p-4"> {/* Reduced padding on small screens */}
           {/* Logo at top left with no header */}
           {wheel?.logoUrl && (
             <div className="absolute left-4 sm:left-6 top-4 sm:top-6 z-10 bg-white p-1.5 sm:p-2 rounded-lg shadow-lg border-2 border-amber-300">
@@ -564,25 +530,17 @@ const WheelGamePage = () => {
           
           {/* Wheel game - now always visible */}
           {showWheelGame && (
-            <div className="p-4 sm:p-6 pt-24 sm:pt-28"> {/* Added padding top for logo space */}
-              <div className="relative w-full max-w-md mx-auto">
-                {/* Glowing outer ring animation */}
-                <div className="absolute top-0 left-0 w-full h-full rounded-full animate-pulse-slow opacity-70 pointer-events-none"
-                  style={{
-                    background: 'radial-gradient(circle, rgba(67, 97, 238, 0) 58%, rgba(67, 97, 238, 0.3) 80%, rgba(67, 97, 238, 0) 100%)',
-                    transform: 'scale(1.1)'
-                  }}
-                ></div>
-                
-                {/* Enhanced pointer triangle */}
+            <div className="pt-20 sm:pt-24 pb-8 overflow-visible"> {/* Reduced top/bottom padding */}
+              <div className="relative mx-auto w-full lg:w-[95%]"> {/* Use full width on small/medium screens */}
+                {/* Enhanced pointer triangle - made bigger */}
                 <div 
                   className="absolute top-0 left-1/2 transform -translate-x-1/2 z-10 pointer"
                   style={{ 
-                    filter: 'drop-shadow(0px 0px 8px rgba(67, 97, 238, 0.8))',
-                    marginTop: '-10px'
+                    filter: 'drop-shadow(0px 0px 10px rgba(67, 97, 238, 0.8))',
+                    marginTop: '-30px'  /* Adjusted for larger pointer */
                   }}
                 >
-                  <svg width="40" height="45" viewBox="0 0 40 45" xmlns="http://www.w3.org/2000/svg">
+                  <svg width="80" height="85" viewBox="0 0 40 45" xmlns="http://www.w3.org/2000/svg"> {/* Increased size */}
                     <defs>
                       <linearGradient id="pointerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" stopColor="#FFD700" />
@@ -615,7 +573,7 @@ const WheelGamePage = () => {
                 {/* Spinning wheel with animation effects */}
                 <motion.div 
                   ref={wheelRef}
-                  className="relative w-full pt-[100%]" // 1:1 Aspect ratio
+                  className="relative w-full pt-[100%] mb-16" // Reduced bottom margin
                   initial={{ rotate: 0 }}
                   animate={{ rotate: rotationDegrees }}
                   transition={{ 
@@ -625,62 +583,87 @@ const WheelGamePage = () => {
                   }}
                   style={{ 
                     transformOrigin: 'center center',
-                    filter: 'drop-shadow(0px 15px 25px rgba(0, 0, 0, 0.5))'
+                    filter: 'drop-shadow(0px 10px 20px rgba(0, 0, 0, 0.4))',
+                    margin: '0' // Removed margin
                   }}
                 >
                   <canvas 
                     ref={canvasRef}
-                    width={500}
-                    height={500}
-                    className="absolute top-0 left-0 w-full h-full"
+                    className="absolute top-0 left-0 w-full h-full" 
                   />
                 </motion.div>
                 
-                {/* Modern decorative wheel stand */}
-                <div className="absolute -left-4 -right-4 -bottom-3 top-[90%] bg-gradient-to-b from-gray-800 to-gray-900 rounded-b-xl shadow-xl flex items-center justify-center overflow-hidden">
-                  {/* Metallic looking base */}
-                  <div className="h-full w-full relative">
-                    {/* Shine effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gray-500 to-transparent opacity-20"></div>
-                    {/* Highlight line */}
-                    <div className="bg-gradient-to-r from-amber-500 via-yellow-300 to-amber-500 h-1.5 w-2/3 rounded-full mx-auto mt-2.5"></div>
+                {/* Center Spin Button with neon effect - OUTSIDE the rotating wheel */}
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none">
+                  <div className="pointer-events-auto">
+                    {/* Animated outer glow ring - only visible when not played */}
+                    {!hasSpun && !isSpinning && (
+                      <div className="absolute inset-0 w-full h-full rounded-full animate-pulse" 
+                        style={{
+                          background: 'radial-gradient(circle, rgba(255,215,0,0.6) 0%, rgba(255,215,0,0) 70%)',
+                          transform: 'scale(1.4)',
+                          filter: 'blur(10px)'
+                        }}
+                      />
+                    )}
+                    
+                    <motion.button
+                      className={`w-28 h-28 sm:w-40 sm:h-40 rounded-full flex items-center justify-center relative z-10
+                        ${hasSpun 
+                          ? 'bg-gray-600 cursor-not-allowed' 
+                          : 'bg-gradient-to-br from-amber-500 via-yellow-400 to-amber-600 overflow-hidden'} 
+                        text-white font-bold border-4 ${hasSpun ? 'border-gray-500' : 'border-amber-300'}`}
+                      whileHover={hasSpun ? {} : { 
+                        scale: 1.05,
+                        boxShadow: '0 0 25px rgba(255, 215, 0, 0.8), 0 0 50px rgba(255, 215, 0, 0.6)'
+                      }}
+                      whileTap={hasSpun ? {} : { scale: 0.95 }}
+                      onClick={spinWheel}
+                      disabled={isSpinning || hasSpun || showInstructionModal}
+                      style={{ 
+                        textShadow: '0 0 10px rgba(255, 255, 255, 0.8)',
+                        boxShadow: hasSpun 
+                          ? 'none' 
+                          : '0 0 20px rgba(255, 215, 0, 0.7), 0 0 40px rgba(255, 215, 0, 0.5), 0 0 60px rgba(255, 215, 0, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.4)'
+                      }}
+                    >
+                      {/* Shine effect overlay for button */}
+                      {!hasSpun && (
+                        <div 
+                          className="absolute inset-0 w-full h-full opacity-30" 
+                          style={{
+                            background: 'linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0) 100%)',
+                            transition: 'all 0.3s ease'
+                          }}
+                        />
+                      )}
+                      
+                      <div className="text-center relative z-10">
+                        <div className="text-sm sm:text-3xl font-bold">
+                          {isSpinning ? 'SPINNING' : hasSpun ? 'PLAYED' : 'SPIN'}
+                        </div>
+                        {isSpinning && (
+                          <div className="text-3xl mt-2 bg-amber-600/30 rounded-full w-10 h-10 mx-auto flex items-center justify-center">
+                            <span className="inline-block animate-spin">⟳</span>
+                          </div>
+                        )}
+                        {!isSpinning && !hasSpun && (
+                          <div className="text-xl sm:text-3xl mt-2 font-bold">NOW!</div>
+                        )}
+                      </div>
+                    </motion.button>
                   </div>
                 </div>
               </div>
               
               {/* Thank you message - only shown after instruction modal is closed */}
               {!showInstructionModal && (
-                <div className="mt-6 sm:mt-8 mb-3 sm:mb-4 text-center">
+                <div className="mt-6 mb-3 text-center"> {/* Reduced margin */}
                   <h2 className="text-lg sm:text-xl font-bold text-indigo-800">
                     Thank you for your contribution, your turn to play!
                   </h2>
                 </div>
               )}
-              
-              {/* Enhanced spin button with glow effect */}
-              <div className="mt-4 sm:mt-6 text-center">
-                <motion.button
-                  className={`px-8 sm:px-10 py-3 sm:py-4 rounded-full ${hasSpun 
-                    ? 'bg-gray-400 cursor-not-allowed' 
-                    : 'bg-gradient-to-r from-amber-600 via-yellow-400 to-amber-600 hover:scale-105'} 
-                    text-gray-900 font-bold text-base sm:text-lg tracking-wider border-2 ${hasSpun ? 'border-gray-500' : 'border-amber-600'} shadow-lg`}
-                  whileHover={{ scale: hasSpun ? 1 : 1.05, boxShadow: hasSpun ? "none" : "0px 6px 15px rgba(255, 200, 10, 0.6)" }}
-                  whileTap={{ scale: hasSpun ? 1 : 0.95 }}
-                  onClick={spinWheel}
-                  disabled={isSpinning || hasSpun || showInstructionModal}
-                  style={{ 
-                    textShadow: hasSpun ? 'none' : '0px 1px 2px rgba(0,0,0,0.3)',
-                    boxShadow: hasSpun ? 'none' : '0px 6px 15px rgba(255, 200, 10, 0.4), 0px 0px 15px rgba(255, 200, 10, 0.3)'
-                  }}
-                >
-                  {isSpinning ? 'SPINNING...' : hasSpun ? 'ALREADY PLAYED' : 'SPIN THE WHEEL'}
-                  
-                  {/* Animate the button while spinning */}
-                  {isSpinning && (
-                    <span className="ml-2 inline-block animate-spin">⟳</span>
-                  )}
-                </motion.button>
-              </div>
             </div>
           )}
           
@@ -726,7 +709,7 @@ const WheelGamePage = () => {
               </div>
             </div>
             
-            <div className="mt-6 sm:mt-8 text-center space-y-3 sm:space-y-4">
+            <div className="mt-6 sm:mt-8 text-center">
               <motion.button
                 className="w-full sm:w-auto px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-bold rounded-full shadow-lg hover:from-indigo-700 hover:to-indigo-800 transform transition-all duration-200 hover:scale-105"
                 whileHover={{ scale: 1.05 }}
@@ -735,10 +718,12 @@ const WheelGamePage = () => {
               >
                 Your turn !
               </motion.button>
-              
+            </div>
+            
+            <div className="mt-4 sm:mt-6 text-center">
               <motion.button
-                className="w-full sm:w-auto px-6 sm:px-8 py-2 bg-transparent text-indigo-700 font-medium italic rounded-full border border-indigo-300 hover:bg-indigo-50 transform transition-all duration-200"
-                whileHover={{ scale: 1.03 }}
+                className="text-xs sm:text-sm text-indigo-600 hover:text-indigo-800 underline cursor-pointer italic"
+                whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleGameRulesClick}
               >
@@ -763,16 +748,6 @@ const WheelGamePage = () => {
               damping: 25
             }}
           >
-            {/* Close button */}
-            <button 
-              onClick={closeResultModal}
-              className="absolute top-3 sm:top-4 right-3 sm:right-4 text-gray-500 hover:text-gray-700 transition-colors"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-            
             {/* Decorative elements */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500"></div>
             
@@ -800,10 +775,10 @@ const WheelGamePage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.6 }}
             >
-              <h2 className="text-center text-2xl sm:text-3xl font-bold text-amber-900 font-serif mb-1 sm:mb-2">YOU WON!</h2>
+              <h2 className="text-center text-3xl sm:text-4xl font-bold text-amber-900 font-serif mb-3">YOU WON 🥳</h2>
               <div className="w-12 sm:w-16 h-1 bg-amber-500 mx-auto mb-3 sm:mb-4"></div>
               
-              <p className="text-center text-3xl sm:text-4xl font-bold text-amber-800 mb-4 sm:mb-6 font-serif">
+              <p className="text-center text-2xl sm:text-3xl font-bold text-amber-800 mb-4 sm:mb-6 font-serif">
                 {result.name}
               </p>
               
@@ -821,75 +796,49 @@ const WheelGamePage = () => {
                 </motion.div>
               )}
               
-              <div className="mt-6 sm:mt-8 text-center">
-                <button
-                  onClick={closeResultModal}
-                  className="px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-amber-600 to-amber-700 text-white font-bold rounded-full shadow-lg hover:from-amber-700 hover:to-amber-800 transform transition-all duration-200 hover:scale-105"
-                >
-                  Close
-                </button>
+              <div className="mt-6 border-t border-amber-200 pt-4">
+                <p className="text-center text-gray-600 mb-4 text-sm sm:text-base">
+                  Enter your contact details to receive your gift
+                </p>
+                
+                <form className="space-y-3" onSubmit={(e) => { e.preventDefault(); handleUserInfoSubmit(); }}>
+                  <div>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={userInfo.email}
+                      onChange={handleUserInfoChange}
+                      className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 text-sm sm:text-base"
+                      placeholder="Email Address"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={userInfo.phone}
+                      onChange={handleUserInfoChange}
+                      className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 text-sm sm:text-base"
+                      placeholder="Phone Number"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="mt-4 text-center">
+                    <button
+                      type="submit"
+                      className="w-full px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-amber-600 to-amber-700 text-white font-bold rounded-lg shadow-lg hover:from-amber-700 hover:to-amber-800 transform transition-all duration-200"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </form>
               </div>
             </motion.div>
-          </motion.div>
-        </div>
-      )}
-      
-      {/* User Information Modal */}
-      {showUserInfoModal && (
-        <div className="fixed inset-0 bg-black/10 bg-opacity-30 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-          <motion.div 
-            className="bg-white/95 rounded-2xl border border-gray-200 shadow-2xl max-w-md w-[90%] sm:w-full p-5 sm:p-8 relative"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            <h2 className="text-center text-xl sm:text-2xl font-bold text-gray-800 mb-1 sm:mb-2">
-              Enter your contact details
-            </h2>
-            <p className="text-center text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">to receive your gift</p>
-            
-            <form className="space-y-3 sm:space-y-4" onSubmit={(e) => { e.preventDefault(); handleUserInfoSubmit(); }}>
-              <div>
-                <label htmlFor="email" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={userInfo.email}
-                  onChange={handleUserInfoChange}
-                  className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm sm:text-base"
-                  placeholder="Enter your email address"
-                  required
-                />
-              </div>
-              
-              <div>
-                <label htmlFor="phone" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={userInfo.phone}
-                  onChange={handleUserInfoChange}
-                  className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm sm:text-base"
-                  placeholder="Enter your phone number"
-                  required
-                />
-              </div>
-              
-              <div className="mt-6 sm:mt-8 text-center">
-                <button
-                  type="submit"
-                  className="w-full px-4 sm:px-6 py-2.5 sm:py-3 bg-indigo-600 text-white font-medium rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 transition-colors text-sm sm:text-base"
-                >
-                  Submit Information
-                </button>
-              </div>
-            </form>
           </motion.div>
         </div>
       )}

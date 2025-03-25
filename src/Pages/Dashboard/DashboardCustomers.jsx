@@ -39,7 +39,7 @@ const DashboardCustomers = () => {
   const fetchCustomers = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get(`https://spin-rate-backend.vercel.app/api/customer/getCustomerByUserId/${user?.user?._id}`);
+      const response = await axios.get(`http://localhost:4000/api/customer/getCustomerByUserId/${user?.user?._id}`);
 
       if (response.data && response.data.customers) {
         setCustomers(response.data.customers);
@@ -89,7 +89,7 @@ const DashboardCustomers = () => {
     e.stopPropagation(); // Prevent event bubbling
     try {
       // API call
-      await axios.put(`https://spin-rate-backend.vercel.app/api/customer/updateStatus/${customerId}`);
+      await axios.put(`http://localhost:4000/api/customer/updateStatus/${customerId}`);
       
       // Refresh customer data
       fetchCustomers();
@@ -140,7 +140,7 @@ const DashboardCustomers = () => {
     e.preventDefault();
     try {
       // API call
-      await axios.put(`https://spin-rate-backend.vercel.app/api/customer/enrichCustomer/${currentCustomer._id}`, {
+      await axios.put(`http://localhost:4000/api/customer/enrichCustomer/${currentCustomer._id}`, {
         firstName: enrichData.firstName,
         lastName: enrichData.lastName,
         birthDate: enrichData.birthdate,
@@ -163,7 +163,7 @@ const DashboardCustomers = () => {
     if (window.confirm('Are you sure you want to delete this customer?')) {
       try {
         // API call
-        await axios.delete(`https://spin-rate-backend.vercel.app/api/customer/delete/${customerId}`);
+        await axios.delete(`http://localhost:4000/api/customer/delete/${customerId}`);
 
         // Refresh data
         fetchCustomers();
