@@ -520,13 +520,7 @@ const WheelGamePage = () => {
           )}
           
           {/* SpinRate logo at top right */}
-          <div className="absolute right-4 sm:right-6 top-4 sm:top-6 z-10">
-            <img 
-              src={spinRateLogo} 
-              alt="SpinRate" 
-              className="h-20 sm:h-32 w-auto object-contain"
-            />
-          </div>
+          
           
           {/* Wheel game - now always visible */}
           {showWheelGame && (
