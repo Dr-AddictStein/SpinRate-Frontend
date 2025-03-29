@@ -24,7 +24,7 @@ export const validateUser = async (dispatch) => {
     }
 
     try {
-        const response = await fetch("https://spin-rate-backend.vercel.app/api/user/checkUser", {
+        const response = await fetch("http://localhost:4000/api/user/checkUser", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

@@ -75,13 +75,13 @@ const Navbar = () => {
                     <div className="hidden md:block flex items-center space-x-4">
                         <Link
                             to="/dashboard"
-                            className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg px-6 py-3 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg px-6 py-3 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
                         >
                             {t('getStarted')}
                         </Link>
                         <Link
                             to="/dashboard"
-                            className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg px-6 py-3 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg px-6 py-3 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
                         >
                             {t('signIn')}
                         </Link>
@@ -126,13 +126,13 @@ const Navbar = () => {
                     
                     <Link
                         to="/dashboard"
-                        className="block w-full px-3 py-3 text-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg mt-3 transition-colors duration-200"
+                        className="block w-full px-3 py-3 text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg mt-3 transition-colors duration-200"
                     >
                         {t('getStarted')}
                     </Link>
                     <Link
                         to="/dashboard"
-                        className="block w-full px-3 py-3 text-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg mt-3 transition-colors duration-200"
+                        className="block w-full px-3 py-3 text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg mt-3 transition-colors duration-200"
                     >
                         {t('signIn')}
                     </Link>

@@ -11,7 +11,7 @@ export const useLogin = () => {
     setError(null);
 
     const response = await fetch(
-      `https://spin-rate-backend.vercel.app/api/user/login`,
+      `http://localhost:4000/api/user/login`,
       {
         method: "POST",
         headers: { "content-type": "application/json" },

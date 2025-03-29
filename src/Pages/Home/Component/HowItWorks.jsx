@@ -1,11 +1,13 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { QrCode, Star, RotateCw, Award, Database } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const HowItWorks = () => {
   // References for animation triggers
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const navigate = useNavigate();
 
   // Steps data
   const steps = [
@@ -91,7 +93,7 @@ const HowItWorks = () => {
   };
 
   return (
-    <section ref={sectionRef} className="py-20 md:py-32 bg-white relative overflow-hidden">
+    <section ref={sectionRef} className="py-20 md:py-32 bg-white relative overflow-hidden w-full">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full">
@@ -100,16 +102,16 @@ const HowItWorks = () => {
           <div className="absolute top-1/4 right-1/4 w-2 h-2 bg-yellow-400 rounded-full animate-ping" style={{ animationDuration: '2.5s' }}></div>
           <div className="absolute bottom-1/3 left-1/3 w-2 h-2 bg-green-400 rounded-full animate-ping" style={{ animationDuration: '4s' }}></div>
           <div className="absolute bottom-1/4 right-1/5 w-2 h-2 bg-purple-400 rounded-full animate-ping" style={{ animationDuration: '3.5s' }}></div>
-          
+
           {/* Decorative circles */}
           <div className="absolute -top-20 -left-20 w-64 h-64 bg-blue-50 rounded-full opacity-50"></div>
           <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-indigo-50 rounded-full opacity-60"></div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="2xl:max-w-[78%] max-w-full  mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section header */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
           transition={{ duration: 0.6 }}
@@ -157,13 +159,13 @@ const HowItWorks = () => {
               {/* Content - increased z-index and added background */}
               <div className={`flex-1 text-center md:text-left ${index % 2 === 1 ? 'md:text-right' : ''} max-w-lg mx-auto md:mx-0 z-10 relative`}>
                 <div className="bg-white bg-opacity-90 p-4 rounded-lg">
-                  <motion.h3 
+                  <motion.h3
                     whileHover={{ scale: 1.02 }}
                     className="text-2xl md:text-3xl font-bold mb-4"
                   >
                     {step.title}
                   </motion.h3>
-                  <motion.p 
+                  <motion.p
                     className="text-lg text-gray-600"
                   >
                     {step.description}
@@ -182,6 +184,7 @@ const HowItWorks = () => {
           className="text-center mt-12"
         >
           <motion.button
+            onClick={() => navigate('/dashboard')}
             whileHover={{ scale: 1.05, boxShadow: "0 10px 25px -5px rgba(59, 130, 246, 0.5)" }}
             whileTap={{ scale: 0.95 }}
             className="px-10 py-5 bg-blue-600 text-white text-xl font-bold rounded-xl shadow-lg hover:bg-blue-700 transition-all duration-300"

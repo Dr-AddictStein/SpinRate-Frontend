@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { motion, useAnimation, useInView } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const FeatureCard = ({ icon, title, description, index }) => {
   const controls = useAnimation();
@@ -119,6 +120,7 @@ const Features = () => {
       description: "Boost sales by turning customer engagement into repeat business and more reviews with our easy prize wheel.",
     }
   ];
+  const navigate = useNavigate();
 
   return (
     <section className="py-20 relative overflow-hidden bg-gray-50">
@@ -219,6 +221,7 @@ const Features = () => {
         className="pt-2 md:pt-5 w-full flex justify-center"
       >
         <motion.button
+          onClick={() => navigate('/dashboard')}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className=" px-6 py-3 md:px-8 md:py-4 bg-blue-500 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-600 transition-colors duration-300"

@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import mobile from '../../../assets/mobile.png';
-
+import { useNavigate } from "react-router-dom";
 const Hero = () => {
     const taglineRef = useRef(null);
+    const navigate = useNavigate();
 
     // Subtle floating animation for decorative elements
     useEffect(() => {
@@ -37,7 +38,7 @@ const Hero = () => {
 
             {/* Modern lines decoration - MOVED FURTHER LEFT */}
             <div className="absolute top-1/3 right-0 w-40 h-2 bg-blue-400 opacity-70 floating" />
-            <div className="absolute top-2/3 left-0 w-32 h-2 bg-indigo-300 opacity-60 floating" />
+            <div className="absolute top-2/3 -left-[3%] w-32 h-2 bg-indigo-300 opacity-60 floating" />
             {/* This is the line causing the issue - moved further left and adjusted position */}
             <div className="absolute bottom-1/4 left-16 w-24 h-2 bg-purple-300 opacity-50 floating" />
 
@@ -141,6 +142,7 @@ const Hero = () => {
                             className="pt-4 md:pt-6"
                         >
                             <motion.button
+                                onClick={() => navigate('/dashboard')}
                                 whileHover={{ scale: 1.05, boxShadow: "0 10px 25px -5px rgba(59, 130, 246, 0.5)" }}
                                 whileTap={{ scale: 0.95 }}
                                 className="px-8 py-4 md:px-10 md:py-5 bg-blue-600 text-white text-lg font-bold rounded-xl shadow-lg hover:bg-blue-700 transition-all duration-300"

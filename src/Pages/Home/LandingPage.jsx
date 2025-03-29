@@ -55,12 +55,13 @@ const LandingPage = () => {
       </div>
 
       <div className="">
-        <CalendlySection />
+        <PricingCard />
       </div>
 
       <div className="">
-        <PricingCard />
+        <CalendlySection />
       </div>
+
 
 
       <div className="">
