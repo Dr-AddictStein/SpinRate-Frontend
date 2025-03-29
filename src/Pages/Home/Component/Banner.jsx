@@ -2,9 +2,35 @@ import React, { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import mobile from '../../../assets/mobile.png';
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "../../../context/LanguageContext";
+
+// Translations object
+const translations = {
+    en: {
+        tagline: "Welcome to SpinRate",
+        heading1: "Increase your",
+        heading2: "Google Reviews",
+        heading3: "Effortlessly!",
+        description: "Boost your Google Reviews and online visibility without asking for reviews. Our reward-driven experience encourages clients to scan a qr code, to leave a review and spin the wheel!",
+        startNow: "Start now",
+        learnMore: "Learn more"
+    },
+    fr: {
+        tagline: "Bienvenue à SpinRate",
+        heading1: "Augmentez vos",
+        heading2: "Avis Google",
+        heading3: "Sans effort!",
+        description: "Augmentez vos avis Google et votre visibilité en ligne sans demander d'avis. Notre expérience basée sur les récompenses encourage les clients à scanner un code QR, à laisser un avis et à faire tourner la roue!",
+        startNow: "Commencer",
+        learnMore: "En savoir plus"
+    }
+};
+
 const Hero = () => {
     const taglineRef = useRef(null);
     const navigate = useNavigate();
+    const { language } = useLanguage();
+    const t = translations[language] || translations.en;
 
     // Subtle floating animation for decorative elements
     useEffect(() => {
@@ -91,7 +117,7 @@ const Hero = () => {
                             transition={{ duration: 0.6, delay: 0.3 }}
                             className="inline-block px-6 py-2 bg-blue-50 text-blue-600 rounded-full text-base font-medium shadow-sm"
                         >
-                            Welcome to SpinRate
+                            {t.tagline}
                         </motion.div>
 
                         {/* Main Heading with animations - BIGGER TEXT */}
@@ -102,7 +128,7 @@ const Hero = () => {
                                 transition={{ duration: 0.8, delay: 0.6 }}
                                 className="text-3xl sm:text-4xl lg:text-6xl font-extrabold tracking-tight text-gray-900"
                             >
-                                Increase your
+                                {t.heading1}
                             </motion.h1>
 
                             <motion.h1
@@ -111,7 +137,7 @@ const Hero = () => {
                                 transition={{ duration: 0.8, delay: 0.8 }}
                                 className="text-3xl sm:text-4xl lg:text-6xl font-extrabold tracking-tight text-blue-600"
                             >
-                                Google Reviews
+                                {t.heading2}
                             </motion.h1>
 
                             <motion.h1
@@ -120,7 +146,7 @@ const Hero = () => {
                                 transition={{ duration: 0.8, delay: 1 }}
                                 className="text-3xl sm:text-4xl lg:text-6xl font-extrabold tracking-tight text-gray-900"
                             >
-                                Effortlessly!
+                                {t.heading3}
                             </motion.h1>
                         </div>
 
@@ -131,7 +157,7 @@ const Hero = () => {
                             transition={{ duration: 0.8, delay: 1.2 }}
                             className="text-lg md:text-xl text-gray-600 max-w-3xl leading-relaxed pb-6"
                         >
-                            Boost your Google Reviews and online visibility without asking for reviews. Our reward-driven experience encourages clients to scan a qr code, to leave a review and spin the wheel !
+                            {t.description}
                         </motion.p>
 
                         {/* CTA Button - ENHANCED */}
@@ -147,7 +173,7 @@ const Hero = () => {
                                 whileTap={{ scale: 0.95 }}
                                 className="px-8 py-4 md:px-10 md:py-5 bg-blue-600 text-white text-lg font-bold rounded-xl shadow-lg hover:bg-blue-700 transition-all duration-300"
                             >
-                                Start now
+                                {t.startNow}
                             </motion.button>
                             
                             {/* Add a secondary action */}
@@ -156,7 +182,7 @@ const Hero = () => {
                                 whileTap={{ scale: 0.95 }}
                                 className="ml-4 px-8 py-4 md:px-10 md:py-5 bg-white text-blue-600 text-lg font-bold rounded-xl shadow-md border border-blue-200 hover:bg-blue-50 transition-all duration-300"
                             >
-                                Learn more
+                                {t.learnMore}
                             </motion.button>
                         </motion.div>
                     </motion.div>

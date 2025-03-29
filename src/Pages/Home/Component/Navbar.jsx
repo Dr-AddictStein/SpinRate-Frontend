@@ -48,47 +48,63 @@ const Navbar = () => {
                         </Link>
                     </div>
 
-                    {/* Desktop menu */}
-                    <div className="hidden md:block">
-                        <div className="ml-10 flex items-center space-x-8">
-                            {/* Language flags */}
-                            <div className="flex items-center space-x-4">
-                                <button 
-                                    onClick={() => changeLanguage('fr')}
-                                    className={`transition-all duration-200 transform hover:scale-110 ${language === 'fr' ? 'ring-2 ring-indigo-600 scale-110' : 'opacity-75'}`}
-                                    aria-label="Switch to French"
-                                >
-                                    <img src={franceFlag} alt="French" className="w-8 h-6 rounded-sm" />
-                                </button>
-                                <button 
-                                    onClick={() => changeLanguage('en')}
-                                    className={`transition-all duration-200 transform hover:scale-110 ${language === 'en' ? 'ring-2 ring-indigo-600 scale-110' : 'opacity-75'}`}
-                                    aria-label="Switch to English"
-                                >
-                                    <img src={ukFlag} alt="English" className="w-8 h-6 rounded-sm" />
-                                </button>
-                            </div>
+                    {/* Desktop navigation layout */}
+                    <div className="hidden md:flex items-center space-x-6">
+                        {/* Action buttons */}
+                        <div className="flex items-center space-x-4">
+                            <Link
+                                to="/dashboard"
+                                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg px-6 py-3 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
+                            >
+                                {t('getStarted')}
+                            </Link>
+                            <Link
+                                to="/dashboard"
+                                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg px-6 py-3 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
+                            >
+                                {t('signIn')}
+                            </Link>
+                        </div>
+
+                        {/* Language flags moved to the far right */}
+                        <div className="flex items-center space-x-3 ml-4">
+                            <button 
+                                onClick={() => changeLanguage('fr')}
+                                className={`transition-all duration-200 transform hover:scale-110 ${language === 'fr' ? 'ring-2 ring-indigo-600 scale-110' : 'opacity-75'}`}
+                                aria-label="Switch to French"
+                            >
+                                <img src={franceFlag} alt="French" className="w-8 h-6 rounded-sm" />
+                            </button>
+                            <button 
+                                onClick={() => changeLanguage('en')}
+                                className={`transition-all duration-200 transform hover:scale-110 ${language === 'en' ? 'ring-2 ring-indigo-600 scale-110' : 'opacity-75'}`}
+                                aria-label="Switch to English"
+                            >
+                                <img src={ukFlag} alt="English" className="w-8 h-6 rounded-sm" />
+                            </button>
                         </div>
                     </div>
 
-                    {/* Get Started button */}
-                    <div className="hidden md:block flex items-center space-x-4">
-                        <Link
-                            to="/dashboard"
-                            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg px-6 py-3 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
-                        >
-                            {t('getStarted')}
-                        </Link>
-                        <Link
-                            to="/dashboard"
-                            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg px-6 py-3 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
-                        >
-                            {t('signIn')}
-                        </Link>
-                    </div>
-
                     {/* Mobile menu button */}
-                    <div className="md:hidden">
+                    <div className="md:hidden flex items-center">
+                        {/* Add mobile language flags right next to menu button */}
+                        <div className="flex items-center space-x-2 mr-3">
+                            <button 
+                                onClick={() => changeLanguage('fr')}
+                                className={`transition-all duration-200 transform hover:scale-110 ${language === 'fr' ? 'ring-2 ring-indigo-600 scale-105' : 'opacity-75'}`}
+                                aria-label="Switch to French"
+                            >
+                                <img src={franceFlag} alt="French" className="w-7 h-5 rounded-sm" />
+                            </button>
+                            <button 
+                                onClick={() => changeLanguage('en')}
+                                className={`transition-all duration-200 transform hover:scale-110 ${language === 'en' ? 'ring-2 ring-indigo-600 scale-105' : 'opacity-75'}`}
+                                aria-label="Switch to English"
+                            >
+                                <img src={ukFlag} alt="English" className="w-7 h-5 rounded-sm" />
+                            </button>
+                        </div>
+                        
                         <button
                             onClick={toggleMenu}
                             className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-indigo-600 focus:outline-none transition-colors duration-200"
@@ -106,33 +122,17 @@ const Navbar = () => {
                 className={`md:hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}
             >
                 <div className="px-4 pt-2 pb-4 space-y-2 bg-white shadow-lg rounded-b-lg">
-                    {/* Language flags for mobile */}
-                    <div className="flex justify-center space-x-4 my-3">
-                        <button 
-                            onClick={() => changeLanguage('fr')}
-                            className={`transition-all duration-200 transform hover:scale-110 ${language === 'fr' ? 'ring-2 ring-indigo-600 scale-110' : 'opacity-75'}`}
-                            aria-label="Switch to French"
-                        >
-                            <img src={franceFlag} alt="French" className="w-8 h-6 rounded-sm" />
-                        </button>
-                        <button 
-                            onClick={() => changeLanguage('en')}
-                            className={`transition-all duration-200 transform hover:scale-110 ${language === 'en' ? 'ring-2 ring-indigo-600 scale-110' : 'opacity-75'}`}
-                            aria-label="Switch to English"
-                        >
-                            <img src={ukFlag} alt="English" className="w-8 h-6 rounded-sm" />
-                        </button>
-                    </div>
-                    
                     <Link
                         to="/dashboard"
                         className="block w-full px-3 py-3 text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg mt-3 transition-colors duration-200"
+                        onClick={toggleMenu}
                     >
                         {t('getStarted')}
                     </Link>
                     <Link
                         to="/dashboard"
                         className="block w-full px-3 py-3 text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg mt-3 transition-colors duration-200"
+                        onClick={toggleMenu}
                     >
                         {t('signIn')}
                     </Link>

@@ -43,14 +43,6 @@ const LandingPage = () => {
       </div>
 
       <div className="">
-        {/* <CloudManagement /> */}
-      </div>
-
-      <div className="">
-        {/* <IntegrationCard /> */}
-      </div>
-
-      <div className="">
         <ClientReviews />
       </div>
 

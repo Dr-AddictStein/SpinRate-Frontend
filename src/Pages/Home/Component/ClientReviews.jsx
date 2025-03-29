@@ -8,9 +8,24 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 // Import required modules
 import { Pagination, Navigation, Autoplay } from 'swiper/modules';
+import { useLanguage } from '../../../context/LanguageContext';
 
 // Custom styles for Swiper
 import './ReviewSlider.css';
+
+// Translations object
+const translations = {
+  en: {
+    sectionLabel: "Client Reviews",
+    sectionTitle: "What Our Customer Say",
+    sectionTitleSecondLine: "About Us"
+  },
+  fr: {
+    sectionLabel: "Avis des Clients",
+    sectionTitle: "Ce Que Nos Clients Disent",
+    sectionTitleSecondLine: "À Propos de Nous"
+  }
+};
 
 const StarRating = ({ rating }) => {
   return (
@@ -66,7 +81,10 @@ const ReviewCard = ({ review }) => {
 };
 
 const ClientReviews = () => {
-  // Sample review data
+  const { language } = useLanguage();
+  const t = translations[language] || translations.en;
+
+  // Sample review data - NOT translated as requested
   const reviews = [
     {
       id: 1,
@@ -127,7 +145,7 @@ const ClientReviews = () => {
             transition={{ duration: 0.5 }}
             className="text-blue-500 font-medium"
           >
-            Client Reviews
+            {t.sectionLabel}
           </motion.p>
           <motion.h2
             initial={{ opacity: 0, y: 10 }}
@@ -135,7 +153,7 @@ const ClientReviews = () => {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="text-3xl md:text-4xl font-bold text-gray-900 mt-2"
           >
-            What Our Customer Say<br />About Us
+            {t.sectionTitle}<br />{t.sectionTitleSecondLine}
           </motion.h2>
         </div>
 

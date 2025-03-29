@@ -1,6 +1,53 @@
 import React, { useEffect, useRef } from 'react';
 import { motion, useAnimation, useInView } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '../../../context/LanguageContext';
+
+// Translations object
+const translations = {
+  en: {
+    featuresLabel: "Features",
+    mainHeading1: "Simple and fun",
+    mainHeading2: "for customers",
+    startNow: "Start now",
+    // Feature card translations
+    features: [
+      {
+        title: "Boost your google reviews",
+        description: "Engage customers with a fun prize wheel that boosts your SEO, increases visibility, and attracts new clients"
+      },
+      {
+        title: "Build Customer Loyalty & Drive Retention",
+        description: "Easily customize your prize wheel and use collected data to create targeted campaigns that keep customers coming back and build long-term loyalty."
+      },
+      {
+        title: "Grow Your Turnover",
+        description: "Boost sales by turning customer engagement into repeat business and more reviews with our easy prize wheel."
+      }
+    ]
+  },
+  fr: {
+    featuresLabel: "Fonctionnalités",
+    mainHeading1: "Simple et amusant",
+    mainHeading2: "pour les clients",
+    startNow: "Commencer",
+    // Feature card translations
+    features: [
+      {
+        title: "Augmentez vos avis Google",
+        description: "Engagez vos clients avec une roue de prix amusante qui améliore votre référencement, augmente votre visibilité et attire de nouveaux clients"
+      },
+      {
+        title: "Fidélisez vos clients",
+        description: "Personnalisez facilement votre roue et utilisez les données collectées pour créer des campagnes ciblées qui fidélisent vos clients et bâtissent une relation durable."
+      },
+      {
+        title: "Augmentez votre chiffre d'affaires",
+        description: "Stimulez vos ventes en transformant l'engagement des clients en affaires répétées et en plus d'avis avec notre roue de prix facile."
+      }
+    ]
+  }
+};
 
 const FeatureCard = ({ icon, title, description, index }) => {
   const controls = useAnimation();
@@ -81,6 +128,9 @@ const Features = () => {
   const titleControls = useAnimation();
   const titleRef = useRef(null);
   const isTitleInView = useInView(titleRef, { once: true });
+  const navigate = useNavigate();
+  const { language } = useLanguage();
+  const t = translations[language] || translations.en;
 
   useEffect(() => {
     if (isTitleInView) {
@@ -96,8 +146,8 @@ const Features = () => {
           <path d="M17 14h.01" />
         </svg>
       ),
-      title: "Boost your google reviews",
-      description: "Engage customers with a fun prize wheel that boosts your SEO, increases visibility, and attracts new clients",
+      title: t.features[0].title,
+      description: t.features[0].description,
     },
     {
       icon: (
@@ -107,8 +157,8 @@ const Features = () => {
           <path d="m8 4 4 6 4-2 3 4" />
         </svg>
       ),
-      title: "Build Customer Loyalty & Drive Retention",
-      description: "Easily customize your prize wheel and use collected data to create targeted campaigns that keep customers coming back and build long-term loyalty.",
+      title: t.features[1].title,
+      description: t.features[1].description,
     },
     {
       icon: (
@@ -116,11 +166,10 @@ const Features = () => {
           <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
         </svg>
       ),
-      title: "Grow Your Turnover",
-      description: "Boost sales by turning customer engagement into repeat business and more reviews with our easy prize wheel.",
+      title: t.features[2].title,
+      description: t.features[2].description,
     }
   ];
-  const navigate = useNavigate();
 
   return (
     <section className="py-20 relative overflow-hidden bg-gray-50">
@@ -159,7 +208,7 @@ const Features = () => {
             transition={{ duration: 0.5 }}
             className="inline-block px-4 py-1 mb-4 bg-blue-50 text-blue-500 rounded-full text-sm font-medium"
           >
-            Features
+            {t.featuresLabel}
           </motion.div>
 
           {/* Main heading */}
@@ -174,14 +223,14 @@ const Features = () => {
             className="relative"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-              Simple and fun
+              {t.mainHeading1}
               <br />
               <motion.span
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
               >
-                for customers
+                {t.mainHeading2}
               </motion.span>
             </h2>
 
@@ -226,7 +275,7 @@ const Features = () => {
           whileTap={{ scale: 0.95 }}
           className=" px-6 py-3 md:px-8 md:py-4 bg-blue-500 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-600 transition-colors duration-300"
         >
-          Start now
+          {t.startNow}
         </motion.button>
       </motion.div>
     </section>

@@ -1,37 +1,131 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
+import { useLanguage } from "../../../context/LanguageContext";
+
+// Translations object
+const translations = {
+  en: {
+    priceTable: "Price Table",
+    noHiddenCharge: "No Hidden Charge Applied,",
+    chooseYourPlan: "Choose Your Plan",
+    monthly: "Monthly",
+    semiAnnual: "6 Months",
+    yearly: "Yearly",
+    perMonth: "Per Month",
+    perSixMonths: "For 6 Months",
+    perYear: "Per Year",
+    discount: "discount",
+    getStarted: "Get Started",
+    popular: "Popular",
+    features: {
+      monthly: [
+        "Full Access to All Features",
+        "Priority Support",
+        "Regular Updates"
+      ],
+      semiAnnual: [
+        "Full Access to All Features",
+        "Priority Support",
+        "Regular Updates",
+        "20% Discount"
+      ],
+      yearly: [
+        "Full Access to All Features",
+        "Priority Support",
+        "Regular Updates",
+        "25% Discount",
+        "Free Setup Assistance"
+      ]
+    }
+  },
+  fr: {
+    priceTable: "Tableau des Prix",
+    noHiddenCharge: "Aucun Frais Caché,",
+    chooseYourPlan: "Choisissez Votre Forfait",
+    monthly: "Mensuel",
+    semiAnnual: "6 Mois",
+    yearly: "Annuel",
+    perMonth: "Par Mois",
+    perSixMonths: "Pour 6 Mois",
+    perYear: "Par An",
+    discount: "de réduction",
+    getStarted: "Commencer",
+    popular: "Populaire",
+    features: {
+      monthly: [
+        "Accès complet à toutes les fonctionnalités",
+        "Support prioritaire",
+        "Mises à jour régulières"
+      ],
+      semiAnnual: [
+        "Accès complet à toutes les fonctionnalités",
+        "Support prioritaire",
+        "Mises à jour régulières",
+        "20% de réduction"
+      ],
+      yearly: [
+        "Accès complet à toutes les fonctionnalités",
+        "Support prioritaire",
+        "Mises à jour régulières",
+        "25% de réduction",
+        "Assistance à la configuration gratuite"
+      ]
+    }
+  }
+};
 
 const PricingCard = ({ title, price, period, features = [], popular, buttonText }) => {
+  const { language } = useLanguage();
+  const t = translations[language] || translations.en;
+
   return (
     <motion.div 
-      className={`bg-white rounded-xl shadow-lg overflow-hidden ${popular ? "relative" : ""}`}
+      className={`bg-white rounded-xl shadow-lg overflow-hidden h-full ${popular ? "relative" : ""}`}
       whileHover={{ y: -10, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.1)" }}
       transition={{ duration: 0.3 }}
     >
       {popular && (
         <div className="absolute top-0 right-0">
           <div className="bg-blue-500 text-white py-1 px-8 transform rotate-45 translate-x-8 translate-y-3 text-sm font-semibold shadow-md">
-            Popular
+            {t.popular}
           </div>
         </div>
       )}
       
-      <div className="p-8">
-        <h3 className="text-2xl font-bold text-center text-gray-800 mb-6">{title}</h3>
-        <div className="text-center mb-6">
-          <span className="text-5xl font-bold text-blue-500">{price}</span>
-          <p className="text-gray-600 mt-2">Per Month, Billed {period === 'yearly' ? 'Yearly' : 'Monthly'}</p>
+      <div className="p-8 flex flex-col h-full">
+        <div>
+          <h3 className="text-2xl font-bold text-center text-gray-800 mb-6">{title}</h3>
+          <div className="text-center mb-6">
+            <span className="text-5xl font-bold text-blue-500">{price}</span>
+            <p className="text-gray-600 mt-2">
+              {period === 'monthly' ? t.perMonth : 
+               period === 'semiAnnual' ? t.perSixMonths : 
+               t.perYear}
+            </p>
+          </div>
         </div>
         
-        <div className="space-y-4 mt-8">
+        <div className="space-y-4 mt-8 flex-grow">
           {features && features.length > 0 && features.map((feature, index) => (
             <div key={index} className="flex items-start">
-              <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+              <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
               <span className="text-gray-700">{feature}</span>
             </div>
           ))}
+          
+          {/* Add invisible placeholder items for the yearly plan to ensure consistent height */}
+          {period !== 'yearly' && period === 'monthly' && (
+            <>
+              <div className="opacity-0 h-5"></div>
+              <div className="opacity-0 h-5"></div>
+            </>
+          )}
+          
+          {period !== 'yearly' && period === 'semiAnnual' && (
+            <div className="opacity-0 h-5"></div>
+          )}
         </div>
         
         <motion.button 
@@ -43,7 +137,7 @@ const PricingCard = ({ title, price, period, features = [], popular, buttonText 
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.98 }}
         >
-          {buttonText || "Get Started"}
+          {buttonText || t.getStarted}
         </motion.button>
       </div>
     </motion.div>
@@ -51,74 +145,32 @@ const PricingCard = ({ title, price, period, features = [], popular, buttonText 
 };
 
 const PricingSection = () => {
-  const [billingPeriod, setBillingPeriod] = useState("monthly");
+  const { language } = useLanguage();
+  const t = translations[language] || translations.en;
   
-  const pricingPlans = {
-    monthly: [
-      {
-        title: "Standard",
-        price: "$49",
-        features: [
-          "Military GradeServer Protection",
-          "All Dashboard Features",
-          "API And Webhook Access"
-        ],
-        popular: false
-      },
-      {
-        title: "Premium",
-        price: "$249",
-        features: [
-          "8 Team Members",
-          "Custom Analytics Filters",
-          "API And Webhook Access"
-        ],
-        popular: true
-      },
-      {
-        title: "Professional",
-        price: "$99",
-        features: [
-          "Military GradeServer Protection",
-          "All Dashboard Features",
-          "API And Webhook Access"
-        ],
-        popular: false
-      }
-    ],
-    yearly: [
-      {
-        title: "Standard",
-        price: "$470",
-        features: [
-          "Military GradeServer Protection",
-          "All Dashboard Features",
-          "API And Webhook Access"
-        ],
-        popular: false
-      },
-      {
-        title: "Premium",
-        price: "$2,390",
-        features: [
-          "8 Team Members",
-          "Custom Analytics Filters",
-          "API And Webhook Access"
-        ],
-        popular: true
-      },
-      {
-        title: "Professional",
-        price: "$950",
-        features: [
-          "Military GradeServer Protection",
-          "All Dashboard Features",
-          "API And Webhook Access"
-        ],
-        popular: false
-      }
-    ]
-  };
+  const pricingPlans = [
+    {
+      title: t.monthly,
+      price: "€10",
+      period: "monthly",
+      features: t.features.monthly,
+      popular: false
+    },
+    {
+      title: t.semiAnnual,
+      price: "€49",
+      period: "semiAnnual",
+      features: t.features.semiAnnual,
+      popular: true
+    },
+    {
+      title: t.yearly,
+      price: "€89",
+      period: "yearly",
+      features: t.features.yearly,
+      popular: false
+    }
+  ];
 
   return (
     <section className="py-16 bg-gray-50 overflow-hidden relative">
@@ -138,7 +190,7 @@ const PricingSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            Price Table
+            {t.priceTable}
           </motion.p>
           <motion.h2 
             className="text-3xl md:text-4xl font-bold text-gray-900 mb-10"
@@ -146,50 +198,27 @@ const PricingSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            No Hidden Charge Applied,<br />
-            Choose Your Plan
+            {t.noHiddenCharge}<br />
+            {t.chooseYourPlan}
           </motion.h2>
-          
-          {/* Billing toggle */}
-          <div className="inline-flex p-1 bg-white rounded-lg shadow-sm border border-gray-200 mb-10">
-            <button
-              className={`px-6 py-2 text-sm font-medium rounded-lg transition-colors ${
-                billingPeriod === "monthly" 
-                  ? "bg-blue-500 text-white" 
-                  : "text-gray-700 hover:text-gray-900"
-              }`}
-              onClick={() => setBillingPeriod("monthly")}
-            >
-              Monthly
-            </button>
-            <button
-              className={`px-6 py-2 text-sm font-medium rounded-lg transition-colors ${
-                billingPeriod === "yearly" 
-                  ? "bg-blue-500 text-white" 
-                  : "text-gray-700 hover:text-gray-900"
-              }`}
-              onClick={() => setBillingPeriod("yearly")}
-            >
-              Yearly
-            </button>
-          </div>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {pricingPlans[billingPeriod].map((plan, index) => (
+          {pricingPlans.map((plan, index) => (
             <motion.div
-              key={`${billingPeriod}-${index}`}
+              key={index}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
+              className="h-full"
             >
               <PricingCard 
                 title={plan.title}
                 price={plan.price}
-                period={billingPeriod}
+                period={plan.period}
                 features={plan.features}
                 popular={plan.popular}
-                buttonText="Get Started"
+                buttonText={t.getStarted}
               />
             </motion.div>
           ))}

@@ -1,6 +1,55 @@
 import React, { useRef, useEffect } from 'react';
 import { motion, useAnimation, useInView } from 'framer-motion';
 import { TrendingUp, Users, RotateCw, DollarSign } from 'lucide-react';
+import { useLanguage } from '../../../context/LanguageContext';
+
+// Translations object
+const translations = {
+  en: {
+    sectionTitle: "Proven Results",
+    sectionDescription: "Our platform delivers measurable impact for businesses of all sizes",
+    stats: [
+      {
+        value: "+300",
+        description: "New Google Reviews per month"
+      },
+      {
+        value: "x6",
+        description: "Bring your customers back"
+      },
+      {
+        value: "+85%",
+        description: "Increase your customer database"
+      },
+      {
+        value: "+10-20%",
+        description: "Increase your revenue yearly"
+      }
+    ]
+  },
+  fr: {
+    sectionTitle: "Résultats Prouvés",
+    sectionDescription: "Notre plateforme offre un impact mesurable pour les entreprises de toutes tailles",
+    stats: [
+      {
+        value: "+300",
+        description: "Nouveaux avis Google par mois"
+      },
+      {
+        value: "x6",
+        description: "Fidélisez vos clients"
+      },
+      {
+        value: "+85%",
+        description: "Augmentez votre base de données clients"
+      },
+      {
+        value: "+10-20%",
+        description: "Augmentez votre chiffre d'affaires annuel"
+      }
+    ]
+  }
+};
 
 const StatCard = ({ icon: Icon, value, description, index }) => {
   const controls = useAnimation();
@@ -60,6 +109,8 @@ const StatsSection = () => {
   const titleRef = useRef(null);
   const titleControls = useAnimation();
   const isTitleInView = useInView(titleRef, { once: true, amount: 0.3 });
+  const { language } = useLanguage();
+  const t = translations[language] || translations.en;
 
   useEffect(() => {
     if (isTitleInView) {
@@ -70,23 +121,23 @@ const StatsSection = () => {
   const stats = [
     {
       icon: TrendingUp,
-      value: "+300",
-      description: "New Google Reviews per month"
+      value: t.stats[0].value,
+      description: t.stats[0].description
     },
     {
       icon: RotateCw,
-      value: "x6",
-      description: "Bring your customers back"
+      value: t.stats[1].value,
+      description: t.stats[1].description
     },
     {
       icon: Users,
-      value: "+85%",
-      description: "Increase your customer database"
+      value: t.stats[2].value,
+      description: t.stats[2].description
     },
     {
       icon: DollarSign,
-      value: "+10-20%",
-      description: "Increase your revenue yearly"
+      value: t.stats[3].value,
+      description: t.stats[3].description
     }
   ];
 
@@ -109,10 +160,10 @@ const StatsSection = () => {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Proven Results
+            {t.sectionTitle}
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Our platform delivers measurable impact for businesses of all sizes
+            {t.sectionDescription}
           </p>
         </motion.div>
 

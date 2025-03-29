@@ -2,43 +2,106 @@ import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { QrCode, Star, RotateCw, Award, Database } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '../../../context/LanguageContext';
+
+// Translations object
+const translations = {
+  en: {
+    howItWorks: "How Does It",
+    workHighlight: "Work?",
+    processDescription: "Our simple 5-step process makes it easy to boost your Google reviews and grow your business",
+    startNow: "Start now!",
+    steps: [
+      {
+        title: "Invite your clients to scan the QR code",
+        description: "We provide you with flyers for your sales counter, and in your delivery bags."
+      },
+      {
+        title: "Clients leave a Google Review",
+        description: "The client sees on the flyer there's a prize wheel spin after they leave a review."
+      },
+      {
+        title: "Time to turn the wheel!",
+        description: "Once the google review is submitted, the client spin the wheel and hopes to land on a gift"
+      },
+      {
+        title: "#1 on Google",
+        description: "You boost your ranking on Google reviews, enhance customer trust and drive new clients!"
+      },
+      {
+        title: "Data collected",
+        description: "You communicate through the data you collected for offers, events, to drive repeat business, and increase your turnover!"
+      }
+    ]
+  },
+  fr: {
+    howItWorks: "Comment ça",
+    workHighlight: "Fonctionne?",
+    processDescription: "Notre processus simple en 5 étapes facilite l'augmentation de vos avis Google et le développement de votre entreprise",
+    startNow: "Commencer!",
+    steps: [
+      {
+        title: "Invitez vos clients à scanner le code QR",
+        description: "Nous vous fournissons des flyers pour votre comptoir de vente et dans vos sacs de livraison."
+      },
+      {
+        title: "Les clients laissent un avis Google",
+        description: "Le client voit sur le flyer qu'il y a une roue de prix à faire tourner après avoir laissé un avis."
+      },
+      {
+        title: "C'est le moment de faire tourner la roue!",
+        description: "Une fois l'avis Google soumis, le client fait tourner la roue et espère gagner un cadeau"
+      },
+      {
+        title: "#1 sur Google",
+        description: "Vous améliorez votre classement sur les avis Google, renforcez la confiance des clients et attirez de nouveaux clients!"
+      },
+      {
+        title: "Données collectées",
+        description: "Vous communiquez via les données collectées pour des offres, des événements, pour fidéliser vos clients et augmenter votre chiffre d'affaires!"
+      }
+    ]
+  }
+};
 
 const HowItWorks = () => {
   // References for animation triggers
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
   const navigate = useNavigate();
+  const { language } = useLanguage();
+  const t = translations[language] || translations.en;
 
   // Steps data
   const steps = [
     {
       icon: <QrCode size={48} className="text-blue-500" />,
-      title: "Invite your clients to scan the QR code",
-      description: "We provide you with flyers for your sales counter, and in your delivery bags.",
+      title: t.steps[0].title,
+      description: t.steps[0].description,
       color: "blue"
     },
     {
       icon: <Star size={48} className="text-yellow-500" />,
-      title: "Clients leave a Google Review",
-      description: "The client sees on the flyer there's a prize wheel spin after they leave a review.",
+      title: t.steps[1].title,
+      description: t.steps[1].description,
       color: "yellow"
     },
     {
       icon: <RotateCw size={48} className="text-green-500" />,
-      title: "Time to turn the wheel!",
-      description: "Once the google review is submitted, the client spin the wheel and hopes to land on a gift",
+      title: t.steps[2].title,
+      description: t.steps[2].description,
       color: "green"
     },
     {
       icon: <Award size={48} className="text-purple-500" />,
-      title: "#1 on Google",
-      description: "You boost your ranking on Google reviews, enhance customer trust and drive new clients!",
+      title: t.steps[3].title,
+      description: t.steps[3].description,
       color: "purple"
     },
     {
       icon: <Database size={48} className="text-indigo-500" />,
-      title: "Data collected",
-      description: "You communicate through the data you collected for offers, events, to drive repeat business, and increase your turnover!",
+      title: t.steps[4].title,
+      description: t.steps[4].description,
       color: "indigo"
     }
   ];
@@ -118,10 +181,10 @@ const HowItWorks = () => {
           className="text-center mb-16 md:mb-24"
         >
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            How Does It <span className="text-blue-600">Work?</span>
+            {t.howItWorks} <span className="text-blue-600">{t.workHighlight}</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Our simple 5-step process makes it easy to boost your Google reviews and grow your business
+            {t.processDescription}
           </p>
         </motion.div>
 
@@ -189,7 +252,7 @@ const HowItWorks = () => {
             whileTap={{ scale: 0.95 }}
             className="px-10 py-5 bg-blue-600 text-white text-xl font-bold rounded-xl shadow-lg hover:bg-blue-700 transition-all duration-300"
           >
-            Start now!
+            {t.startNow}
           </motion.button>
         </motion.div>
       </div>

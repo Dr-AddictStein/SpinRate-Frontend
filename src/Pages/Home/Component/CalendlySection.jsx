@@ -1,8 +1,40 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, MessageCircle } from 'lucide-react';
+import { useLanguage } from '../../../context/LanguageContext';
+
+// Translations object
+const translations = {
+  en: {
+    title: "Reserve a Free 15-Minute Chat with Us if You Have Questions!",
+    description: "Not sure if our solution is right for you? Schedule a quick call with our team to discuss your needs and how we can help boost your online presence.",
+    features: [
+      "Quick 15-minute consultation",
+      "Get answers to all your questions",
+      "Choose a time that works for you"
+    ],
+    callToAction: "Schedule Your Free Call",
+    availableNow: "Available Now",
+    teamReady: "Our team is ready to help you succeed"
+  },
+  fr: {
+    title: "Réservez un Chat Gratuit de 15 Minutes avec Nous si Vous Avez des Questions!",
+    description: "Vous n'êtes pas sûr que notre solution vous convienne? Planifiez un appel rapide avec notre équipe pour discuter de vos besoins et de la façon dont nous pouvons vous aider à améliorer votre présence en ligne.",
+    features: [
+      "Consultation rapide de 15 minutes",
+      "Obtenez des réponses à toutes vos questions",
+      "Choisissez un horaire qui vous convient"
+    ],
+    callToAction: "Planifiez Votre Appel Gratuit",
+    availableNow: "Disponible Maintenant",
+    teamReady: "Notre équipe est prête à vous aider à réussir"
+  }
+};
 
 const CalendlySection = () => {
+  const { language } = useLanguage();
+  const t = translations[language] || translations.en;
+
   return (
     <section className="py-16 md:py-24 relative overflow-hidden">
       {/* Background gradient */}
@@ -31,11 +63,11 @@ const CalendlySection = () => {
                 viewport={{ once: true }}
               >
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-                  Reserve a Free 15-Minute Chat with Us if You Have Questions!
+                  {t.title}
                 </h2>
                 
                 <p className="text-lg text-gray-600 mb-8">
-                  Not sure if our solution is right for you? Schedule a quick call with our team to discuss your needs and how we can help boost your online presence.
+                  {t.description}
                 </p>
                 
                 <ul className="space-y-4 mb-8">
@@ -43,19 +75,19 @@ const CalendlySection = () => {
                     <div className="flex-shrink-0 w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
                       <Clock size={20} />
                     </div>
-                    <span className="ml-4 text-gray-700">Quick 15-minute consultation</span>
+                    <span className="ml-4 text-gray-700">{t.features[0]}</span>
                   </li>
                   <li className="flex items-center">
                     <div className="flex-shrink-0 w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
                       <MessageCircle size={20} />
                     </div>
-                    <span className="ml-4 text-gray-700">Get answers to all your questions</span>
+                    <span className="ml-4 text-gray-700">{t.features[1]}</span>
                   </li>
                   <li className="flex items-center">
                     <div className="flex-shrink-0 w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
                       <Calendar size={20} />
                     </div>
-                    <span className="ml-4 text-gray-700">Choose a time that works for you</span>
+                    <span className="ml-4 text-gray-700">{t.features[2]}</span>
                   </li>
                 </ul>
                 
@@ -65,7 +97,7 @@ const CalendlySection = () => {
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
                 >
-                  Schedule Your Free Call
+                  {t.callToAction}
                 </a>
               </motion.div>
             </div>
@@ -82,9 +114,9 @@ const CalendlySection = () => {
                 <div className="w-48 h-48 mx-auto bg-white rounded-full flex items-center justify-center shadow-lg mb-6">
                   <Calendar className="w-24 h-24 text-indigo-600" />
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-2">Available Now</h3>
+                <h3 className="text-2xl font-bold text-white mb-2">{t.availableNow}</h3>
                 <p className="text-indigo-100">
-                  Our team is ready to help you succeed
+                  {t.teamReady}
                 </p>
               </motion.div>
             </div>
