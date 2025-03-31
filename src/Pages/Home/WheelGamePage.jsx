@@ -58,6 +58,48 @@ const WheelGamePage = () => {
     }
   }, [id]);
   
+  // Add custom animation classes
+  useEffect(() => {
+    // Add pulse-width animation if not already defined
+    const styleSheet = document.styleSheets[0];
+    let animationExists = false;
+    
+    for (let i = 0; i < styleSheet.cssRules.length; i++) {
+      if (styleSheet.cssRules[i].name === 'pulse-width') {
+        animationExists = true;
+        break;
+      }
+    }
+    
+    if (!animationExists) {
+      styleSheet.insertRule(`
+        @keyframes pulse-width {
+          0%, 100% { width: 10%; }
+          50% { width: 90%; }
+        }
+      `, styleSheet.cssRules.length);
+      
+      styleSheet.insertRule(`
+        .animate-pulse-width {
+          animation: pulse-width 2s ease-in-out infinite;
+        }
+      `, styleSheet.cssRules.length);
+      
+      styleSheet.insertRule(`
+        @keyframes spin-slow {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+      `, styleSheet.cssRules.length);
+      
+      styleSheet.insertRule(`
+        .animate-spin-slow {
+          animation: spin-slow 8s linear infinite;
+        }
+      `, styleSheet.cssRules.length);
+    }
+  }, []);
+  
   // Helper function to adjust color brightness
   function adjustColor(color, amount) {
     // Remove the # if present
@@ -110,222 +152,140 @@ const WheelGamePage = () => {
     
     // Function to draw the wheel (extracted to be called after resize)
     function drawWheel() {
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-      const radius = Math.min(centerX, centerY) * 0.92; // Increased radius proportion
-    
-    // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Get wheel data
-    const colors = [
-      wheel.mainColors?.color1 || '#FF6B6B', // Modern vibrant red
-      wheel.mainColors?.color2 || '#4ECDC4', // Teal
-      wheel.mainColors?.color3 || '#FFD166'  // Vibrant yellow
-    ];
-    
-    const displayLots = wheel.lots && wheel.lots.length > 0 
-      ? wheel.lots 
-      : Array(8).fill({ name: 'Prize', odds: '1', promoCode: '' });
-    
-    // Add modern metallic ring around edge
-    const ringGradient = ctx.createLinearGradient(
-      centerX - radius, centerY - radius,
-      centerX + radius, centerY + radius
-    );
-    ringGradient.addColorStop(0, '#FFD700'); // Gold
-    ringGradient.addColorStop(0.5, '#FFF8E1'); // Light gold/silver
-    ringGradient.addColorStop(1, '#FFD700'); // Gold again
-    
-    ctx.beginPath();
-      ctx.arc(centerX, centerY, radius * 1.02, 0, 2 * Math.PI); // Slightly adjusted radius
-      ctx.lineWidth = 10; // Reduced thickness for better fit
-    ctx.strokeStyle = ringGradient;
-    ctx.stroke();
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const radius = Math.min(centerX, centerY) * 0.92;
       
-      // Add outer shadow to the ring for better visibility
-      ctx.shadowBlur = 8; // Reduced shadow blur
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+      // Clear canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Get wheel data from backend or use defaults
+      // Primary wheel colors (alternating colors as shown in the image)
+      const primaryColors = [
+        wheel.mainColors?.color1 || '#000000', // Black (from the image)
+        wheel.mainColors?.color2 || '#6F6F00'  // Olive/dark yellow (from the image)
+      ];
+      
+      // Create sample data if none exists
+      const sampleLots = [
+        { name: '$8 mandatory', odds: '1' },
+        { name: '$8 mandatory', odds: '1' },
+        { name: '$8 mandatory', odds: '1' },
+        { name: '$8 mandatory', odds: '1' },
+        { name: '$8 mandatory', odds: '1' },
+        { name: '$5 mandatory', odds: '1' },
+        { name: '$3 mandatory', odds: '1' },
+        { name: 'ZERO', odds: '1' },
+      ];
+      
+      const displayLots = wheel.lots && wheel.lots.length > 0 
+        ? wheel.lots 
+        : sampleLots;
+      
+      // Add outer border/ring
       ctx.beginPath();
-      ctx.arc(centerX, centerY, radius * 1.03, 0, 2 * Math.PI); // Slightly increased
-      ctx.lineWidth = 1;
-      ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+      ctx.arc(centerX, centerY, radius * 1.02, 0, 2 * Math.PI);
+      ctx.lineWidth = 8;
+      ctx.strokeStyle = '#FFCC00'; // Gold/yellow border from the image
       ctx.stroke();
-      ctx.shadowBlur = 0;
-    
-    // Add inner ring with neon effect
-    ctx.beginPath();
-      ctx.arc(centerX, centerY, radius * 0.95, 0, 2 * Math.PI); // Reduced radius
-      ctx.lineWidth = 3; // Reduced width
-    ctx.strokeStyle = '#4361EE'; // Neon blue
-    ctx.stroke();
-    
-    // Add light reflection on ring (3D effect)
-    ctx.beginPath();
-      ctx.arc(centerX, centerY, radius * 1.05, Math.PI * 1.7, Math.PI * 2.2); // Adjusted radius
-    ctx.lineWidth = 5;
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
-    ctx.stroke();
-    
-    // Draw segments
-    const segmentAngle = (2 * Math.PI) / displayLots.length;
-    
-    // Top of the wheel is at 270 degrees (Math.PI * 1.5) in our canvas coordinate system
-    const topPosition = Math.PI * 1.5;
-    const startOffset = topPosition - (segmentAngle / 2);
-    
-    displayLots.forEach((lot, index) => {
-      const startAngle = startOffset + (index * segmentAngle);
-      const endAngle = startOffset + ((index + 1) * segmentAngle);
-      const midAngle = startAngle + (segmentAngle / 2);
       
-      // Select color from the palette, cycling through the available colors
-      const segmentColor = colors[index % colors.length];
+      // Draw segments
+      const segmentAngle = (2 * Math.PI) / displayLots.length;
       
-      // Create advanced gradient for segments
+      // Position the top segment properly - the pointer in the image points to the top
+      const topPosition = Math.PI * 1.5; // 270 degrees
+      const startOffset = topPosition - (segmentAngle / 2);
+      
+      // Center glow/light effect (subtle yellow radial gradient)
       const gradient = ctx.createRadialGradient(
-          centerX, centerY, 0, // Start from center
-        centerX, centerY, radius * 0.85
+        centerX, centerY, 0,
+        centerX, centerY, radius * 0.9
       );
+      gradient.addColorStop(0, 'rgba(255, 255, 0, 0.2)');
+      gradient.addColorStop(1, 'rgba(255, 255, 0, 0)');
       
-      // Calculate darker version of color for gradient
-      const darkerColor = adjustColor(segmentColor, -30);
-      const lighterColor = adjustColor(segmentColor, 30);
-      
-      // Three-color gradient for more depth
-      gradient.addColorStop(0, lighterColor);
-      gradient.addColorStop(0.7, segmentColor);
-      gradient.addColorStop(1, darkerColor);
-      
-        // Draw segment - extended all the way to center
       ctx.beginPath();
-      ctx.moveTo(centerX, centerY);
-        ctx.arc(centerX, centerY, radius * 0.98, startAngle, endAngle); // Increased segment radius
-      ctx.closePath();
-      
+      ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
       ctx.fillStyle = gradient;
       ctx.fill();
       
-      // Add 3D effect to segments with bright edge
+      // Draw each segment
+      displayLots.forEach((lot, index) => {
+        const startAngle = startOffset + (index * segmentAngle);
+        const endAngle = startOffset + ((index + 1) * segmentAngle);
+        const midAngle = startAngle + (segmentAngle / 2);
+        
+        // Alternate colors for segments
+        const segmentColor = primaryColors[index % 2];
+        
+        // Draw segment
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+        ctx.closePath();
+        
+        ctx.fillStyle = segmentColor;
+        ctx.fill();
+        
+        // Add white divider lines between segments
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(
+          centerX + Math.cos(startAngle) * radius,
+          centerY + Math.sin(startAngle) * radius
+        );
+        
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.stroke();
+        
+        // Draw text with the same orientation as before
+        ctx.save();
+        
+        // Get prize text
+        let displayText = lot.name || '$8 mandatory';
+        
+        // Set text properties - smaller font for better fit
+        const fontSize = Math.min(radius * 0.07, 14);
+        ctx.font = `bold ${Math.floor(fontSize)}px Arial, sans-serif`;
+        ctx.fillStyle = '#FFCC00';
+        
+        // Position context at center of wheel
+        ctx.translate(centerX, centerY);
+        
+        // Rotate to match the segment's midpoint angle
+        ctx.rotate(midAngle);
+        
+        // Draw text along the radial line path (but without drawing the line)
+        ctx.textAlign = 'center'; // Center the text on the line
+        ctx.textBaseline = 'middle';
+        
+        // Add shadow for better readability against dark backgrounds
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
+        ctx.shadowBlur = 5;
+        ctx.shadowOffsetX = 1;
+        ctx.shadowOffsetY = 1;
+        
+        // Place text in middle of where the line would be
+        const textDistance = radius * 0.55;
+        ctx.fillText(displayText, textDistance, 0);
+        
+        ctx.restore();
+      });
+      
+      // Add center circle (white)
       ctx.beginPath();
-      ctx.moveTo(centerX, centerY);
-        ctx.arc(centerX, centerY, radius * 0.98, startAngle, endAngle); // Increased segment radius
-      ctx.closePath();
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-      ctx.stroke();
-      
-      // Draw divider lines with neon glow effect
-      ctx.beginPath();
-      ctx.moveTo(centerX, centerY);
-      ctx.lineTo(
-          centerX + Math.cos(startAngle) * radius * 0.98, // Increased radius
-          centerY + Math.sin(startAngle) * radius * 0.98 // Increased radius
-      );
-      
-      // Create gradient for divider lines
-      const dividerGradient = ctx.createLinearGradient(
-        centerX, centerY,
-          centerX + Math.cos(startAngle) * radius * 0.98, // Increased radius
-          centerY + Math.sin(startAngle) * radius * 0.98 // Increased radius
-      );
-      dividerGradient.addColorStop(0, 'rgba(255, 255, 255, 0.1)');
-      dividerGradient.addColorStop(1, 'rgba(255, 255, 255, 0.8)');
-      
-      ctx.strokeStyle = dividerGradient;
-      ctx.lineWidth = 2;
-      ctx.stroke();
-      
-      // Add text
-      ctx.save();
-      ctx.translate(centerX, centerY);
-      ctx.rotate(midAngle);
-      
-        // Text path - adjusted based on segment size and number of segments
-        const textDistance = radius * 0.68; // Adjusted for larger wheel
-        
-        // Determine font size dynamically based on the number of segments and radius
-        const segmentCount = displayLots.length;
-        const radiusBasedFontSize = Math.max(radius * 0.08, 24); // Increased base font size
-        
-        let fontSize = radiusBasedFontSize; // Default font size based on radius
-        
-        // Further adjust based on segment count
-        if (segmentCount > 10) {
-          fontSize = radiusBasedFontSize * 0.85;
-        } else if (segmentCount > 8) {
-          fontSize = radiusBasedFontSize * 0.92;
-        }
-        
-        // Modern text styling with larger font
-      ctx.textAlign = 'center';
+      ctx.arc(centerX, centerY, radius * 0.15, 0, 2 * Math.PI);
       ctx.fillStyle = '#FFFFFF';
-        ctx.font = `bold ${Math.floor(fontSize)}px "Arial", sans-serif`;
-        
-        // Apply all text rendering techniques for maximum readability
-        ctx.textBaseline = 'middle'; // Better text vertical alignment
-        
-        // Create a strong high-contrast outline
-        ctx.strokeStyle = 'rgba(0, 0, 0, 0.9)';
-        ctx.lineWidth = Math.max(4, Math.floor(fontSize / 6)); // Scale outline with font size
-        ctx.lineJoin = 'round'; // Smoother text outline
-        
-        // Add strong text shadow
-        ctx.shadowColor = 'rgba(0, 0, 0, 1)';
-        ctx.shadowBlur = Math.max(5, Math.floor(fontSize / 4)); // Scale blur with font size
-        ctx.shadowOffsetX = 2;
-        ctx.shadowOffsetY = 2;
-        
-        // Get text metrics to check width - limit text length if needed
-        let displayText = lot.name || 'Prize';
-        const metrics = ctx.measureText(displayText);
-        
-        // If text is too wide for segment, truncate it
-        const maxTextWidth = radius * 0.4; // Maximum allowed text width
-        if (metrics.width > maxTextWidth) {
-          // Truncate text
-          let truncatedText = displayText;
-          while (ctx.measureText(truncatedText + "...").width > maxTextWidth && truncatedText.length > 0) {
-            truncatedText = truncatedText.substring(0, truncatedText.length - 1);
-          }
-          displayText = truncatedText + "...";
-        }
-        
-        // Draw text with outline for maximum contrast
-        ctx.strokeText(displayText, textDistance, 0); // Adjusted y coordinate to center text
-        ctx.fillText(displayText, textDistance, 0); // Adjusted y coordinate to center text
-      
-      // Reset shadow
-      ctx.shadowColor = 'transparent';
-      
-      ctx.restore();
-    });
-    
-    // Draw decorative elements around the wheel
-    // Animated-looking elements around the rim
-    for (let i = 0; i < displayLots.length * 3; i++) {
-      const angle = i * Math.PI / (displayLots.length * 1.5);
-      const dotSize = i % 3 === 0 ? 4 : 2;
-      
-      ctx.beginPath();
-      ctx.arc(
-          centerX + Math.cos(angle) * (radius * 0.97), // Adjusted inward slightly
-          centerY + Math.sin(angle) * (radius * 0.97), // Adjusted inward slightly
-        dotSize,
-        0,
-        2 * Math.PI
-      );
-      
-      // Alternate colors for more visual interest
-      if (i % 2 === 0) {
-        ctx.fillStyle = '#4CC9F0'; // Light blue
-      } else {
-        ctx.fillStyle = '#F72585'; // Pink
-      }
       ctx.fill();
-    }
-    
-      // Don't draw the center button on canvas - it will be an HTML element overlay
+      
+      // Add "SPIN NOW" text in the center
+      ctx.font = `bold ${Math.floor(radius * 0.06)}px Arial, sans-serif`;
+      ctx.fillStyle = '#000000';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('SPIN', centerX, centerY - radius * 0.02);
+      ctx.fillText('NOW', centerX, centerY + radius * 0.06);
     }
     
     // Clean up event listener when component unmounts
@@ -337,15 +297,27 @@ const WheelGamePage = () => {
   
   // Handle wheel spin with enhanced animation
   const spinWheel = () => {
-    if (isSpinning || !wheel || !wheel.lots || hasSpun) return;
+    if (isSpinning || !wheel || hasSpun) return;
     
     setIsSpinning(true);
     setResult(null);
     
+    // Create sample data if none exists from the backend
+    const sampleLots = [
+      { name: '$8 mandatory', odds: '1' },
+      { name: '$8 mandatory', odds: '1' },
+      { name: '$8 mandatory', odds: '1' },
+      { name: '$8 mandatory', odds: '1' },
+      { name: '$8 mandatory', odds: '1' },
+      { name: '$5 mandatory', odds: '1' },
+      { name: '$3 mandatory', odds: '1' },
+      { name: 'ZERO', odds: '1' },
+    ];
+    
     // Get wheel lots
     const displayLots = wheel.lots && wheel.lots.length > 0 
       ? wheel.lots 
-      : Array(8).fill({ name: 'Prize', odds: '1', promoCode: '' });
+      : sampleLots;
     
     // Calculate total odds
     const totalOdds = displayLots.reduce((sum, lot) => sum + (parseInt(lot.odds) || 1), 0);
@@ -474,10 +446,15 @@ const WheelGamePage = () => {
   
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-900 to-purple-700">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-xl font-medium text-gray-700">Loading wheel game...</p>
+          <div className="w-20 h-20 border-t-4 border-b-4 border-yellow-400 rounded-full animate-spin mx-auto mb-6"></div>
+          <div className="relative">
+            <div className="h-2 w-48 bg-purple-800 rounded-full overflow-hidden">
+              <div className="h-full bg-yellow-400 animate-pulse-width rounded-full"></div>
+            </div>
+          </div>
+          <p className="text-xl font-medium text-yellow-300 mt-6">Loading your prize wheel...</p>
         </div>
       </div>
     );
@@ -485,12 +462,12 @@ const WheelGamePage = () => {
   
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-        <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full text-center">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-900 to-purple-700 px-4">
+        <div className="bg-purple-800 p-8 rounded-xl shadow-lg max-w-md w-full text-center border-2 border-yellow-400">
           <div className="text-red-500 text-5xl mb-4">😕</div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Wheel Not Found</h2>
-          <p className="text-gray-600 mb-6">Sorry, we couldn't find the wheel game you're looking for.</p>
-          <Link to="/" className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200">
+          <h2 className="text-2xl font-bold text-yellow-300 mb-2">Wheel Not Found</h2>
+          <p className="text-white mb-6">Sorry, we couldn't find the prize wheel you're looking for.</p>
+          <Link to="/" className="inline-block bg-yellow-400 hover:bg-yellow-500 text-purple-900 font-medium py-2 px-6 rounded-lg transition duration-200">
             Go Home
           </Link>
         </div>
@@ -502,12 +479,12 @@ const WheelGamePage = () => {
   const instruction = wheel?.customerInstruction || "Give us a review";
   
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 py-2 px-1 sm:py-4 sm:px-2"> {/* Further reduced padding on mobile */}
-      <div className="mx-auto w-full">
-        <div className="bg-white rounded-xl shadow-xl overflow-visible relative p-1 sm:p-2 md:p-4"> {/* Further reduced padding on mobile */}
+    <div className="min-h-screen bg-[#7F00C6] flex items-center justify-center py-2 px-1 sm:py-4 sm:px-2">
+      <div className="mx-auto w-full max-w-4xl">
+        <div className="bg-white rounded-xl shadow-xl overflow-visible relative p-1 sm:p-2 md:p-4">
           {/* Logo at top left with no header */}
           {wheel?.logoUrl && (
-            <div className="absolute left-2 sm:left-4 md:left-6 top-2 sm:top-4 md:top-6 z-10 bg-white p-1 sm:p-1.5 md:p-2 rounded-lg shadow-lg border-2 border-amber-300">
+            <div className="absolute left-2 sm:left-4 md:left-6 top-2 sm:top-4 md:top-6 z-10 bg-white p-1 sm:p-1.5 md:p-2 rounded-lg shadow-lg border-2 border-yellow-400">
               <img 
                 src={wheel.logoUrl} 
                 alt="Logo" 
@@ -516,46 +493,23 @@ const WheelGamePage = () => {
             </div>
           )}
           
-          
-          
           {/* Wheel game - now always visible */}
           {showWheelGame && (
-            <div className="pt-12 sm:pt-16 md:pt-20 pb-4 sm:pb-6 md:pb-8 overflow-visible"> {/* Reduced top padding for mobile */}
+            <div className="pt-6 sm:pt-16 md:pt-20 pb-2 sm:pb-6 md:pb-8 overflow-visible"> {/* Reduced padding for mobile */}
               <div className="relative mx-auto w-full lg:w-[95%]"> {/* Use full width on small/medium screens */}
-                {/* Enhanced pointer triangle - made bigger but responsive */}
+                {/* Enhanced pointer triangle - updated to match the image */}
                 <div 
                   className="absolute top-0 left-1/2 transform -translate-x-1/2 z-10 pointer"
                   style={{ 
-                    filter: 'drop-shadow(0px 0px 10px rgba(67, 97, 238, 0.8))',
-                    marginTop: '-20px'  /* Smaller for mobile, will be overridden by media queries */
+                    marginTop: '-20px'
                   }}
                 >
-                  <svg width="60" height="65" viewBox="0 0 40 45" className="sm:w-[80px] sm:h-[85px]" xmlns="http://www.w3.org/2000/svg"> {/* Smaller on mobile */}
-                    <defs>
-                      <linearGradient id="pointerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#FFD700" />
-                        <stop offset="50%" stopColor="#FFF8E1" />
-                        <stop offset="100%" stopColor="#FFD700" />
-                      </linearGradient>
-                    </defs>
-                    <filter id="glow">
-                      <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
-                      <feMerge>
-                        <feMergeNode in="coloredBlur"/>
-                        <feMergeNode in="SourceGraphic"/>
-                      </feMerge>
-                    </filter>
+                  <svg width="50" height="55" viewBox="0 0 30 35" className="sm:w-[60px] sm:h-[65px]">
                     <polygon 
-                      points="20,45 0,10 40,10" 
-                      fill="url(#pointerGradient)" 
-                      filter="url(#glow)"
-                      stroke="#FFA000" 
+                      points="15,35 0,5 30,5" 
+                      fill="#000000" 
+                      stroke="#FFCC00" 
                       strokeWidth="1.5"
-                    />
-                    <polygon 
-                      points="20,38 6,12 34,12" 
-                      fill="#FFFFFF" 
-                      opacity="0.2"
                     />
                   </svg>
                 </div>
@@ -563,7 +517,7 @@ const WheelGamePage = () => {
                 {/* Spinning wheel with animation effects */}
                 <motion.div 
                   ref={wheelRef}
-                  className="relative w-full pt-[100%] mb-8 sm:mb-12 md:mb-16" // Adjusted bottom margin based on screen size
+                  className="relative w-full pt-[100%] mb-4 sm:mb-12 md:mb-16" // Reduced bottom margin on mobile
                   initial={{ rotate: 0 }}
                   animate={{ rotate: rotationDegrees }}
                   transition={{ 
@@ -597,78 +551,55 @@ const WheelGamePage = () => {
                       />
                     )}
                     
-                <motion.button
-                      className={`w-20 h-20 sm:w-28 sm:h-28 md:w-40 md:h-40 rounded-full flex items-center justify-center relative z-10
+                    <motion.button
+                      className={`w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full flex items-center justify-center relative z-10
                         ${hasSpun 
-                          ? 'bg-gray-600 cursor-not-allowed' 
-                          : 'bg-gradient-to-br from-amber-500 via-yellow-400 to-amber-600 overflow-hidden'} 
-                        text-white font-bold border-4 ${hasSpun ? 'border-gray-500' : 'border-amber-300'}`}
+                          ? 'cursor-not-allowed bg-white/30' 
+                          : 'bg-transparent'} 
+                        font-bold border-0`}
                       whileHover={hasSpun ? {} : { 
                         scale: 1.05,
-                        boxShadow: '0 0 25px rgba(255, 215, 0, 0.8), 0 0 50px rgba(255, 215, 0, 0.6)'
                       }}
                       whileTap={hasSpun ? {} : { scale: 0.95 }}
-                  onClick={spinWheel}
-                  disabled={isSpinning || hasSpun || showInstructionModal}
-                  style={{ 
-                        textShadow: '0 0 10px rgba(255, 255, 255, 0.8)',
-                        boxShadow: hasSpun 
-                          ? 'none' 
-                          : '0 0 20px rgba(255, 215, 0, 0.7), 0 0 40px rgba(255, 215, 0, 0.5), 0 0 60px rgba(255, 215, 0, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.4)'
-                      }}
+                      onClick={spinWheel}
+                      disabled={isSpinning || hasSpun || showInstructionModal}
+                      aria-label="Spin the wheel"
                     >
-                      {/* Shine effect overlay for button */}
-                      {!hasSpun && (
-                        <div 
-                          className="absolute inset-0 w-full h-full opacity-30" 
-                          style={{
-                            background: 'linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0) 100%)',
-                            transition: 'all 0.3s ease'
-                          }}
-                        />
-                      )}
-                      
                       <div className="text-center relative z-10">
-                        <div className="text-xs sm:text-sm md:text-3xl font-bold">
-                          {isSpinning ? 'SPINNING' : hasSpun ? 'PLAYED' : 'SPIN'}
-                        </div>
-                  {isSpinning && (
-                          <div className="text-xl sm:text-2xl md:text-3xl mt-1 sm:mt-2 bg-amber-600/30 rounded-full w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 mx-auto flex items-center justify-center">
+                        {isSpinning && (
+                          <div className="text-xl sm:text-2xl md:text-3xl mt-1 sm:mt-2 rounded-full w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 mx-auto flex items-center justify-center">
                             <span className="inline-block animate-spin">⟳</span>
                           </div>
-                  )}
-                        {!isSpinning && !hasSpun && (
-                          <div className="text-xs sm:text-xl md:text-3xl mt-1 sm:mt-2 font-bold">NOW!</div>
                         )}
                       </div>
-                </motion.button>
-              </div>
+                    </motion.button>
+                  </div>
                 </div>
               </div>
-              
-              {/* Thank you message - only shown after instruction modal is closed */}
-              {!showInstructionModal && (
-                <div className="mt-3 sm:mt-6 mb-2 sm:mb-3 text-center"> {/* Reduced margin */}
-                  <h2 className="text-base sm:text-lg md:text-xl font-bold text-indigo-800">
-                    Thank you for your contribution, your turn to play!
-                  </h2>
-                </div>
-              )}
             </div>
           )}
           
-          {/* Footer */}
+          {/* Thank you message - Updated to match the image purple text */}
+          {!showInstructionModal && (
+            <div className="mt-2 sm:mt-6 mb-3 sm:mb-4 text-center">
+              <h2 className="text-base sm:text-lg md:text-xl font-bold text-[#7F00C6]">
+                {wheel?.thankyouMessage || "Thank you for your review! Spin the wheel to win a prize!"}
+              </h2>
+            </div>
+          )}
+          
+          {/* Update footer to match image */}
           <div className="bg-gray-100 p-2 sm:p-3 md:p-4 text-center text-gray-500 text-xs sm:text-sm">
             <p>© {new Date().getFullYear()} SpinRate. All rights reserved.</p>
           </div>
         </div>
       </div>
       
-      {/* Initial Instruction Modal - made more responsive */}
+      {/* Initial Instruction Modal - updated for modern gaming theme */}
       {wheel && showInstructionModal && (
-        <div className="fixed inset-0 bg-black/10 bg-opacity-30 backdrop-blur-xs flex items-center justify-center z-50 p-2 sm:p-4">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4">
           <motion.div 
-            className="bg-gradient-to-b from-indigo-50/95 to-indigo-100/95 rounded-2xl border-4 border-indigo-500 shadow-2xl max-w-md w-[95%] sm:w-[90%] md:w-full p-4 sm:p-5 md:p-8 relative pointer-events-auto"
+            className="bg-gradient-to-b from-purple-900/95 to-purple-800/95 rounded-2xl border-4 border-yellow-400 shadow-2xl max-w-md w-[95%] sm:w-[90%] md:w-full p-4 sm:p-6 md:p-8 relative pointer-events-auto"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ 
@@ -678,41 +609,41 @@ const WheelGamePage = () => {
               damping: 25
             }}
           >
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-400 to-indigo-500"></div>
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400"></div>
             
-            <h2 className="text-center text-lg sm:text-xl md:text-2xl font-bold text-indigo-900 font-serif mb-3 sm:mb-4 md:mb-6">
-              How it works? 😍
+            <h2 className="text-center text-xl sm:text-2xl md:text-3xl font-bold text-yellow-300 mb-4 sm:mb-6">
+              {wheel?.customerInstruction || "HOW TO PLAY 🎮"}
             </h2>
             
-            <div className="my-3 sm:my-4 md:my-6 space-y-2 sm:space-y-3 md:space-y-4">
-              <div className="flex items-start space-x-2 sm:space-x-3">
-                <div className="bg-indigo-600 text-white font-bold rounded-full h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 flex items-center justify-center flex-shrink-0 text-xs sm:text-sm">1</div>
-                <p className="text-gray-800 text-xs sm:text-sm md:text-base">Give us a review.</p>
+            <div className="my-4 sm:my-6 space-y-3 sm:space-y-4">
+              <div className="flex items-start space-x-3 sm:space-x-4">
+                <div className="bg-yellow-400 text-purple-900 font-bold rounded-full h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 flex items-center justify-center flex-shrink-0 text-sm sm:text-base">1</div>
+                <p className="text-white text-sm sm:text-base">{wheel?.instructionStep1 || "Give us a review on Google."}</p>
               </div>
-              <div className="flex items-start space-x-2 sm:space-x-3">
-                <div className="bg-indigo-600 text-white font-bold rounded-full h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 flex items-center justify-center flex-shrink-0 text-xs sm:text-sm">2</div>
-                <p className="text-gray-800 text-xs sm:text-sm md:text-base">Press the return key on your phone.</p>
+              <div className="flex items-start space-x-3 sm:space-x-4">
+                <div className="bg-yellow-400 text-purple-900 font-bold rounded-full h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 flex items-center justify-center flex-shrink-0 text-sm sm:text-base">2</div>
+                <p className="text-white text-sm sm:text-base">{wheel?.instructionStep2 || "Return to this page after leaving your review."}</p>
               </div>
-              <div className="flex items-start space-x-2 sm:space-x-3">
-                <div className="bg-indigo-600 text-white font-bold rounded-full h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 flex items-center justify-center flex-shrink-0 text-xs sm:text-sm">3</div>
-                <p className="text-gray-800 text-xs sm:text-sm md:text-base">Come back to spin the wheel!</p>
+              <div className="flex items-start space-x-3 sm:space-x-4">
+                <div className="bg-yellow-400 text-purple-900 font-bold rounded-full h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 flex items-center justify-center flex-shrink-0 text-sm sm:text-base">3</div>
+                <p className="text-white text-sm sm:text-base">{wheel?.instructionStep3 || "Spin the wheel to win amazing prizes!"}</p>
               </div>
             </div>
             
-            <div className="mt-4 sm:mt-6 md:mt-8 text-center">
+            <div className="mt-6 sm:mt-8 text-center">
               <motion.button
-                className="w-full sm:w-auto px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-bold rounded-full shadow-lg hover:from-indigo-700 hover:to-indigo-800 transform transition-all duration-200 hover:scale-105 text-sm sm:text-base"
+                className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-purple-900 font-bold rounded-lg shadow-lg transform transition-all duration-200 text-sm sm:text-base"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleReviewButtonClick}
               >
-                Your turn !
+                LEAVE A REVIEW
               </motion.button>
             </div>
             
-            <div className="mt-3 sm:mt-4 md:mt-6 text-center">
+            <div className="mt-4 sm:mt-6 text-center">
               <motion.button
-                className="text-xs sm:text-xs md:text-sm text-indigo-600 hover:text-indigo-800 underline cursor-pointer italic"
+                className="text-sm text-yellow-300 hover:text-yellow-200 underline cursor-pointer"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleGameRulesClick}
@@ -724,12 +655,11 @@ const WheelGamePage = () => {
         </div>
       )}
       
-      {/* Result Modal - positioned more to the left to match screenshot */}
+      {/* Result Modal - updated for a more modern gaming look */}
       {showResultModal && result && (
-        <div className="fixed inset-0 bg-black/10 bg-opacity-30 backdrop-blur-xs flex items-center z-50 p-2 sm:p-4"
-          style={{ justifyContent: 'flex-start', paddingLeft: '10%', marginRight: '10%' }}> {/* Shifted further left to match screenshot */}
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4">
           <motion.div 
-            className="bg-gradient-to-b from-amber-50/95 to-amber-100/95 rounded-2xl border-4 border-amber-500 shadow-2xl max-w-md w-[85%] sm:w-[90%] md:w-full p-4 sm:p-5 md:p-8 relative"
+            className="bg-gradient-to-b from-purple-900/95 to-purple-800/95 rounded-2xl border-4 border-yellow-400 shadow-2xl max-w-md w-[95%] sm:w-[90%] md:w-full p-4 sm:p-6 md:p-8 relative"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ 
@@ -740,7 +670,7 @@ const WheelGamePage = () => {
             }}
           >
             {/* Decorative elements */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500"></div>
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400"></div>
             
             <motion.div 
               initial={{ scale: 0, rotate: -180 }}
@@ -751,14 +681,14 @@ const WheelGamePage = () => {
                 type: "spring",
                 stiffness: 200
               }}
-              className="mx-auto mb-3 sm:mb-4 md:mb-6 relative"
+              className="mx-auto mb-4 sm:mb-6 md:mb-8 relative"
             >
-              <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 mx-auto rounded-full bg-gradient-to-br from-yellow-300 to-amber-600 flex items-center justify-center shadow-lg">
-                <svg className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 mx-auto rounded-full bg-gradient-to-br from-yellow-300 to-yellow-500 flex items-center justify-center shadow-lg">
+                <svg className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" />
                 </svg>
               </div>
-              <div className="absolute -inset-2 rounded-full border-4 border-dashed border-amber-400 animate-spin-slow opacity-70"></div>
+              <div className="absolute -inset-2 rounded-full border-4 border-dashed border-yellow-400 animate-spin-slow opacity-70"></div>
             </motion.div>
             
             <motion.div 
@@ -766,68 +696,70 @@ const WheelGamePage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.6 }}
             >
-              <h2 className="text-center text-2xl sm:text-3xl md:text-4xl font-bold text-amber-900 font-serif mb-2 sm:mb-3">YOU WON 🥳</h2>
-              <div className="w-10 sm:w-12 md:w-16 h-1 bg-amber-500 mx-auto mb-2 sm:mb-3 md:mb-4"></div>
+              <h2 className="text-center text-2xl sm:text-3xl md:text-4xl font-bold text-yellow-300 mb-2 sm:mb-3">CONGRATULATIONS!</h2>
+              <div className="w-12 sm:w-16 md:w-20 h-1 bg-yellow-400 mx-auto mb-4 sm:mb-6"></div>
               
-              <p className="text-center text-xl sm:text-2xl md:text-3xl font-bold text-amber-800 mb-3 sm:mb-4 md:mb-6 font-serif">
-                {result.name}
+              <p className="text-center text-xl sm:text-2xl md:text-3xl font-bold text-white mb-4 sm:mb-6">
+                You Won: <span className="text-yellow-300">{result.name}</span>
               </p>
               
               {result.promoCode && (
                 <motion.div 
-                  className="mt-3 sm:mt-4 md:mt-6 p-2 sm:p-3 md:p-4 bg-white/90 rounded-xl border-2 border-amber-300 shadow-inner"
+                  className="mt-4 sm:mt-6 p-3 sm:p-4 bg-purple-700/50 rounded-xl border-2 border-yellow-400 shadow-inner"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.7, duration: 0.5 }}
                 >
-                  <p className="text-gray-700 mb-1 font-medium text-center text-xs sm:text-sm md:text-base">Your Promo Code:</p>
-                  <p className="text-lg sm:text-xl md:text-2xl font-bold text-amber-800 font-mono tracking-wider text-center bg-amber-50/90 py-1 sm:py-2 rounded">
+                  <p className="text-yellow-200 mb-2 font-medium text-center text-sm sm:text-base">Your Promo Code:</p>
+                  <p className="text-lg sm:text-xl md:text-2xl font-bold text-white font-mono tracking-wider text-center bg-purple-600/50 py-2 sm:py-3 rounded">
                     {result.promoCode}
                   </p>
                 </motion.div>
               )}
               
-              <div className="mt-4 sm:mt-5 md:mt-6 border-t border-amber-200 pt-3 sm:pt-4">
-                <p className="text-center text-gray-600 mb-3 sm:mb-4 text-xs sm:text-sm md:text-base">
-                  Enter your contact details to receive your gift
+              <div className="mt-6 sm:mt-8 border-t border-purple-700 pt-4 sm:pt-6">
+                <p className="text-center text-yellow-200 mb-4 text-sm sm:text-base">
+                  Enter your contact info to claim your prize
                 </p>
                 
-                <form className="space-y-2 sm:space-y-3" onSubmit={(e) => { e.preventDefault(); handleUserInfoSubmit(); }}>
-              <div>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={userInfo.email}
-                  onChange={handleUserInfoChange}
-                      className="w-full px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 text-xs sm:text-sm md:text-base"
+                <form className="space-y-3 sm:space-y-4" onSubmit={(e) => { e.preventDefault(); handleUserInfoSubmit(); }}>
+                  <div>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={userInfo.email}
+                      onChange={handleUserInfoChange}
+                      className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-purple-700/50 border border-purple-600 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-white placeholder-purple-300"
                       placeholder="Email Address"
-                  required
-                />
-              </div>
-              
-              <div>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={userInfo.phone}
-                  onChange={handleUserInfoChange}
-                      className="w-full px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 text-xs sm:text-sm md:text-base"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={userInfo.phone}
+                      onChange={handleUserInfoChange}
+                      className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-purple-700/50 border border-purple-600 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-white placeholder-purple-300"
                       placeholder="Phone Number"
-                  required
-                />
-              </div>
-              
-                  <div className="mt-3 sm:mt-4 text-center">
-                <button
-                  type="submit"
-                      className="w-full px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 bg-gradient-to-r from-amber-600 to-amber-700 text-white font-bold rounded-lg shadow-lg hover:from-amber-700 hover:to-amber-800 transform transition-all duration-200 text-xs sm:text-sm md:text-base"
-                >
-                      Submit
-                </button>
-              </div>
-            </form>
+                      required
+                    />
+                  </div>
+                  
+                  <div className="mt-4 sm:mt-6 text-center">
+                    <motion.button
+                      type="submit"
+                      className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-purple-900 font-bold rounded-lg shadow-lg hover:from-yellow-500 hover:to-yellow-600 transform transition-all duration-200"
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
+                    >
+                      CLAIM PRIZE
+                    </motion.button>
+                  </div>
+                </form>
               </div>
             </motion.div>
           </motion.div>
