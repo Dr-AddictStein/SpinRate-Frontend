@@ -5,7 +5,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import spinRateLogo from "../../assets/Design_sans_titre__10_-ai-brush-removebg-5gtqgd1e.png";
 
-const API_URL = 'http://localhost:4000/api';
+const API_URL = 'https://spin-rate-backend.vercel.app/api';
 
 const WheelGamePage = () => {
   const { id } = useParams(); // Get wheel ID from URL
@@ -442,7 +442,7 @@ const WheelGamePage = () => {
         };
         
         // Send data to the API endpoint
-        const response = await axios.post('http://localhost:4000/api/customer/create', userData);
+        const response = await axios.post('https://spin-rate-backend.vercel.app/api/customer/create', userData);
         
         if (response.data && response.data.customer) {
           // Show success message
