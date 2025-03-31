@@ -657,9 +657,9 @@ const WheelGamePage = () => {
       
       {/* Result Modal - updated for a more modern gaming look */}
       {showResultModal && result && (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto overflow-x-hidden">
           <motion.div 
-            className="bg-gradient-to-b from-purple-900/95 to-purple-800/95 rounded-2xl border-4 border-yellow-400 shadow-2xl max-w-md w-[95%] sm:w-[90%] md:w-full p-4 sm:p-6 md:p-8 relative"
+            className="bg-gradient-to-b from-purple-900/95 to-purple-800/95 rounded-2xl border-4 border-yellow-400 shadow-2xl max-w-md mx-auto w-[90%] p-4 sm:p-6 md:p-8 relative my-4"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ 
@@ -681,10 +681,10 @@ const WheelGamePage = () => {
                 type: "spring",
                 stiffness: 200
               }}
-              className="mx-auto mb-4 sm:mb-6 md:mb-8 relative"
+              className="mx-auto mb-3 sm:mb-5 md:mb-6 relative"
             >
-              <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 mx-auto rounded-full bg-gradient-to-br from-yellow-300 to-yellow-500 flex items-center justify-center shadow-lg">
-                <svg className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 mx-auto rounded-full bg-gradient-to-br from-yellow-300 to-yellow-500 flex items-center justify-center shadow-lg">
+                <svg className="w-9 h-9 sm:w-12 sm:h-12 md:w-14 md:h-14 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" />
                 </svg>
               </div>
@@ -695,34 +695,35 @@ const WheelGamePage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.6 }}
+              className="w-full"
             >
-              <h2 className="text-center text-2xl sm:text-3xl md:text-4xl font-bold text-yellow-300 mb-2 sm:mb-3">CONGRATULATIONS!</h2>
-              <div className="w-12 sm:w-16 md:w-20 h-1 bg-yellow-400 mx-auto mb-4 sm:mb-6"></div>
+              <h2 className="text-center text-xl sm:text-2xl md:text-3xl font-bold text-yellow-300 mb-1 sm:mb-2">CONGRATULATIONS!</h2>
+              <div className="w-10 sm:w-14 md:w-16 h-1 bg-yellow-400 mx-auto mb-3 sm:mb-4"></div>
               
-              <p className="text-center text-xl sm:text-2xl md:text-3xl font-bold text-white mb-4 sm:mb-6">
+              <p className="text-center text-lg sm:text-xl md:text-2xl font-bold text-white mb-3 sm:mb-4">
                 You Won: <span className="text-yellow-300">{result.name}</span>
               </p>
               
               {result.promoCode && (
                 <motion.div 
-                  className="mt-4 sm:mt-6 p-3 sm:p-4 bg-purple-700/50 rounded-xl border-2 border-yellow-400 shadow-inner"
+                  className="mt-3 sm:mt-4 p-2 sm:p-3 bg-purple-700/50 rounded-xl border-2 border-yellow-400 shadow-inner"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.7, duration: 0.5 }}
                 >
-                  <p className="text-yellow-200 mb-2 font-medium text-center text-sm sm:text-base">Your Promo Code:</p>
-                  <p className="text-lg sm:text-xl md:text-2xl font-bold text-white font-mono tracking-wider text-center bg-purple-600/50 py-2 sm:py-3 rounded">
+                  <p className="text-yellow-200 mb-1 sm:mb-2 font-medium text-center text-sm">Your Promo Code:</p>
+                  <p className="text-base sm:text-lg md:text-xl font-bold text-white font-mono tracking-wider text-center bg-purple-600/50 py-2 rounded">
                     {result.promoCode}
                   </p>
                 </motion.div>
               )}
               
-              <div className="mt-6 sm:mt-8 border-t border-purple-700 pt-4 sm:pt-6">
-                <p className="text-center text-yellow-200 mb-4 text-sm sm:text-base">
+              <div className="mt-4 sm:mt-6 border-t border-purple-700 pt-3 sm:pt-4">
+                <p className="text-center text-yellow-200 mb-3 text-sm">
                   Enter your contact info to claim your prize
                 </p>
                 
-                <form className="space-y-3 sm:space-y-4" onSubmit={(e) => { e.preventDefault(); handleUserInfoSubmit(); }}>
+                <form className="space-y-2 sm:space-y-3" onSubmit={(e) => { e.preventDefault(); handleUserInfoSubmit(); }}>
                   <div>
                     <input
                       type="email"
@@ -730,7 +731,7 @@ const WheelGamePage = () => {
                       name="email"
                       value={userInfo.email}
                       onChange={handleUserInfoChange}
-                      className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-purple-700/50 border border-purple-600 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-white placeholder-purple-300"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-purple-700/50 border border-purple-600 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-white placeholder-purple-300 text-sm"
                       placeholder="Email Address"
                       required
                     />
@@ -743,16 +744,16 @@ const WheelGamePage = () => {
                       name="phone"
                       value={userInfo.phone}
                       onChange={handleUserInfoChange}
-                      className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-purple-700/50 border border-purple-600 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-white placeholder-purple-300"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-purple-700/50 border border-purple-600 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-white placeholder-purple-300 text-sm"
                       placeholder="Phone Number"
                       required
                     />
                   </div>
                   
-                  <div className="mt-4 sm:mt-6 text-center">
+                  <div className="mt-3 sm:mt-4 text-center">
                     <motion.button
                       type="submit"
-                      className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-purple-900 font-bold rounded-lg shadow-lg hover:from-yellow-500 hover:to-yellow-600 transform transition-all duration-200"
+                      className="w-full px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-purple-900 font-bold rounded-lg shadow-lg hover:from-yellow-500 hover:to-yellow-600 transform transition-all duration-200 text-sm"
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
                     >
