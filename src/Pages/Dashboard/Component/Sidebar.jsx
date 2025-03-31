@@ -23,7 +23,8 @@ import {
     User2Icon,
     GroupIcon,
     UserRound,
-    Wallet2
+    Wallet2,
+    GitGraph
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuthContext } from '../../../hooks/useAuthContext';
@@ -120,6 +121,7 @@ const Sidebar = ({ collapsed = false, toggleSidebar }) => {
 
     // Define all menu items with their paths
     const menuItems = [
+        { translationKey: "Analytics", icon: GitGraph, path: "/dashboard/analytics", badge: false },
         { translationKey: "customers", icon: UserRound, path: "/dashboard/customers", badge: false },
         { translationKey: "settings", icon: Settings, path: "/dashboard/settings" },
         { translationKey: "subscription", icon: Wallet2, path: "/dashboard/subscription", badge: false },

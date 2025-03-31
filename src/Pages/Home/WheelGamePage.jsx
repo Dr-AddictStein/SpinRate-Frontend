@@ -58,6 +58,23 @@ const WheelGamePage = () => {
     }
   }, [id]);
   
+  // Update wheel scan count when page loads
+  useEffect(() => {
+    const updateScanCount = async () => {
+      try {
+        if (id) {
+          await axios.put(`${API_URL}/wheel/updateWheelScans/${id}`);
+          console.log('Wheel scan count updated');
+        }
+      } catch (err) {
+        console.error('Error updating wheel scan count:', err);
+        // Don't show toast error to user as this is a background operation
+      }
+    };
+    
+    updateScanCount();
+  }, [id]);
+  
   // Add custom animation classes
   useEffect(() => {
     // Add pulse-width animation if not already defined

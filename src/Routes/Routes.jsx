@@ -8,6 +8,7 @@ import DashboardSubscription from "../Pages/Dashboard/DashboardSubscription";
 import DashboardSettings from "../Pages/Dashboard/DashboardSettings";
 import WheelGamePage from "../Pages/Home/WheelGamePage";
 import TermsAndConditions from "../Pages/Home/TermsAndConditions";
+import DashboardAnalytics from "../Pages/Dashboard/DashboardAnalytics";
 
 // Define your route objects
 const routes = [
@@ -27,6 +28,14 @@ const routes = [
     children: [
       {
         path: "",
+        element: <DashboardCustomers />,
+      },
+      {
+        path: "analytics",
+        element: <DashboardAnalytics />,
+      },
+      {
+        path: "customers",
         element: <DashboardCustomers />,
       },
       {
