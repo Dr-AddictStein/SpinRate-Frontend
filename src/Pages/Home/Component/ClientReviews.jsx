@@ -88,33 +88,33 @@ const ClientReviews = () => {
   const reviews = [
     {
       id: 1,
-      name: "Alessandro",
-      role: "User",
-      content: "Duis cursus, mi quis viverra ornare, eros dolor inte nulla utimp erdiet libero vitae erat Aenean faucibus nibh et jus cursus",
-      rating: 3,
+      name: "Jerôme M., Gérant",
+      role: "Burger Avenue",
+      content: "Grâce à SpinRate, nous avons triplé nos avis Google en un mois ! Les clients adorent le concept du jeu et reviennent plus souvent. Simple et efficace !",
+      rating: 5,
       avatar: "https://randomuser.me/api/portraits/men/32.jpg"
     },
     {
       id: 2,
-      name: "Gabriele Riccardo",
-      role: "User",
-      content: "Duis cursus, mi quis viverra ornare, eros dolor inte nulla utimp erdiet libero vitae erat Aenean faucibus nibh et jus cursus",
-      rating: 3,
+      name: "Antoine R., Propriétaire",
+      role: "Pizza Factory",
+      content: "Avant, obtenir des avis était compliqué. Avec SpinRate, les clients s’amusent et nous gagnons en visibilité sur Google. Résultat : plus de commandes et une meilleure réputation en ligne.",
+      rating: 5,
       avatar: "https://randomuser.me/api/portraits/women/44.jpg"
     },
     {
       id: 3,
-      name: "Michael W. Kirwan",
-      role: "User",
-      content: "Duis cursus, mi quis viverra ornare, eros dolor inte nulla utimp erdiet libero vitae erat Aenean faucibus nibh et jus cursus",
-      rating: 3,
+      name: "Sophie L., Directrice",
+      role: "Café de la Plage",
+      content: "Notre score Google a explosé en quelques semaines ! Le système de récompenses motive vraiment les clients, et nous avons récupéré des centaines d’emails pour nos campagnes marketing.",
+      rating: 5,
       avatar: "https://randomuser.me/api/portraits/men/86.jpg"
     },
     {
       id: 4,
-      name: "Sarah Johnson",
-      role: "Business Owner",
-      content: "This platform has completely transformed how we collect reviews. Our online presence has improved dramatically in just a few months.",
+      name: "Sophie L., Directrice",
+      role: "Urban Tacos",
+      content: "SpinRate a changé la donne pour nous ! Nos clients laissent des avis sans qu’on ait besoin de leur demander et reviennent régulièrement pour tenter leur chance à la roue. Notre visibilité a explosé sur Google !",
       rating: 5,
       avatar: "https://randomuser.me/api/portraits/women/63.jpg"
     },

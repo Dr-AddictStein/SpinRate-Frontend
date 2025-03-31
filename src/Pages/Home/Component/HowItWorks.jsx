@@ -50,7 +50,7 @@ const translations = {
       },
       {
         title: "C'est le moment de faire tourner la roue!",
-        description: "Une fois l'avis Google soumis, le client fait tourner la roue et espère gagner un cadeau"
+        description: "Une fois l'avis Google soumis, le client fait tourner la roue et espère gagner un cadeau, que vous prédéfinissez en avance avec notre outil."
       },
       {
         title: "#1 sur Google",

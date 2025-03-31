@@ -6,10 +6,12 @@ import { useLanguage } from "../../../context/LanguageContext";
 import { useTranslation } from "../../../hooks/useTranslation";
 import ukFlag from "../../../assets/flags/uk-flag.svg";
 import franceFlag from "../../../assets/flags/france-flag.svg";
+import LoginModal from "../../../Components/LoginModal";
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const { language, changeLanguage } = useLanguage();
     const { t } = useTranslation();
 
@@ -58,12 +60,12 @@ const Navbar = () => {
                             >
                                 {t('getStarted')}
                             </Link>
-                            <Link
-                                to="/dashboard"
+                            <button
+                                onClick={() => setIsLoginModalOpen(true)}
                                 className="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg px-6 py-3 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
                             >
                                 {t('signIn')}
-                            </Link>
+                            </button>
                         </div>
 
                         {/* Language flags moved to the far right */}
@@ -129,15 +131,22 @@ const Navbar = () => {
                     >
                         {t('getStarted')}
                     </Link>
-                    <Link
-                        to="/dashboard"
+                    <button
                         className="block w-full px-3 py-3 text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg mt-3 transition-colors duration-200"
-                        onClick={toggleMenu}
+                        onClick={() => {
+                            toggleMenu();
+                            setIsLoginModalOpen(true);
+                        }}
                     >
                         {t('signIn')}
-                    </Link>
+                    </button>
                 </div>
             </div>
+
+            {/* Login Modal */}
+            {isLoginModalOpen && (
+                <LoginModal closeModal={() => setIsLoginModalOpen(false)} />
+            )}
         </nav>
     );
 };
