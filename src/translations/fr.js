@@ -92,5 +92,23 @@ export const fr = {
   saveInformation: "Enregistrer les Informations",
   updateInformation: "Mettre à Jour les Informations",
   
+  // Wheel Game Page
+  howToPlay: "COMMENT JOUER 🎮",
+  giveReview: "Donnez-nous un avis sur Google.",
+  returnToPage: "Revenez sur cette page après avoir laissé votre avis.",
+  spinToWin: "Tournez la roue pour gagner des prix incroyables !",
+  leaveReview: "LAISSER UN AVIS",
+  gameRules: "Règles du Jeu",
+  congratulations: "FÉLICITATIONS !",
+  youWon: "Vous avez gagné",
+  yourPromoCode: "Votre Code Promo",
+  enterContactInfo: "Entrez vos coordonnées pour réclamer votre prix",
+  claimPrize: "RÉCLAMER LE PRIX",
+  spinTheWheel: "Tournez la roue",
+  thankYouForReview: "Merci pour votre avis ! Tournez la roue pour gagner un prix !",
+  spinRateCopyright: "SpinRate. Tous droits réservés.",
+  spin: "TOURNER",
+  now: "MAINTENANT",
+  
   // Add more translations as needed for your website
 }; 

@@ -92,5 +92,23 @@ export const en = {
   saveInformation: "Save Information",
   updateInformation: "Update Information",
   
+  // Wheel Game Page
+  howToPlay: "HOW TO PLAY 🎮",
+  giveReview: "Give us a review on Google.",
+  returnToPage: "Return to this page after leaving your review.",
+  spinToWin: "Spin the wheel to win amazing prizes!",
+  leaveReview: "LEAVE A REVIEW",
+  gameRules: "Game Rules",
+  congratulations: "CONGRATULATIONS!",
+  youWon: "You Won",
+  yourPromoCode: "Your Promo Code",
+  enterContactInfo: "Enter your contact info to claim your prize",
+  claimPrize: "CLAIM PRIZE",
+  spinTheWheel: "Spin the wheel",
+  thankYouForReview: "Thank you for your review! Spin the wheel to win a prize!",
+  spinRateCopyright: "SpinRate. All rights reserved.",
+  spin: "SPIN",
+  now: "NOW",
+  
   // Add more translations as needed for your website
 }; 
