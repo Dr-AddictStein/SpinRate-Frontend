@@ -15,6 +15,7 @@ const translations = {
     title: "Wheel Game Configuration",
     previewGame: "Preview Game",
     googleReviewLink: "Google Review Link",
+    socialMediaLink: "Social Media Link (optional)",
     customerInstruction: "Customer instruction",
     characterLimit: "(20 character limit)",
     mainColors: "3 main colors",
@@ -73,6 +74,7 @@ const translations = {
     title: "Configuration du Jeu de Roue",
     previewGame: "Aperçu du Jeu",
     googleReviewLink: "Lien Google Review",
+    socialMediaLink: "Lien de Média Social (optionnel)",
     customerInstruction: "Instruction client",
     characterLimit: "(limite de 20 caractères)",
     mainColors: "3 couleurs principales",
@@ -142,6 +144,7 @@ const WheelGameDashboard = () => {
   // State variables for wheel configuration
   const [wheelId, setWheelId] = useState(null);
   const [googleReviewLink, setGoogleReviewLink] = useState('');
+  const [socialMediaLink, setSocialMediaLink] = useState('');
   const [customerInstruction, setCustomerInstruction] = useState('');
   const [mainColors, setMainColors] = useState({
     color1: '#fb1313',
@@ -218,6 +221,7 @@ const WheelGameDashboard = () => {
         // Update state with wheel data
         setWheelId(wheel._id);
         setGoogleReviewLink(wheel.googleReviewLink || '');
+        setSocialMediaLink(wheel.socialMediaLink || '');
         setCustomerInstruction(wheel.customerInstruction || '');
 
         // Set colors
@@ -385,6 +389,7 @@ const WheelGameDashboard = () => {
       const wheelData = {
         userId: user.user._id,
         googleReviewLink,
+        socialMediaLink,
         customerInstruction,
         mainColors,
         lots,
@@ -847,7 +852,7 @@ const WheelGameDashboard = () => {
                   setValidationErrors({...validationErrors, googleReviewLink: false});
                 }
               }}
-              placeholder="https://www.google.com/search?hl=en-BDXgbcbdxq=Michiko,+20+FL+des+"
+              placeholder=""
               className={`w-full p-3 rounded-lg border ${validationErrors.googleReviewLink ? 'border-red-500 bg-red-50' : 'border-gray-300'} focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out`}
               disabled={isLoading}
               required
@@ -883,6 +888,57 @@ const WheelGameDashboard = () => {
             {t.enterGoogleReview}
           </div>
         )}
+      </motion.div>
+
+      {/* Social Media Link */}
+      <motion.div
+        className="bg-white p-6 rounded-xl shadow-lg border border-gray-100"
+        variants={itemVariants}
+        onMouseEnter={() => setActiveSection('social')}
+        whileHover={{ boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
+      >
+        <div className="flex justify-between items-center mb-4">
+          <div className="flex items-center">
+            <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-2 16h-2v-6h2v6zm-1-6.891c-.607 0-1.1-.496-1.1-1.109 0-.612.492-1.109 1.1-1.109s1.1.497 1.1 1.109c0 .613-.493 1.109-1.1 1.109zm8 6.891h-1.998v-2.861c0-1.881-2.002-1.722-2.002 0v2.861h-2v-6h2v1.093c.872-1.616 4-1.736 4 1.548v3.359z" fill="#0077B5" />
+            </svg>
+            <label className="font-semibold text-gray-800 text-lg">{t.socialMediaLink}</label>
+          </div>
+          <div className="relative flex items-center w-3/4">
+            <input
+              type="text"
+              value={socialMediaLink}
+              onChange={(e) => setSocialMediaLink(e.target.value)}
+              placeholder=""
+              className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out"
+              disabled={isLoading}
+            />
+            {socialMediaLink && (
+              <motion.div
+                className="absolute right-3"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: 'spring', stiffness: 500, damping: 15 }}
+              >
+                <Check className="text-green-500 w-5 h-5" />
+              </motion.div>
+            )}
+            <motion.button
+              className="absolute right-12 text-gray-400 hover:text-gray-600"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => {
+                if (socialMediaLink) {
+                  navigator.clipboard.writeText(socialMediaLink);
+                  toast.success("Social Media Link copied!");
+                }
+              }}
+              disabled={!socialMediaLink || isLoading}
+            >
+              <Copy className="w-5 h-5" />
+            </motion.button>
+          </div>
+        </div>
       </motion.div>
 
       {/* Customer Instruction */}
