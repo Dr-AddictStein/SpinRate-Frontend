@@ -714,7 +714,7 @@ const WheelGamePage = () => {
               </button>
             </div>
             
-            <h2 className="text-center text-xl sm:text-2xl md:text-3xl font-bold text-white mb-4 sm:mb-6">
+            <h2 className="text-center text-xl sm:text-2xl md:text-3xl font-bold text-white mb-4 mt-6 sm:mb-6">
               {wheel?.customerInstruction || t('howToPlay')}
             </h2>
             
@@ -760,9 +760,9 @@ const WheelGamePage = () => {
       
       {/* Result Modal - updated to use translations */}
       {showResultModal && result && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto overflow-x-hidden">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
           <motion.div 
-            className="bg-black/95 rounded-2xl border-4 border-white shadow-2xl max-w-md mx-auto w-[90%] p-4 sm:p-6 md:p-8 relative my-auto max-h-[90vh] overflow-y-auto"
+            className="bg-black/95 rounded-2xl border-4 border-white shadow-2xl max-w-md w-[95%] sm:w-[90%] md:w-full p-4 sm:p-6 md:p-8 relative pointer-events-auto max-h-[90vh] overflow-y-auto my-auto"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ 
@@ -818,7 +818,6 @@ const WheelGamePage = () => {
                   <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" />
                 </svg>
               </div>
-              {/* <div className="absolute -inset-2 rounded-full border-4 border-dashed border-white animate-spin-slow opacity-70"></div> */}
             </motion.div>
             
             <motion.div 
@@ -830,7 +829,7 @@ const WheelGamePage = () => {
               <h2 className="text-center text-lg sm:text-xl md:text-2xl font-bold text-white mb-1 sm:mb-2">{t('congratulations')}</h2>
               <div className="w-8 sm:w-12 md:w-14 h-1 bg-white mx-auto mb-2 sm:mb-3"></div>
               
-              <p className="text-center text-lg sm:text-xl md:text-2xl font-bold text-white mb-3 sm:mb-4">
+              <p className="text-center text-base sm:text-lg md:text-xl font-bold text-white mb-3 sm:mb-4">
                 {t('youWon')}: <span className="text-white">{result.name}</span>
               </p>
               
@@ -848,8 +847,8 @@ const WheelGamePage = () => {
                 </motion.div>
               )}
               
-              <div className="mt-3 sm:mt-5 border-t border-gray-700 pt-2 sm:pt-3">
-                <p className="text-center text-white mb-2 text-sm">
+              <div className="mt-3 sm:mt-4 border-t border-gray-700 pt-2 sm:pt-3">
+                <p className="text-center text-white mb-2 text-xs sm:text-sm">
                   {t('enterContactInfo')}
                 </p>
                 
@@ -861,7 +860,7 @@ const WheelGamePage = () => {
                       name="email"
                       value={userInfo.email}
                       onChange={handleUserInfoChange}
-                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-gray-800/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-white focus:border-white text-white placeholder-gray-300 text-sm"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-gray-800/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-white focus:border-white text-white placeholder-gray-300 text-xs sm:text-sm"
                       placeholder={t('email')}
                       required
                     />
@@ -874,7 +873,7 @@ const WheelGamePage = () => {
                       name="phone"
                       value={userInfo.phone}
                       onChange={handleUserInfoChange}
-                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-gray-800/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-white focus:border-white text-white placeholder-gray-300 text-sm"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-gray-800/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-white focus:border-white text-white placeholder-gray-300 text-xs sm:text-sm"
                       placeholder={t('phone')}
                       required
                     />
