@@ -2,12 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import spinRateLogo from "../../assets/Design_sans_titre__10_-ai-brush-removebg-5gtqgd1e.png";
 import { useLanguage } from '../../context/LanguageContext';
 import { useTranslation } from '../../hooks/useTranslation';
 import ukFlag from "../../assets/flags/uk-flag.svg";
 import franceFlag from "../../assets/flags/france-flag.svg";
+import instagramLogo from "../../../public/instagram.webp";
+import googleReview from "../../../public/googleReview.webp";
+import facebookLogo from "../../../public/Facebook_logo_(square).png";
 
 const API_URL = 'https://spin-rate-backend.vercel.app/api';
 
@@ -53,6 +56,9 @@ const WheelGamePage = () => {
     email: '',
     phone: ''
   });
+  
+  // New state for validation popup
+  const [showValidationPopup, setShowValidationPopup] = useState(false);
   
   // References
   const canvasRef = useRef(null);
@@ -427,10 +433,18 @@ const WheelGamePage = () => {
   // Handle button click in instruction modal
   const handleReviewButtonClick = () => {
     if (wheel?.googleReviewLink) {
+      // Show validation popup
+      setShowValidationPopup(true);
+      
+      // Open the link immediately in a new tab
       window.open(wheel.googleReviewLink, '_blank');
       
-      // Close instruction modal immediately
-      setShowInstructionModal(false);
+      // Set a timer to close the validation popup after 10 seconds
+      setTimeout(() => {
+        setShowValidationPopup(false);
+        // Close instruction modal 
+        setShowInstructionModal(false);
+      }, 10000);
     }
   };
   
@@ -466,8 +480,12 @@ const WheelGamePage = () => {
         const response = await axios.post('https://spin-rate-backend.vercel.app/api/customer/create', userData);
         
         if (response.data && response.data.customer) {
-          // Show success message
-          toast.success('Thank you! Your information has been submitted successfully.');
+          // Show success message in the appropriate language
+          toast.success(
+            language === 'fr' 
+              ? 'Merci ! Vos informations ont été soumises avec succès.' 
+              : 'Thank you! Your information has been submitted successfully.'
+          );
           
           // Close the modal
           setShowResultModal(false);
@@ -478,32 +496,82 @@ const WheelGamePage = () => {
           }, 1500);
         }
       } else {
-        // If no result is available, show an error
-        toast.error('No prize information available. Please try spinning the wheel again.');
+        // If no result is available, show an error in the appropriate language
+        toast.error(
+          language === 'fr'
+            ? 'Aucune information sur le prix disponible. Veuillez réessayer de faire tourner la roue.'
+            : 'No prize information available. Please try spinning the wheel again.'
+        );
       }
     } catch (err) {
       console.error('Error submitting user info:', err);
       
       // Display specific error message from backend if available
       if (err.response && err.response.data && err.response.data.error) {
-        toast.error(`Error: ${err.response.data.error}`);
+        const errorMsg = err.response.data.error;
+        
+        if (errorMsg === "Email already registered") {
+          toast.error(
+            language === 'fr'
+              ? 'Cet email est déjà enregistré ! Veuillez utiliser une adresse différente.'
+              : 'This email is already registered! Please use a different email.',
+            {
+              icon: '📧',
+              duration: 5000,
+              style: {
+                padding: '16px',
+                borderRadius: '10px',
+                background: '#333',
+                color: '#fff',
+                fontWeight: 'bold'
+              }
+            }
+          );
+        } else if (errorMsg === "Phone number already registered") {
+          toast.error(
+            language === 'fr'
+              ? 'Ce numéro de téléphone est déjà enregistré ! Veuillez utiliser un numéro différent.'
+              : 'This phone number is already registered! Please use a different number.',
+            {
+              icon: '📱',
+              duration: 5000,
+              style: {
+                padding: '16px',
+                borderRadius: '10px',
+                background: '#333',
+                color: '#fff',
+                fontWeight: 'bold'
+              }
+            }
+          );
+        } else {
+          toast.error(
+            language === 'fr'
+              ? `Erreur: ${errorMsg}`
+              : `Error: ${errorMsg}`
+          );
+        }
       } else {
-        toast.error('Failed to submit your information. Please try again.');
+        toast.error(
+          language === 'fr'
+            ? 'Échec de la soumission de vos informations. Veuillez réessayer.'
+            : 'Failed to submit your information. Please try again.'
+        );
       }
     }
   };
   
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-black">
+      <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="text-center">
-          <div className="w-20 h-20 border-t-4 border-b-4 border-white rounded-full animate-spin mx-auto mb-6"></div>
+          <div className="w-20 h-20 border-t-4 border-b-4 border-black rounded-full animate-spin mx-auto mb-6"></div>
           <div className="relative">
-            <div className="h-2 w-48 bg-gray-800 rounded-full overflow-hidden">
-              <div className="h-full bg-white animate-pulse-width rounded-full"></div>
+            <div className="h-2 w-48 bg-gray-200 rounded-full overflow-hidden">
+              <div className="h-full bg-black animate-pulse-width rounded-full"></div>
             </div>
           </div>
-          <p className="text-xl font-medium text-white mt-6">Loading your prize wheel...</p>
+          <p className="text-xl font-medium text-black mt-6">Loading your prize wheel...</p>
         </div>
       </div>
     );
@@ -511,12 +579,12 @@ const WheelGamePage = () => {
   
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-black px-4">
-        <div className="bg-gray-800 p-8 rounded-xl shadow-lg max-w-md w-full text-center border-2 border-white">
+      <div className="min-h-screen flex items-center justify-center bg-white px-4">
+        <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full text-center border-2 border-black">
           <div className="text-red-500 text-5xl mb-4">😕</div>
-          <h2 className="text-2xl font-bold text-white mb-2">Wheel Not Found</h2>
-          <p className="text-white mb-6">Sorry, we couldn't find the prize wheel you're looking for.</p>
-          <Link to="/" className="inline-block bg-white hover:bg-gray-300 text-black font-medium py-2 px-6 rounded-lg transition duration-200">
+          <h2 className="text-2xl font-bold text-black mb-2">Wheel Not Found</h2>
+          <p className="text-black mb-6">Sorry, we couldn't find the prize wheel you're looking for.</p>
+          <Link to="/" className="inline-block bg-black hover:bg-gray-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200">
             Go Home
           </Link>
         </div>
@@ -528,7 +596,7 @@ const WheelGamePage = () => {
   const instruction = wheel?.customerInstruction || t('giveReview');
   
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center py-2 px-1 sm:py-4 sm:px-2">
+    <div className="min-h-screen bg-white flex items-center justify-center py-2 px-1 sm:py-4 sm:px-2">
       <div className="mx-auto w-full max-w-4xl">
         <div className="bg-white rounded-xl shadow-xl overflow-visible relative p-1 sm:p-2 md:p-4">
           {/* Language switcher in top right */}
@@ -620,7 +688,7 @@ const WheelGamePage = () => {
                     {!hasSpun && !isSpinning && (
                       <div className="absolute inset-0 w-full h-full rounded-full animate-pulse" 
                         style={{
-                          background: 'radial-gradient(circle, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 70%)',
+                          background: 'radial-gradient(circle, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 70%)',
                           transform: 'scale(1.4)',
                           filter: 'blur(10px)'
                         }}
@@ -630,7 +698,7 @@ const WheelGamePage = () => {
                     <motion.button
                       className={`w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full flex items-center justify-center relative z-10
                         ${hasSpun 
-                          ? 'cursor-not-allowed bg-white/30' 
+                          ? 'cursor-not-allowed bg-black/30' 
                           : 'bg-transparent'} 
                         font-bold border-0`}
                       whileHover={hasSpun ? {} : { 
@@ -671,11 +739,11 @@ const WheelGamePage = () => {
         </div>
       </div>
       
-      {/* Initial Instruction Modal - updated for black and white theme */}
+      {/* Initial Instruction Modal - updated for white with black text theme */}
       {wheel && showInstructionModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
           <motion.div 
-            className="bg-black/95 rounded-2xl border-4 border-white shadow-2xl max-w-md w-[95%] sm:w-[90%] md:w-full p-4 sm:p-6 md:p-8 relative pointer-events-auto max-h-[90vh] overflow-y-auto my-auto"
+            className="bg-white rounded-2xl border-4 border-black shadow-2xl max-w-md w-[95%] sm:w-[90%] md:w-full p-4 sm:p-6 md:p-8 relative pointer-events-auto max-h-[90vh] overflow-y-auto my-auto"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ 
@@ -688,7 +756,7 @@ const WheelGamePage = () => {
               maxHeight: "calc(100vh - 2rem)"
             }}
           >
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-white via-gray-300 to-white"></div>
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-black via-gray-700 to-black"></div>
             
             {/* Language switcher in modal top right */}
             <div className="absolute right-2 sm:right-4 top-2 sm:top-4 z-10 flex items-center space-x-2">
@@ -697,7 +765,7 @@ const WheelGamePage = () => {
                   console.log('Switching to French');
                   changeLanguage('fr');
                 }}
-                className={`transition-all duration-200 transform hover:scale-110 ${language === 'fr' ? 'ring-2 ring-white scale-110' : 'opacity-75'}`}
+                className={`transition-all duration-200 transform hover:scale-110 ${language === 'fr' ? 'ring-2 ring-black scale-110' : 'opacity-75'}`}
                 aria-label="Switch to French"
               >
                 <img src={franceFlag} alt="French" className="w-7 h-5 rounded-sm" />
@@ -707,35 +775,39 @@ const WheelGamePage = () => {
                   console.log('Switching to English');
                   changeLanguage('en');
                 }}
-                className={`transition-all duration-200 transform hover:scale-110 ${language === 'en' ? 'ring-2 ring-white scale-110' : 'opacity-75'}`}
+                className={`transition-all duration-200 transform hover:scale-110 ${language === 'en' ? 'ring-2 ring-black scale-110' : 'opacity-75'}`}
                 aria-label="Switch to English"
               >
                 <img src={ukFlag} alt="English" className="w-7 h-5 rounded-sm" />
               </button>
             </div>
             
-            <h2 className="text-center text-xl sm:text-2xl md:text-3xl font-bold text-white mb-4 mt-6 sm:mb-6">
-              {wheel?.customerInstruction || t('howToPlay')}
+            <h2 className="text-center text-xl sm:text-2xl md:text-3xl font-bold text-black mb-4 mt-6 sm:mb-6">
+              {"How it works 😍"}
             </h2>
             
             <div className="my-4 sm:my-6 space-y-3 sm:space-y-4">
               <div className="flex items-start space-x-3 sm:space-x-4">
-                <div className="bg-white text-black font-bold rounded-full h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 flex items-center justify-center flex-shrink-0 text-sm sm:text-base">1</div>
-                <p className="text-white text-sm sm:text-base">{wheel?.instructionStep1 || t('giveReview')}</p>
+                <div className="bg-black text-white font-bold rounded-full h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 flex items-center justify-center flex-shrink-0 text-sm sm:text-base">1</div>
+                <p className="text-black text-sm sm:text-base">{wheel?.instructionStep1 || t('giveReview')}</p>
               </div>
               <div className="flex items-start space-x-3 sm:space-x-4">
-                <div className="bg-white text-black font-bold rounded-full h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 flex items-center justify-center flex-shrink-0 text-sm sm:text-base">2</div>
-                <p className="text-white text-sm sm:text-base">{wheel?.instructionStep2 || t('returnToPage')}</p>
+                <div className="bg-black text-white font-bold rounded-full h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 flex items-center justify-center flex-shrink-0 text-sm sm:text-base">2</div>
+                <p className="text-black text-sm sm:text-base">{wheel?.instructionStep2 || t('returnToPage')}</p>
               </div>
               <div className="flex items-start space-x-3 sm:space-x-4">
-                <div className="bg-white text-black font-bold rounded-full h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 flex items-center justify-center flex-shrink-0 text-sm sm:text-base">3</div>
-                <p className="text-white text-sm sm:text-base">{wheel?.instructionStep3 || t('spinToWin')}</p>
+                <div className="bg-black text-white font-bold rounded-full h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 flex items-center justify-center flex-shrink-0 text-sm sm:text-base">3</div>
+                <p className="text-black text-sm sm:text-base">{wheel?.instructionStep3 || t('spinToWin')}</p>
               </div>
             </div>
-            
+            <div className="flex w-full gap-3 justify-around">
+              <img src={instagramLogo} alt="" className="w-[20%]"/>
+              <img src={googleReview} alt="" className="w-[30%]"/>
+              <img src={facebookLogo} alt="" className="w-[20%]"/>
+            </div>
             <div className="mt-6 sm:mt-8 text-center">
               <motion.button
-                className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-black font-bold rounded-lg shadow-lg transform transition-all duration-200 text-sm sm:text-base"
+                className="px-6 sm:px-8 py-3 sm:py-4 bg-black text-white font-bold rounded-lg shadow-lg transform transition-all duration-200 text-sm sm:text-base"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleReviewButtonClick}
@@ -746,7 +818,7 @@ const WheelGamePage = () => {
             
             <div className="mt-4 sm:mt-6 text-center">
               <motion.button
-                className="text-sm text-white hover:text-gray-300 underline cursor-pointer"
+                className="text-sm text-black hover:text-gray-700 underline cursor-pointer"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleGameRulesClick}
@@ -758,11 +830,11 @@ const WheelGamePage = () => {
         </div>
       )}
       
-      {/* Result Modal - updated to use translations */}
+      {/* Result Modal - updated to use white background with black text */}
       {showResultModal && result && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
           <motion.div 
-            className="bg-black/95 rounded-2xl border-4 border-white shadow-2xl max-w-md w-[95%] sm:w-[90%] md:w-full p-4 sm:p-6 md:p-8 relative pointer-events-auto max-h-[90vh] overflow-y-auto my-auto"
+            className="bg-white rounded-2xl border-4 border-black shadow-2xl max-w-md w-[95%] sm:w-[90%] md:w-full p-4 sm:p-6 md:p-8 relative pointer-events-auto max-h-[90vh] overflow-y-auto my-auto"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ 
@@ -776,7 +848,7 @@ const WheelGamePage = () => {
             }}
           >
             {/* Decorative elements */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-white via-gray-300 to-white"></div>
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-black via-gray-700 to-black"></div>
             
             {/* Language switcher in modal top right */}
             <div className="absolute right-2 sm:right-4 top-2 sm:top-4 z-10 flex items-center space-x-2">
@@ -785,7 +857,7 @@ const WheelGamePage = () => {
                   console.log('Switching to French');
                   changeLanguage('fr');
                 }}
-                className={`transition-all duration-200 transform hover:scale-110 ${language === 'fr' ? 'ring-2 ring-white scale-110' : 'opacity-75'}`}
+                className={`transition-all duration-200 transform hover:scale-110 ${language === 'fr' ? 'ring-2 ring-black scale-110' : 'opacity-75'}`}
                 aria-label="Switch to French"
               >
                 <img src={franceFlag} alt="French" className="w-7 h-5 rounded-sm" />
@@ -795,7 +867,7 @@ const WheelGamePage = () => {
                   console.log('Switching to English');
                   changeLanguage('en');
                 }}
-                className={`transition-all duration-200 transform hover:scale-110 ${language === 'en' ? 'ring-2 ring-white scale-110' : 'opacity-75'}`}
+                className={`transition-all duration-200 transform hover:scale-110 ${language === 'en' ? 'ring-2 ring-black scale-110' : 'opacity-75'}`}
                 aria-label="Switch to English"
               >
                 <img src={ukFlag} alt="English" className="w-7 h-5 rounded-sm" />
@@ -813,8 +885,8 @@ const WheelGamePage = () => {
               }}
               className="mx-auto mb-2 sm:mb-4 md:mb-5 relative"
             >
-              <div className="w-14 h-14 sm:w-18 sm:h-18 md:w-20 md:h-20 mx-auto rounded-full bg-white flex items-center justify-center shadow-lg">
-                <svg className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-black" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <div className="w-14 h-14 sm:w-18 sm:h-18 md:w-20 md:h-20 mx-auto rounded-full bg-black flex items-center justify-center shadow-lg">
+                <svg className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" />
                 </svg>
               </div>
@@ -826,29 +898,29 @@ const WheelGamePage = () => {
               transition={{ delay: 0.4, duration: 0.6 }}
               className="w-full"
             >
-              <h2 className="text-center text-lg sm:text-xl md:text-2xl font-bold text-white mb-1 sm:mb-2">{t('congratulations')}</h2>
-              <div className="w-8 sm:w-12 md:w-14 h-1 bg-white mx-auto mb-2 sm:mb-3"></div>
+              <h2 className="text-center text-lg sm:text-xl md:text-2xl font-bold text-black mb-1 sm:mb-2">{t('congratulations')}</h2>
+              <div className="w-8 sm:w-12 md:w-14 h-1 bg-black mx-auto mb-2 sm:mb-3"></div>
               
-              <p className="text-center text-base sm:text-lg md:text-xl font-bold text-white mb-3 sm:mb-4">
-                {t('youWon')}: <span className="text-white">{result.name}</span>
+              <p className="text-center text-base sm:text-lg md:text-xl font-bold text-black mb-3 sm:mb-4">
+                {t('youWon')}: <span className="text-black">{result.name}</span>
               </p>
               
               {result.promoCode && (
                 <motion.div 
-                  className="mt-3 sm:mt-4 p-2 sm:p-3 bg-gray-800/50 rounded-xl border-2 border-white shadow-inner"
+                  className="mt-3 sm:mt-4 p-2 sm:p-3 bg-gray-200 rounded-xl border-2 border-black shadow-inner"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.7, duration: 0.5 }}
                 >
-                  <p className="text-white mb-1 sm:mb-2 font-medium text-center text-sm">{t('yourPromoCode')}:</p>
-                  <p className="text-base sm:text-lg md:text-xl font-bold text-white font-mono tracking-wider text-center bg-gray-800/50 py-2 rounded">
+                  <p className="text-black mb-1 sm:mb-2 font-medium text-center text-sm">{t('yourPromoCode')}:</p>
+                  <p className="text-base sm:text-lg md:text-xl font-bold text-black font-mono tracking-wider text-center bg-gray-100 py-2 rounded">
                     {result.promoCode}
                   </p>
                 </motion.div>
               )}
               
-              <div className="mt-3 sm:mt-4 border-t border-gray-700 pt-2 sm:pt-3">
-                <p className="text-center text-white mb-2 text-xs sm:text-sm">
+              <div className="mt-3 sm:mt-4 border-t border-gray-300 pt-2 sm:pt-3">
+                <p className="text-center text-black mb-2 text-xs sm:text-sm">
                   {t('enterContactInfo')}
                 </p>
                 
@@ -860,7 +932,7 @@ const WheelGamePage = () => {
                       name="email"
                       value={userInfo.email}
                       onChange={handleUserInfoChange}
-                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-gray-800/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-white focus:border-white text-white placeholder-gray-300 text-xs sm:text-sm"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border border-gray-400 rounded-lg focus:ring-2 focus:ring-black focus:border-black text-black placeholder-gray-700 text-xs sm:text-sm"
                       placeholder={t('email')}
                       required
                     />
@@ -873,7 +945,7 @@ const WheelGamePage = () => {
                       name="phone"
                       value={userInfo.phone}
                       onChange={handleUserInfoChange}
-                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-gray-800/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-white focus:border-white text-white placeholder-gray-300 text-xs sm:text-sm"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border border-gray-400 rounded-lg focus:ring-2 focus:ring-black focus:border-black text-black placeholder-gray-700 text-xs sm:text-sm"
                       placeholder={t('phone')}
                       required
                     />
@@ -882,7 +954,7 @@ const WheelGamePage = () => {
                   <div className="mt-2 sm:mt-3 text-center">
                     <motion.button
                       type="submit"
-                      className="w-full px-4 py-2 sm:px-6 sm:py-3 bg-white text-black font-bold rounded-lg shadow-lg hover:bg-gray-200 transform transition-all duration-200 text-sm"
+                      className="w-full px-4 py-2 sm:px-6 sm:py-3 bg-black text-white font-bold rounded-lg shadow-lg hover:bg-gray-800 transform transition-all duration-200 text-sm"
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
                     >
@@ -892,6 +964,50 @@ const WheelGamePage = () => {
                 </form>
               </div>
             </motion.div>
+          </motion.div>
+        </div>
+      )}
+      
+      {/* Awaiting Validation Popup */}
+      {showValidationPopup && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
+          <motion.div 
+            className="bg-white rounded-2xl border-4 border-black shadow-2xl max-w-md w-[80%] sm:w-[60%] md:w-[50%] p-4 sm:p-6 md:p-8 relative pointer-events-auto text-center"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ 
+              duration: 0.3,
+              type: "spring",
+              stiffness: 300,
+              damping: 25
+            }}
+          >
+            <div className="flex flex-col items-center justify-center">
+              <h2 className="text-xl font-bold text-black mb-4">
+                {language === 'fr' ? 'En attente de validation...' : 'Awaiting validation...'}
+              </h2>
+              
+              <div className="relative w-16 h-16 mb-4">
+                <div className="absolute inset-0 rounded-full border-4 border-gray-300 border-t-black animate-spin"></div>
+              </div>
+              
+              <p className="text-gray-700 mb-4 text-center">
+                {language === 'fr' ? 'Laissez-nous un avis et gagnez le gros lot' : 'Leave us a review and win the grand prize'}
+              </p>
+              
+              <button
+                className="px-6 py-2 bg-gray-200 text-black border border-gray-300 rounded-lg flex items-center justify-center space-x-2"
+                disabled
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                  <path d="M0 0h24v24H0z" fill="none"/>
+                </svg>
+                <span>
+                  {language === 'fr' ? 'Laisser un avis' : 'Leave a review'}
+                </span>
+              </button>
+            </div>
           </motion.div>
         </div>
       )}

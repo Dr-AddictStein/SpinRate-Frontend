@@ -97,7 +97,7 @@ export const fr = {
   giveReview: "Donnez-nous un avis sur Google.",
   returnToPage: "Revenez sur cette page après avoir laissé votre avis.",
   spinToWin: "Tournez la roue pour gagner des prix incroyables !",
-  leaveReview: "LAISSER UN AVIS",
+  leaveReview: "À vous de jouer !",
   gameRules: "Règles du Jeu",
   congratulations: "FÉLICITATIONS !",
   youWon: "Vous avez gagné",

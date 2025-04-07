@@ -891,7 +891,7 @@ const WheelGameDashboard = () => {
       </motion.div>
 
       {/* Social Media Link */}
-      <motion.div
+      {/* <motion.div
         className="bg-white p-6 rounded-xl shadow-lg border border-gray-100"
         variants={itemVariants}
         onMouseEnter={() => setActiveSection('social')}
@@ -939,7 +939,7 @@ const WheelGameDashboard = () => {
             </motion.button>
           </div>
         </div>
-      </motion.div>
+      </motion.div> */}
 
       {/* Customer Instruction */}
       <motion.div

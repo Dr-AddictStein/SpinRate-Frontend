@@ -20,7 +20,7 @@ const translations = {
         heading1: "Augmentez vos",
         heading2: "Avis Google",
         heading3: "Sans effort!",
-        description: "Augmentez vos avis Google et votre visibilité en ligne sans demander d'avis. Notre expérience basée sur les récompenses encourage les clients à scanner un code QR, à laisser un avis et à faire tourner la roue!",
+        description: "Augmentez vos avis Google et votre visibilité en ligne sans demander d'avis. Notre expérience basée sur les récompenses encourage les clients à scanner un code QR, à À vous de jouer ! et à faire tourner la roue!",
         startNow: "Commencer",
         learnMore: "En savoir plus"
     }
