@@ -10,7 +10,7 @@ import ukFlag from "../../assets/flags/uk-flag.svg";
 import franceFlag from "../../assets/flags/france-flag.svg";
 import instagramLogo from "../../../public/instagram.webp";
 import googleReview from "../../../public/googleReview.webp";
-import facebookLogo from "../../../public/Facebook_logo_(square).png";
+import facebookLogo from "../../../public/tiltok.webp";
 
 const API_URL = 'https://spin-rate-backend.vercel.app/api';
 
@@ -209,10 +209,11 @@ const WheelGamePage = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       // Get wheel data from backend or use defaults
-      // Primary wheel colors (alternating colors as shown in the image)
+      // Use all three colors from mainColors in a repeating pattern
       const primaryColors = [
-        wheel.mainColors?.color1 || '#000000', // Black (from the image)
-        wheel.mainColors?.color2 || '#6F6F00'  // Olive/dark yellow (from the image)
+        wheel.mainColors?.color1 || '#000000',
+        wheel.mainColors?.color2 || '#6F6F00',
+        wheel.mainColors?.color3 || '#00AA00',
       ];
       
       // Create sample data if none exists
@@ -264,8 +265,8 @@ const WheelGamePage = () => {
         const endAngle = startOffset + ((index + 1) * segmentAngle);
         const midAngle = startAngle + (segmentAngle / 2);
         
-        // Alternate colors for segments
-        const segmentColor = primaryColors[index % 2];
+        // Use all three colors in a repeating pattern
+        const segmentColor = primaryColors[index % 3];
         
         // Draw segment
         ctx.beginPath();
@@ -783,13 +784,13 @@ const WheelGamePage = () => {
             </div>
             
             <h2 className="text-center text-xl sm:text-2xl md:text-3xl font-bold text-black mb-4 mt-6 sm:mb-6">
-              {"How it works 😍"}
+              {language === 'fr' ? "Comment ça marche 😍" : "How it works 😍"}
             </h2>
             
             <div className="my-4 sm:my-6 space-y-3 sm:space-y-4">
               <div className="flex items-start space-x-3 sm:space-x-4">
                 <div className="bg-black text-white font-bold rounded-full h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 flex items-center justify-center flex-shrink-0 text-sm sm:text-base">1</div>
-                <p className="text-black text-sm sm:text-base">{wheel?.instructionStep1 || t('giveReview')}</p>
+                <p className="text-black text-sm sm:text-base">{wheel?.customerInstruction}</p>
               </div>
               <div className="flex items-start space-x-3 sm:space-x-4">
                 <div className="bg-black text-white font-bold rounded-full h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 flex items-center justify-center flex-shrink-0 text-sm sm:text-base">2</div>
@@ -800,10 +801,10 @@ const WheelGamePage = () => {
                 <p className="text-black text-sm sm:text-base">{wheel?.instructionStep3 || t('spinToWin')}</p>
               </div>
             </div>
-            <div className="flex w-full gap-3 justify-around">
-              <img src={instagramLogo} alt="" className="w-[20%]"/>
-              <img src={googleReview} alt="" className="w-[30%]"/>
-              <img src={facebookLogo} alt="" className="w-[20%]"/>
+            <div className="flex w-full gap-3 justify-around items-center">
+              <img src={instagramLogo} alt="" className="w-[50px] h-[50px]"/>
+              <img src={googleReview} alt="" className="w-[33%]"/>
+              <img src={facebookLogo} alt="" className="w-[80px] h-[80px]"/>
             </div>
             <div className="mt-6 sm:mt-8 text-center">
               <motion.button
@@ -996,8 +997,8 @@ const WheelGamePage = () => {
               </p>
               
               <button
-                className="px-6 py-2 bg-gray-200 text-black border border-gray-300 rounded-lg flex items-center justify-center space-x-2"
-                disabled
+                className="px-6 py-2 bg-black text-white hover:bg-gray-800 rounded-lg flex items-center justify-center space-x-2 transition duration-200"
+                onClick={() => wheel?.googleReviewLink && window.open(wheel.googleReviewLink, '_blank')}
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
