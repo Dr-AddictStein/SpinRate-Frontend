@@ -597,9 +597,9 @@ const WheelGamePage = () => {
   const instruction = wheel?.customerInstruction || t('giveReview');
   
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center py-2 px-1 sm:py-4 sm:px-2">
-      <div className="mx-auto w-full max-w-4xl">
-        <div className="bg-white rounded-xl shadow-xl overflow-visible relative p-1 sm:p-2 md:p-4">
+    <div className="min-h-screen bg-white flex flex-col justify-between py-2 px-1 sm:py-4 sm:px-2">
+      <div className="mx-auto w-full max-w-4xl flex-1 flex flex-col">
+        <div className="bg-white rounded-xl shadow-xl overflow-visible relative p-1 sm:p-2 md:p-4 flex flex-col flex-1">
           {/* Language switcher in top right */}
           <div className="absolute right-2 sm:right-4 md:right-6 top-2 sm:top-4 md:top-6 z-10 flex items-center space-x-3">
             {/* Debug display of current language */}
@@ -640,7 +640,7 @@ const WheelGamePage = () => {
           
           {/* Wheel game - now always visible */}
           {showWheelGame && (
-            <div className="pt-6 sm:pt-16 md:pt-20 pb-2 sm:pb-6 md:pb-8 overflow-visible"> {/* Reduced padding for mobile */}
+            <div className="pt-12 sm:pt-16 md:pt-20 pb-2 sm:pb-6 md:pb-8 overflow-visible flex-1 flex flex-col justify-center"> {/* Added flex classes */}
               <div className="relative mx-auto w-full lg:w-[95%]"> {/* Use full width on small/medium screens */}
                 {/* Enhanced pointer triangle - updated to match the image */}
                 <div 
@@ -726,7 +726,7 @@ const WheelGamePage = () => {
           
           {/* Thank you message - Updated to black text */}
           {!showInstructionModal && (
-            <div className="mt-2 sm:mt-6 mb-3 sm:mb-4 text-center">
+            <div className="mt-auto sm:mt-6 mb-3 sm:mb-4 text-center">
               <h2 className="text-base sm:text-lg md:text-xl font-bold text-black">
                 {wheel?.thankyouMessage || t('thankYouForReview')}
               </h2>
@@ -734,7 +734,7 @@ const WheelGamePage = () => {
           )}
           
           {/* Update footer to match image */}
-          <div className="bg-gray-100 p-2 sm:p-3 md:p-4 text-center text-gray-500 text-xs sm:text-sm">
+          <div className="bg-gray-100 p-2 sm:p-3 md:p-4 text-center text-gray-500 text-xs sm:text-sm mt-auto">
             <p>© {new Date().getFullYear()} {t('spinRateCopyright')}</p>
           </div>
         </div>
