@@ -327,21 +327,17 @@ const WheelGamePage = () => {
         ctx.restore();
       });
       
-      // Add center circle (white)
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, radius * 0.15, 0, 2 * Math.PI);
-      ctx.fillStyle = '#FFFFFF';
-      ctx.fill();
+      // Remove center circle completely - no gradient, no stroke
       
-      // Always use English "SPIN NOW" text in the center regardless of selected language
-      ctx.font = `bold ${Math.floor(radius * 0.06)}px Arial, sans-serif`;
-      ctx.fillStyle = '#000000';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
+      // Remove "SPIN NOW" text from center of wheel
+      // ctx.font = `bold ${Math.floor(radius * 0.06)}px Arial, sans-serif`;
+      // ctx.fillStyle = '#000000';
+      // ctx.textAlign = 'center';
+      // ctx.textBaseline = 'middle';
       
       // Always use English text
-      ctx.fillText('SPIN', centerX, centerY - radius * 0.02);
-      ctx.fillText('NOW', centerX, centerY + radius * 0.06);
+      // ctx.fillText('SPIN', centerX, centerY - radius * 0.02);
+      // ctx.fillText('NOW', centerX, centerY + radius * 0.06);
     }
     
     // Clean up event listener when component unmounts
@@ -629,96 +625,81 @@ const WheelGamePage = () => {
           
           {/* Logo at top left with no header */}
           {wheel?.logoUrl && (
-            <div className="absolute left-2 sm:left-4 md:left-6 top-2 sm:top-4 md:top-6 z-10 bg-white p-1 sm:p-1.5 md:p-2 rounded-lg shadow-lg border-2 border-gray-400">
+            <div className="absolute left-0 sm:left-2 md:left-4 top-0 sm:top-2 md:top-4 z-10 bg-white p-2 sm:p-3 md:p-4 rounded-lg shadow-lg border-2 border-gray-400">
               <img 
                 src={wheel.logoUrl} 
                 alt="Logo" 
-                className="h-8 sm:h-12 md:h-16 w-auto object-contain"
+                className="w-[120px] h-[120px] sm:w-[150px] sm:h-[150px] md:w-[180px] md:h-[180px] object-contain"
               />
             </div>
           )}
           
           {/* Wheel game - now always visible */}
           {showWheelGame && (
-            <div className="pt-12 sm:pt-16 md:pt-20 pb-2 sm:pb-6 md:pb-8 overflow-visible flex-1 flex flex-col justify-center"> {/* Added flex classes */}
-              <div className="relative mx-auto w-full lg:w-[95%]"> {/* Use full width on small/medium screens */}
-                {/* Enhanced pointer triangle - updated to match the image */}
-                <div 
-                  className="absolute top-0 left-1/2 transform -translate-x-1/2 z-10 pointer"
-                  style={{ 
-                    marginTop: '-20px'
-                  }}
-                >
-                  <svg width="50" height="55" viewBox="0 0 30 35" className="sm:w-[60px] sm:h-[65px]">
-                    <polygon 
-                      points="15,35 0,5 30,5" 
-                      fill="#000000" 
-                      stroke="#FFFFFF" 
-                      strokeWidth="1.5"
-                    />
-                  </svg>
+            <div className="pt-32 sm:pt-40 md:pt-52 pb-2 sm:pb-6 md:pb-8 overflow-visible flex-1 flex flex-col justify-center">
+              <div className="mx-auto w-full lg:w-[95%]">
+                {/* Spin button above wheel */}
+                <div className="text-center mb-6 sm:mb-8 md:mb-10">
+                  <motion.button
+                    className={`px-6 sm:px-8 py-3 sm:py-4 font-bold rounded-lg shadow-lg transform transition-all duration-200 text-base sm:text-lg md:text-xl
+                      ${hasSpun 
+                        ? 'bg-gray-400 text-gray-200 cursor-not-allowed' 
+                        : 'bg-black text-white hover:bg-gray-800'}`}
+                    whileHover={hasSpun ? {} : { scale: 1.05 }}
+                    whileTap={hasSpun ? {} : { scale: 0.95 }}
+                    onClick={spinWheel}
+                    disabled={isSpinning || hasSpun || showInstructionModal}
+                  >
+                    {isSpinning ? (
+                      <span className="flex items-center justify-center">
+                        <span className="inline-block animate-spin mr-2">⟳</span>
+                        {t('spinning')}
+                      </span>
+                    ) : (
+                      t('spinTheWheel')
+                    )}
+                  </motion.button>
                 </div>
                 
-                {/* Spinning wheel with animation effects */}
-                <motion.div 
-                  ref={wheelRef}
-                  className="relative w-full pt-[100%] mb-4 sm:mb-12 md:mb-16" // Reduced bottom margin on mobile
-                  initial={{ rotate: 0 }}
-                  animate={{ rotate: rotationDegrees }}
-                  transition={{ 
-                    duration: isSpinning ? 5 : 0,
-                    ease: [0.1, 0.25, 0.3, 1], // More realistic momentum curve
-                    type: "tween"
-                  }}
-                  style={{ 
-                    transformOrigin: 'center center',
-                    filter: 'drop-shadow(0px 10px 20px rgba(0, 0, 0, 0.4))',
-                    margin: '0' // Removed margin
-                  }}
-                >
-                  <canvas 
-                    ref={canvasRef}
-                    className="absolute top-0 left-0 w-full h-full"
-                  />
-                </motion.div>
-                
-                {/* Center Spin Button with neon effect - OUTSIDE the rotating wheel - made more responsive */}
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none">
-                  <div className="pointer-events-auto">
-                    {/* Animated outer glow ring - only visible when not played */}
-                    {!hasSpun && !isSpinning && (
-                      <div className="absolute inset-0 w-full h-full rounded-full animate-pulse" 
-                        style={{
-                          background: 'radial-gradient(circle, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 70%)',
-                          transform: 'scale(1.4)',
-                          filter: 'blur(10px)'
-                        }}
+                {/* Wheel container with pointer */}
+                <div className="relative">
+                  {/* Pointer triangle */}
+                  <div 
+                    className="absolute top-0 left-1/2 transform -translate-x-1/2 z-10"
+                    style={{ marginTop: '-20px' }}
+                  >
+                    <svg width="50" height="55" viewBox="0 0 30 35" className="sm:w-[60px] sm:h-[65px]">
+                      <polygon 
+                        points="15,35 0,5 30,5" 
+                        fill="#000000" 
+                        stroke="#FFFFFF" 
+                        strokeWidth="1.5"
                       />
-                    )}
-                    
-                    <motion.button
-                      className={`w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full flex items-center justify-center relative z-10
-                        ${hasSpun 
-                          ? 'cursor-not-allowed bg-black/30' 
-                          : 'bg-transparent'} 
-                        font-bold border-0`}
-                      whileHover={hasSpun ? {} : { 
-                        scale: 1.05,
-                      }}
-                      whileTap={hasSpun ? {} : { scale: 0.95 }}
-                      onClick={spinWheel}
-                      disabled={isSpinning || hasSpun || showInstructionModal}
-                      aria-label={t('spinTheWheel')}
-                    >
-                      <div className="text-center relative z-10">
-                        {isSpinning && (
-                          <div className="text-xl sm:text-2xl md:text-3xl mt-1 sm:mt-2 rounded-full w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 mx-auto flex items-center justify-center">
-                            <span className="inline-block animate-spin">⟳</span>
-                          </div>
-                        )}
-                      </div>
-                    </motion.button>
+                    </svg>
                   </div>
+                  
+                  {/* Spinning wheel */}
+                  <motion.div 
+                    ref={wheelRef}
+                    className="relative w-full pt-[100%] mb-4 sm:mb-12 md:mb-16"
+                    initial={{ rotate: 0 }}
+                    animate={{ rotate: rotationDegrees }}
+                    transition={{ 
+                      duration: isSpinning ? 5 : 0,
+                      ease: [0.1, 0.25, 0.3, 1],
+                      type: "tween"
+                    }}
+                    style={{ 
+                      transformOrigin: 'center center',
+                      filter: 'drop-shadow(0px 10px 20px rgba(0, 0, 0, 0.4))',
+                      margin: '0'
+                    }}
+                  >
+                    <canvas 
+                      ref={canvasRef}
+                      className="absolute top-0 left-0 w-full h-full"
+                    />
+                  </motion.div>
                 </div>
               </div>
             </div>
