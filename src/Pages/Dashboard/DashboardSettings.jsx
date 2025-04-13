@@ -8,6 +8,7 @@ import { useAuthContext } from '../../hooks/useAuthContext';
 import wheelApi from './API/wheelApi.js';
 import { toast } from 'react-toastify';
 import { useLanguage } from '../../context/LanguageContext';
+import LinkAssist from "../../../public/LinkAssist.png"
 
 // Translations object
 const translations = {
@@ -17,7 +18,7 @@ const translations = {
     googleReviewLink: "Google Review Link",
     socialMediaLink: "Social Media Link (optional)",
     customerInstruction: "Customer instruction",
-    characterLimit: "(20 character limit)",
+    characterLimit: "(40 character limit)",
     mainColors: "3 main colors",
     color1: "Color 1",
     color2: "Color 2",
@@ -76,7 +77,7 @@ const translations = {
     googleReviewLink: "Lien Google Review",
     socialMediaLink: "Lien de Média Social (optionnel)",
     customerInstruction: "Instruction client",
-    characterLimit: "(limite de 20 caractères)",
+    characterLimit: "(limite de 40 caractères)",
     mainColors: "3 couleurs principales",
     color1: "Couleur 1",
     color2: "Couleur 2",
@@ -608,7 +609,7 @@ const WheelGameDashboard = () => {
       toast.error("Failed to load the English poster template");
       setIsLoading(false);
     };
-    templateImg.src = '/English Poster.png'; // Path to the template in public folder
+    templateImg.src = '/English2.png'; // Path to the template in public folder
   };
 
   const downloadFrenchPoster = () => {
@@ -883,6 +884,10 @@ const WheelGameDashboard = () => {
             </motion.button>
           </div>
         </div>
+        <div className="text-sm text-gray-500 ml-7">or social media link</div>
+        <div className="mt-2 flex justify-center">
+          <img src={LinkAssist} alt="Link instructions" className="max-w-full h-auto rounded-lg shadow-sm" />
+        </div>
         {validationErrors.googleReviewLink && (
           <div className="mt-2 text-red-500 text-sm">
             {t.enterGoogleReview}
@@ -971,12 +976,12 @@ const WheelGameDashboard = () => {
                 }}
                 placeholder={language === 'fr' ? "Si vide, texte par défaut: 'Donnez-nous un avis'" : "If empty default text: 'Give us a review'"}
                 className={`w-full p-3 border ${validationErrors.customerInstruction ? 'border-red-500 bg-red-50' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-200`}
-                maxLength={20}
+                maxLength={40}
                 disabled={isLoading}
                 required
               />
               <span className="absolute right-3 top-3 text-xs text-gray-500">
-                {customerInstruction.length}/20
+                {customerInstruction.length}/40
               </span>
             </div>
           </div>
