@@ -17,6 +17,7 @@ const translations = {
     previewGame: "Preview Game",
     googleReviewLink: "Google Review Link",
     socialMediaLink: "Social Media Link (optional)",
+    orSocialMediaLink: "or social media link",
     customerInstruction: "Customer instruction",
     characterLimit: "(40 character limit)",
     mainColors: "3 main colors",
@@ -47,6 +48,7 @@ const translations = {
     downloadSVG: "Download SVG",
     downloadPNG: "Download PNG",
     lastUpdated: "Last updated",
+    linkInstructionText: "Find your link in your Google Business listing (shown above) and fill it in the \"Google Review Link\" field",
     
     // Validation messages
     loginRequired: "You must be logged in to save a wheel",
@@ -76,6 +78,7 @@ const translations = {
     previewGame: "Aperçu du Jeu",
     googleReviewLink: "Lien Google Review",
     socialMediaLink: "Lien de Média Social (optionnel)",
+    orSocialMediaLink: "ou lien de média social",
     customerInstruction: "Instruction client",
     characterLimit: "(limite de 40 caractères)",
     mainColors: "3 couleurs principales",
@@ -106,6 +109,7 @@ const translations = {
     downloadSVG: "Télécharger SVG",
     downloadPNG: "Télécharger PNG",
     lastUpdated: "Dernière mise à jour",
+    linkInstructionText: "Trouvez votre lien dans votre fiche Google Business (photo ci-dessus) et remplissez-le dans la case \"Lien google review\"",
     
     // Validation messages
     loginRequired: "Vous devez être connecté pour enregistrer une roue",
@@ -558,24 +562,9 @@ const WheelGameDashboard = () => {
             const logoImg = new Image();
             logoImg.crossOrigin = "Anonymous";
             logoImg.onload = () => {
-              // Draw logo near the top (position based on the template)
-              // The logo should go above the "Spin now" text
-              const logoMaxWidth = templateImg.width * 0.3; // Maximum logo width
-              const logoMaxHeight = templateImg.height * 0.1; // Maximum logo height
-
-              // Calculate logo dimensions while preserving aspect ratio
-              const logoAspect = logoImg.width / logoImg.height;
-              let logoWidth, logoHeight;
-
-              if (logoAspect > 1) {
-                // Wider logo
-                logoWidth = Math.min(logoMaxWidth, logoImg.width);
-                logoHeight = logoWidth / logoAspect;
-              } else {
-                // Taller logo
-                logoHeight = Math.min(logoMaxHeight, logoImg.height);
-                logoWidth = logoHeight * logoAspect;
-              }
+              // Set fixed logo dimensions to exactly 200px x 200px
+              const logoWidth = 200;
+              const logoHeight = 200;
 
               // Position logo near the top center, above the main text
               const logoX = (templateImg.width - logoWidth) / 2;
@@ -681,24 +670,9 @@ const WheelGameDashboard = () => {
             const logoImg = new Image();
             logoImg.crossOrigin = "Anonymous";
             logoImg.onload = () => {
-              // Draw logo near the top (position based on the template)
-              // The logo should go above the "Spin now" text
-              const logoMaxWidth = templateImg.width * 0.3; // Maximum logo width
-              const logoMaxHeight = templateImg.height * 0.1; // Maximum logo height
-
-              // Calculate logo dimensions while preserving aspect ratio
-              const logoAspect = logoImg.width / logoImg.height;
-              let logoWidth, logoHeight;
-
-              if (logoAspect > 1) {
-                // Wider logo
-                logoWidth = Math.min(logoMaxWidth, logoImg.width);
-                logoHeight = logoWidth / logoAspect;
-              } else {
-                // Taller logo
-                logoHeight = Math.min(logoMaxHeight, logoImg.height);
-                logoWidth = logoHeight * logoAspect;
-              }
+              // Set fixed logo dimensions to exactly 200px x 200px
+              const logoWidth = 200;
+              const logoHeight = 200;
 
               // Position logo near the top center, above the main text
               const logoX = (templateImg.width - logoWidth) / 2;
@@ -884,9 +858,14 @@ const WheelGameDashboard = () => {
             </motion.button>
           </div>
         </div>
-        <div className="text-sm text-gray-500 ml-7">or social media link</div>
+        <div className="flex items-center ml-7 -mt-1 mb-2">
+          <span className="font-semibold text-gray-800 text-lg">{t.orSocialMediaLink}</span>
+        </div>
         <div className="mt-2 flex justify-center">
           <img src={LinkAssist} alt="Link instructions" className="max-w-full h-auto rounded-lg shadow-sm" />
+        </div>
+        <div className="mt-2 text-center">
+          <p className="text-sm italic text-gray-600">{t.linkInstructionText}</p>
         </div>
         {validationErrors.googleReviewLink && (
           <div className="mt-2 text-red-500 text-sm">
