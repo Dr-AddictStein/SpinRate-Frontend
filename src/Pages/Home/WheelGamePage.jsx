@@ -179,18 +179,28 @@ const WheelGamePage = () => {
     
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
+    let pixelRatio = window.devicePixelRatio || 1;
+    let scaledOnce = false;
     
     // Dynamically set canvas size based on container size
     const calculateSize = () => {
+      // Reset transform to prevent accumulating scales
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      scaledOnce = false;
+      
       // Get the parent container width (accounting for any padding)
       const containerWidth = canvas.parentElement.clientWidth;
       
-      // Set canvas dimensions to match container width (for perfect square)
-      canvas.width = containerWidth;
-      canvas.height = containerWidth;
+      // Set display size (css pixels)
+      canvas.style.width = `${containerWidth}px`;
+      canvas.style.height = `${containerWidth}px`;
+      
+      // Set actual size in memory (scaled for pixel ratio)
+      canvas.width = containerWidth * pixelRatio;
+      canvas.height = containerWidth * pixelRatio;
       
       // Force a redraw with the new dimensions
-      drawWheel();
+      drawWheel(containerWidth);
     };
     
     // Calculate size initially
@@ -200,13 +210,19 @@ const WheelGamePage = () => {
     window.addEventListener('resize', calculateSize);
     
     // Function to draw the wheel (extracted to be called after resize)
-    function drawWheel() {
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
+    function drawWheel(containerWidth) {
+      // Apply scale for high DPI displays ONLY ONCE per redraw
+      if (!scaledOnce) {
+        ctx.scale(pixelRatio, pixelRatio);
+        scaledOnce = true;
+      }
+      
+      const centerX = containerWidth / 2;
+      const centerY = containerWidth / 2;
       const radius = Math.min(centerX, centerY) * 0.92;
       
       // Clear canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, containerWidth, containerWidth);
       
       // Get wheel data from backend or use defaults
       // Use all three colors from mainColors in a repeating pattern
@@ -450,16 +466,6 @@ const WheelGamePage = () => {
           ctx.fillText("SR", centerX, centerY);
         };
       }
-      
-      // Remove "SPIN NOW" text from center of wheel
-      // ctx.font = `bold ${Math.floor(radius * 0.06)}px Arial, sans-serif`;
-      // ctx.fillStyle = '#000000';
-      // ctx.textAlign = 'center';
-      // ctx.textBaseline = 'middle';
-      
-      // Always use English text
-      // ctx.fillText('SPIN', centerX, centerY - radius * 0.02);
-      // ctx.fillText('NOW', centerX, centerY + radius * 0.06);
     }
     
     // Clean up event listener when component unmounts
