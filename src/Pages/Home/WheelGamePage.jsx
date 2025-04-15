@@ -312,8 +312,8 @@ const WheelGamePage = () => {
         let displayText = lot.name || '$8 mandatory';
         
         // Set text properties - increase font size for better readability, especially on mobile
-        // Increased the multiplier from 0.07 to 0.09 and minimum size from 14 to 16
-        const fontSize = Math.max(Math.min(radius * 0.09, 22), 16);
+        // Increased the multiplier from 0.09 to 0.11 and minimum size from 16 to 18
+        const fontSize = Math.max(Math.min(radius * 0.11, 24), 18);
         ctx.font = `bold ${Math.floor(fontSize)}px Arial, sans-serif`;
         ctx.fillStyle = '#FFFFFF';
         
@@ -334,8 +334,8 @@ const WheelGamePage = () => {
         ctx.shadowOffsetY = 1;
         
         // Place text in middle of where the line would be - moved slightly outward
-        // Adjusted positioning from 0.55 to 0.6 for better placement
-        const textDistance = radius * 0.6;
+        // Adjusted positioning from 0.6 to 0.65 for better placement with larger text
+        const textDistance = radius * 0.65;
         
         // Draw text with better contrast
         ctx.fillText(displayText, textDistance, 0);
@@ -346,7 +346,7 @@ const WheelGamePage = () => {
       // Remove center circle completely - no gradient, no stroke
       
       // Add a center logo circle
-      const centerCircleRadius = radius * 0.12; // Reduced from 0.15 to 0.12
+      const centerCircleRadius = radius * 0.14; // Increased from 0.12 to 0.14
       
       // Draw white circle background with shadow
       ctx.beginPath();
@@ -386,13 +386,13 @@ const WheelGamePage = () => {
           ctx.clip();
           
           // Calculate dimensions to maintain aspect ratio and fit within circle
-          const size = centerCircleRadius * 1.5;
+          // Using the same size factor as for the primary logo
           ctx.drawImage(
             logoImg, 
-            centerX - size/2, 
-            centerY - size/2, 
-            size, 
-            size
+            centerX - centerCircleRadius * 1.7/2, 
+            centerY - centerCircleRadius * 1.7/2, 
+            centerCircleRadius * 1.7, 
+            centerCircleRadius * 1.7
           );
           
           ctx.restore();
@@ -436,13 +436,13 @@ const WheelGamePage = () => {
           ctx.clip();
           
           // Calculate dimensions to maintain aspect ratio and fit within circle
-          const size = centerCircleRadius * 1.5;
+          // Using the same size factor as for the primary logo
           ctx.drawImage(
             logoImg, 
-            centerX - size/2, 
-            centerY - size/2, 
-            size, 
-            size
+            centerX - centerCircleRadius * 1.7/2, 
+            centerY - centerCircleRadius * 1.7/2, 
+            centerCircleRadius * 1.7, 
+            centerCircleRadius * 1.7
           );
           
           ctx.restore();
@@ -458,7 +458,7 @@ const WheelGamePage = () => {
         // Handle image loading error
         logoImg.onerror = () => {
           // Fallback to text if logo fails to load
-          ctx.font = `bold ${Math.floor(centerCircleRadius * 0.9)}px Arial, sans-serif`;
+          ctx.font = `bold ${Math.floor(centerCircleRadius * 1.1)}px Arial, sans-serif`; // Increased from 0.9 to 1.1
           ctx.fillStyle = "#000000";
           ctx.textAlign = "center";
           ctx.textBaseline = "middle";
