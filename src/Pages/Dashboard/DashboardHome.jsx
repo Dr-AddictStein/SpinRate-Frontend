@@ -241,14 +241,14 @@ const BarChartComponent = () => {
   const maxValue = Math.max(...monthlyReviewsData.map(d => d.reviews));
   
   return (
-    <div className="mt-4 h-64 flex items-end justify-between">
+    <div className="mt-4 h-52 sm:h-64 flex items-end justify-between px-2">
       {monthlyReviewsData.map((data, index) => (
         <div key={index} className="flex flex-col items-center">
           <motion.div 
             initial={{ height: 0 }}
             animate={{ height: `${(data.reviews / maxValue) * 100}%` }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="w-10 bg-gradient-to-t from-blue-500 to-indigo-600 rounded-t-lg"
+            className="w-4 sm:w-6 md:w-8 lg:w-10 bg-gradient-to-t from-blue-500 to-indigo-600 rounded-t-lg"
           ></motion.div>
           <span className="text-xs text-gray-500 mt-2">{data.month}</span>
         </div>
@@ -263,32 +263,32 @@ const DashboardHome = () => {
   return (
     <div className="pb-12">
       {/* Page header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
-        <p className="text-gray-600 mt-1">Welcome back! Here's what's happening with your business today.</p>
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-xl md:text-2xl font-bold text-gray-800">Dashboard</h1>
+        <p className="text-sm md:text-base text-gray-600 mt-1">Welcome back! Here's what's happening with your business today.</p>
       </div>
       
       {/* Stats grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-6 sm:mb-8">
         {statsData.map((stat, index) => (
           <StatCard key={index} stat={stat} />
         ))}
       </div>
       
       {/* Charts and activity section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Chart */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.2 }}
-          className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 lg:col-span-2"
+          className="bg-white rounded-xl shadow-sm p-3 sm:p-6 border border-gray-100 lg:col-span-2"
         >
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="font-bold text-gray-800">Monthly Reviews</h3>
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6">
+            <h3 className="font-bold text-gray-800 mb-2 sm:mb-0">Monthly Reviews</h3>
             <div className="flex space-x-2">
-              <button className="px-3 py-1 text-sm bg-blue-50 text-blue-600 rounded-md font-medium">Monthly</button>
-              <button className="px-3 py-1 text-sm text-gray-500 hover:bg-gray-50 rounded-md">Weekly</button>
+              <button className="px-2 sm:px-3 py-1 text-xs sm:text-sm bg-blue-50 text-blue-600 rounded-md font-medium">Monthly</button>
+              <button className="px-2 sm:px-3 py-1 text-xs sm:text-sm text-gray-500 hover:bg-gray-50 rounded-md">Weekly</button>
             </div>
           </div>
           <BarChartComponent />
@@ -303,27 +303,27 @@ const DashboardHome = () => {
         >
           <div className="flex border-b border-gray-100">
             <button 
-              className={`flex-1 py-4 text-sm font-medium ${activeTab === 'overview' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+              className={`flex-1 py-3 sm:py-4 text-xs sm:text-sm font-medium ${activeTab === 'overview' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
               onClick={() => setActiveTab('overview')}
             >
               Recent Reviews
             </button>
             <button 
-              className={`flex-1 py-4 text-sm font-medium ${activeTab === 'analytics' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+              className={`flex-1 py-3 sm:py-4 text-xs sm:text-sm font-medium ${activeTab === 'analytics' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
               onClick={() => setActiveTab('analytics')}
             >
               Upcoming Events
             </button>
           </div>
           
-          <div className="max-h-96 overflow-y-auto">
+          <div className="max-h-64 sm:max-h-80 md:max-h-96 overflow-y-auto">
             {activeTab === 'overview' ? (
               <div>
                 {recentReviews.map((review, index) => (
                   <ReviewCard key={review.id} review={review} delay={index} />
                 ))}
                 <div className="p-4 text-center">
-                  <button className="text-sm text-blue-600 font-medium flex items-center justify-center mx-auto">
+                  <button className="text-xs sm:text-sm text-blue-600 font-medium flex items-center justify-center mx-auto">
                     View all reviews <ChevronRight size={16} />
                   </button>
                 </div>
@@ -334,7 +334,7 @@ const DashboardHome = () => {
                   <EventCard key={event.id} event={event} delay={index} />
                 ))}
                 <div className="p-4 text-center">
-                  <button className="text-sm text-blue-600 font-medium flex items-center justify-center mx-auto">
+                  <button className="text-xs sm:text-sm text-blue-600 font-medium flex items-center justify-center mx-auto">
                     View calendar <ChevronRight size={16} />
                   </button>
                 </div>

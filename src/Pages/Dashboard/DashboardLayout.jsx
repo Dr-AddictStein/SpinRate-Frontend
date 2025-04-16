@@ -18,6 +18,7 @@ const DashboardLayout = () => {
   const [showSignupModal, setShowSignupModal] = useState(false);
   const { t } = useTranslation();
   const { language, changeLanguage } = useLanguage();
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
     // Show signup modal if user is not authenticated
@@ -27,6 +28,25 @@ const DashboardLayout = () => {
       setShowSignupModal(false);
     }
   }, [user]);
+
+  useEffect(() => {
+    // Handle resize events to determine if we're on mobile
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      // Close sidebar automatically on small screens
+      if (window.innerWidth < 1024 && sidebarOpen) {
+        setSidebarOpen(false);
+      } else if (window.innerWidth >= 1024 && !sidebarOpen) {
+        setSidebarOpen(true);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    // Initial check
+    handleResize();
+    
+    return () => window.removeEventListener('resize', handleResize);
+  }, [sidebarOpen]);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -48,7 +68,7 @@ const DashboardLayout = () => {
   // If we're here, we're authenticated
   return (
     <div className="w-full min-h-screen bg-gray-50 flex overflow-hidden">
-      {/* Language Selector - fixed position */}
+      {/* Language Selector - fixed position with improved mobile positioning */}
       <div className="fixed top-4 right-4 z-50 flex items-center space-x-2">
         <button 
           onClick={() => changeLanguage('fr')}
@@ -71,12 +91,13 @@ const DashboardLayout = () => {
         <SignupModal closeModal={() => setShowSignupModal(false)} />
       )}
 
-      {/* Mobile menu toggle button - only visible on mobile */}
+      {/* Mobile menu toggle button - improved positioning and visibility */}
       <button 
         onClick={toggleMobileMenu}
-        className="lg:hidden fixed top-4 left-4 z-50 p-3 rounded-md bg-white shadow-md text-gray-600 hover:bg-gray-100"
+        className="lg:hidden fixed top-4 left-4 z-50 p-2.5 rounded-md bg-white shadow-md text-gray-600 hover:bg-gray-100 flex items-center justify-center"
+        aria-label="Toggle mobile menu"
       >
-        {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
       </button>
       
       {/* Desktop sidebar toggle button - only visible when sidebar is collapsed */}
@@ -84,27 +105,33 @@ const DashboardLayout = () => {
         <button 
           onClick={toggleSidebar}
           className="hidden lg:flex fixed top-4 left-4 z-30 p-2 rounded-md bg-white shadow-md text-gray-600 hover:bg-gray-100"
+          aria-label="Expand sidebar"
         >
           <Menu size={20} />
         </button>
       )}
       
-      {/* Mobile Sidebar */}
+      {/* Mobile Sidebar - improved animation and sizing */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div 
-            initial={{ x: -300, opacity: 0 }}
+            initial={{ x: -280, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -300, opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            exit={{ x: -280, opacity: 0 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
             className="fixed inset-0 z-40 lg:hidden"
           >
-            <div className="absolute inset-0 bg-gray-600 bg-opacity-75" onClick={toggleMobileMenu}></div>
-            <div className="relative flex-1 flex flex-col max-w-xs w-full h-full bg-white overflow-y-hidden">
-              <div className="absolute top-0 right-0 -mr-12 pt-2">
+            <div 
+              className="absolute inset-0 bg-gray-600 bg-opacity-75" 
+              onClick={toggleMobileMenu}
+              aria-hidden="true"
+            ></div>
+            <div className="relative flex-1 flex flex-col max-w-[280px] w-full h-full bg-white overflow-y-auto">
+              <div className="absolute top-0 right-0 pt-2 -mr-12">
                 <button
                   className="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
                   onClick={toggleMobileMenu}
+                  aria-label="Close sidebar"
                 >
                   <X size={24} className="text-white" />
                 </button>
@@ -115,20 +142,21 @@ const DashboardLayout = () => {
         )}
       </AnimatePresence>
       
-      {/* Desktop Sidebar */}
+      {/* Desktop Sidebar - with responsive behavior */}
       <motion.div 
         initial={false}
         animate={{ width: sidebarOpen ? '16rem' : '5rem' }}
-        className={`hidden lg:block relative z-20 transition-all duration-300 ease-in-out`}
+        className={`hidden lg:block relative z-20 transition-all duration-300 ease-in-out overflow-hidden`}
       >
         <Sidebar collapsed={!sidebarOpen} toggleSidebar={toggleSidebar} />
       </motion.div>
       
-      {/* Main Content Area */}
-      <main className={`flex-1 overflow-y-auto bg-gray-50 p-6 lg:p-8  transition-all duration-300`}>
+      {/* Main Content Area - improved responsive padding and spacing */}
+      <main className={`flex-1 overflow-y-auto bg-gray-50 transition-all duration-300 
+                        px-3 py-4 sm:p-5 md:p-6 lg:p-8`}>
         <div className="max-w-7xl mx-auto">
-          {/* Add some top padding on mobile to account for the menu button */}
-          <div className="lg:pt-0 pt-10">
+          {/* Add appropriate padding on mobile to account for menu button */}
+          <div className="pt-12 lg:pt-0">
             <Outlet />
           </div>
         </div>

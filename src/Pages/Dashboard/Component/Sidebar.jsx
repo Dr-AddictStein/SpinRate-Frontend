@@ -40,15 +40,16 @@ const MenuItem = ({ icon: Icon, text, translationKey, path, active, collapsed, b
     const displayText = translationKey ? t(translationKey) : text;
 
     const handleClick = () => {
-        if (onClick) {
-            onClick();
-            return;
-        }
-        
+        // Handle navigation first
         if (translationKey === "logout") {
             logout();
         } else if (path) {
             navigate(path);
+        }
+        
+        // Then handle sidebar toggle if provided
+        if (onClick) {
+            onClick();
         }
     };
 
@@ -203,6 +204,7 @@ const Sidebar = ({ collapsed = false, toggleSidebar }) => {
                         active={isActive(item.path)}
                         collapsed={collapsed}
                         badge={item.badge}
+                        onClick={toggleSidebar}
                     />
                 ))}
             </div>
@@ -216,6 +218,7 @@ const Sidebar = ({ collapsed = false, toggleSidebar }) => {
                     active={false}
                     collapsed={collapsed}
                     badge={false}
+                    onClick={toggleSidebar}
                 />
             </div>
         </div>

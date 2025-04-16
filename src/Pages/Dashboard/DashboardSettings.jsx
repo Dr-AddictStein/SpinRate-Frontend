@@ -77,8 +77,8 @@ const translations = {
     title: "Configuration du Jeu de Roue",
     previewGame: "Aperçu du Jeu",
     googleReviewLink: "Lien Google Review",
-    socialMediaLink: "Lien de Média Social (optionnel)",
-    orSocialMediaLink: "ou lien de média social",
+    socialMediaLink: "Lien de Réseau social (optionnel)",
+    orSocialMediaLink: "ou lien de réseau social",
     customerInstruction: "Instruction client",
     characterLimit: "(limite de 40 caractères)",
     mainColors: "3 couleurs principales",
@@ -562,9 +562,9 @@ const WheelGameDashboard = () => {
             const logoImg = new Image();
             logoImg.crossOrigin = "Anonymous";
             logoImg.onload = () => {
-              // Set fixed logo dimensions to exactly 200px x 200px
-              const logoWidth = 200;
-              const logoHeight = 200;
+              // Set logo dimensions to 260px x 260px
+              const logoWidth = 260;
+              const logoHeight = 260;
 
               // Position logo near the top center, above the main text
               const logoX = (templateImg.width - logoWidth) / 2;
@@ -670,9 +670,9 @@ const WheelGameDashboard = () => {
             const logoImg = new Image();
             logoImg.crossOrigin = "Anonymous";
             logoImg.onload = () => {
-              // Set fixed logo dimensions to exactly 200px x 200px
-              const logoWidth = 200;
-              const logoHeight = 200;
+              // Set logo dimensions to 260px x 260px
+              const logoWidth = 260;
+              const logoHeight = 260;
 
               // Position logo near the top center, above the main text
               const logoX = (templateImg.width - logoWidth) / 2;
@@ -775,49 +775,47 @@ const WheelGameDashboard = () => {
 
   return (
     <motion.div
-      className="w-full max-w-6xl mx-auto p-6 space-y-8"
+      className="w-full max-w-6xl mx-auto p-3 sm:p-6 space-y-6 sm:space-y-8"
       initial="hidden"
       animate="visible"
       variants={containerVariants}
     >
       <motion.div
-        className="flex items-center justify-between mb-8"
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-8 gap-3"
         variants={itemVariants}
       >
-        <h1 className="text-3xl font-bold text-gray-800">{t.title}</h1>
-        <div className="flex space-x-2">
-          <motion.button
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 shadow-lg"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={openPreviewModal}
-            disabled={isLoading}
-          >
-            <Grid className="w-5 h-5" />
-            <span>{t.previewGame}</span>
-          </motion.button>
-        </div>
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800">{t.title}</h1>
+        <motion.button
+          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center justify-center space-x-2 shadow-lg w-full sm:w-auto"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={openPreviewModal}
+          disabled={isLoading}
+        >
+          <Grid className="w-5 h-5" />
+          <span>{t.previewGame}</span>
+        </motion.button>
       </motion.div>
 
       {/* Google Review Link */}
       <motion.div
         ref={googleReviewRef}
-        className={`bg-white p-6 rounded-xl shadow-lg border ${validationErrors.googleReviewLink ? 'border-red-500 shadow-red-100' : 'border-gray-100'}`}
+        className={`bg-white p-4 sm:p-6 rounded-xl shadow-lg border ${validationErrors.googleReviewLink ? 'border-red-500 shadow-red-100' : 'border-gray-100'}`}
         variants={itemVariants}
         onMouseEnter={() => setActiveSection('google')}
         whileHover={{ boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
       >
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2">
           <div className="flex items-center">
-            <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg className="w-5 h-5 mr-2 flex-shrink-0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
               <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
             </svg>
-            <label className="font-semibold text-gray-800 text-lg">{t.googleReviewLink} <span className="text-red-500">*</span></label>
+            <label className="font-semibold text-gray-800 text-base sm:text-lg">{t.googleReviewLink} <span className="text-red-500">*</span></label>
           </div>
-          <div className="relative flex items-center w-3/4">
+          <div className="relative flex items-center w-full sm:w-3/4">
             <input
               type="text"
               value={googleReviewLink}
@@ -828,7 +826,7 @@ const WheelGameDashboard = () => {
                 }
               }}
               placeholder=""
-              className={`w-full p-3 rounded-lg border ${validationErrors.googleReviewLink ? 'border-red-500 bg-red-50' : 'border-gray-300'} focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out`}
+              className={`w-full p-2 sm:p-3 text-sm rounded-lg border ${validationErrors.googleReviewLink ? 'border-red-500 bg-red-50' : 'border-gray-300'} focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out`}
               disabled={isLoading}
               required
             />
@@ -839,11 +837,11 @@ const WheelGameDashboard = () => {
                 animate={{ scale: 1 }}
                 transition={{ type: 'spring', stiffness: 500, damping: 15 }}
               >
-                <Check className="text-green-500 w-5 h-5" />
+                <Check className="text-green-500 w-4 h-4 sm:w-5 sm:h-5" />
               </motion.div>
             )}
             <motion.button
-              className="absolute right-12 text-gray-400 hover:text-gray-600"
+              className="absolute right-10 sm:right-12 text-gray-400 hover:text-gray-600"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={() => {
@@ -854,95 +852,44 @@ const WheelGameDashboard = () => {
               }}
               disabled={!googleReviewLink || isLoading}
             >
-              <Copy className="w-5 h-5" />
+              <Copy className="w-4 h-4 sm:w-5 sm:h-5" />
             </motion.button>
           </div>
         </div>
-        <div className="flex items-center ml-7 -mt-1 mb-2">
-          <span className="font-semibold text-gray-800 text-lg">{t.orSocialMediaLink}</span>
+        <div className="flex items-center ml-2 sm:ml-4 -mt-2 sm:-mt-3 mb-2">
+          <span className="font-semibold text-gray-800 text-sm sm:text-lg">{t.orSocialMediaLink}</span>
         </div>
         <div className="mt-2 flex justify-center">
           <img src={LinkAssist} alt="Link instructions" className="max-w-full h-auto rounded-lg shadow-sm" />
         </div>
         <div className="mt-2 text-center">
-          <p className="text-sm italic text-gray-600">{t.linkInstructionText}</p>
+          <p className="text-xs sm:text-sm italic text-gray-600">{t.linkInstructionText}</p>
         </div>
         {validationErrors.googleReviewLink && (
-          <div className="mt-2 text-red-500 text-sm">
+          <div className="mt-2 text-red-500 text-xs sm:text-sm">
             {t.enterGoogleReview}
           </div>
         )}
       </motion.div>
 
-      {/* Social Media Link */}
-      {/* <motion.div
-        className="bg-white p-6 rounded-xl shadow-lg border border-gray-100"
-        variants={itemVariants}
-        onMouseEnter={() => setActiveSection('social')}
-        whileHover={{ boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
-      >
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center">
-            <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-2 16h-2v-6h2v6zm-1-6.891c-.607 0-1.1-.496-1.1-1.109 0-.612.492-1.109 1.1-1.109s1.1.497 1.1 1.109c0 .613-.493 1.109-1.1 1.109zm8 6.891h-1.998v-2.861c0-1.881-2.002-1.722-2.002 0v2.861h-2v-6h2v1.093c.872-1.616 4-1.736 4 1.548v3.359z" fill="#0077B5" />
-            </svg>
-            <label className="font-semibold text-gray-800 text-lg">{t.socialMediaLink}</label>
-          </div>
-          <div className="relative flex items-center w-3/4">
-            <input
-              type="text"
-              value={socialMediaLink}
-              onChange={(e) => setSocialMediaLink(e.target.value)}
-              placeholder=""
-              className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out"
-              disabled={isLoading}
-            />
-            {socialMediaLink && (
-              <motion.div
-                className="absolute right-3"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: 'spring', stiffness: 500, damping: 15 }}
-              >
-                <Check className="text-green-500 w-5 h-5" />
-              </motion.div>
-            )}
-            <motion.button
-              className="absolute right-12 text-gray-400 hover:text-gray-600"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => {
-                if (socialMediaLink) {
-                  navigator.clipboard.writeText(socialMediaLink);
-                  toast.success("Social Media Link copied!");
-                }
-              }}
-              disabled={!socialMediaLink || isLoading}
-            >
-              <Copy className="w-5 h-5" />
-            </motion.button>
-          </div>
-        </div>
-      </motion.div> */}
-
       {/* Customer Instruction */}
       <motion.div
         ref={customerInstructionRef}
-        className={`bg-white p-6 rounded-xl shadow-lg border ${validationErrors.customerInstruction ? 'border-red-500 shadow-red-100' : 'border-gray-100'}`}
+        className={`bg-white p-4 sm:p-6 rounded-xl shadow-lg border ${validationErrors.customerInstruction ? 'border-red-500 shadow-red-100' : 'border-gray-100'}`}
         variants={itemVariants}
         onMouseEnter={() => setActiveSection('instruction')}
         whileHover={{ boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
       >
-        <div className="flex justify-between items-center">
-          <div className="flex items-center">
-            <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mr-4">
-              <Info className="w-5 h-5 text-purple-600" />
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+          <div className="flex items-center mb-2 sm:mb-0">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-purple-100 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+              <Info className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
             </div>
-            <label className="font-semibold text-gray-800 text-lg">
-              {t.customerInstruction} <span className="text-sm font-normal text-gray-500">{t.characterLimit}</span> <span className="text-red-500">*</span>
+            <label className="font-semibold text-gray-800 text-base sm:text-lg">
+              {t.customerInstruction} <span className="text-xs sm:text-sm font-normal text-gray-500">{t.characterLimit}</span> <span className="text-red-500">*</span>
             </label>
           </div>
-          <div className="w-3/4">
+          <div className="w-full sm:w-3/4">
             <div className="relative">
               <input
                 type="text"
@@ -954,19 +901,19 @@ const WheelGameDashboard = () => {
                   }
                 }}
                 placeholder={language === 'fr' ? "Si vide, texte par défaut: 'Donnez-nous un avis'" : "If empty default text: 'Give us a review'"}
-                className={`w-full p-3 border ${validationErrors.customerInstruction ? 'border-red-500 bg-red-50' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-200`}
+                className={`w-full p-2 sm:p-3 text-sm sm:text-base border ${validationErrors.customerInstruction ? 'border-red-500 bg-red-50' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-200`}
                 maxLength={40}
                 disabled={isLoading}
                 required
               />
-              <span className="absolute right-3 top-3 text-xs text-gray-500">
+              <span className="absolute right-3 top-2 sm:top-3 text-xs text-gray-500">
                 {customerInstruction.length}/40
               </span>
             </div>
           </div>
         </div>
         {validationErrors.customerInstruction && (
-          <div className="mt-2 text-red-500 text-sm">
+          <div className="mt-2 text-red-500 text-xs sm:text-sm">
             {t.enterCustomerInstructions}
           </div>
         )}
@@ -974,27 +921,27 @@ const WheelGameDashboard = () => {
 
       {/* Main Colors */}
       <motion.div
-        className="bg-white p-6 rounded-xl shadow-lg border border-gray-100"
+        className="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-gray-100"
         variants={itemVariants}
         onMouseEnter={() => setActiveSection('colors')}
         whileHover={{ boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
       >
-        <div className="flex items-center mb-6">
-          <div className="w-10 h-10 bg-gradient-to-r from-red-400 via-green-400 to-yellow-400 rounded-full flex items-center justify-center mr-4">
-            <div className="w-6 h-6 bg-white rounded-full"></div>
+        <div className="flex items-center mb-4 sm:mb-6">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-red-400 via-green-400 to-yellow-400 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+            <div className="w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-full"></div>
           </div>
-          <label className="font-semibold text-gray-800 text-lg">{t.mainColors}</label>
+          <label className="font-semibold text-gray-800 text-base sm:text-lg">{t.mainColors}</label>
         </div>
 
-        <div className="grid grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-8">
           <motion.div
             whileHover={{ scale: 1.05 }}
-            className="bg-gradient-to-b from-white to-gray-50 p-4 rounded-lg shadow-sm"
+            className="bg-gradient-to-b from-white to-gray-50 p-3 sm:p-4 rounded-lg shadow-sm"
           >
-            <div className="mb-2 text-center font-medium text-gray-700">{t.color1}</div>
+            <div className="mb-2 text-center font-medium text-sm sm:text-base text-gray-700">{t.color1}</div>
             <div className="relative">
               <div
-                className="w-full h-16 rounded-lg mb-2 shadow-inner"
+                className="w-full h-12 sm:h-16 rounded-lg mb-2 shadow-inner"
                 style={{ backgroundColor: mainColors.color1 }}
               ></div>
               <motion.div
@@ -1005,7 +952,7 @@ const WheelGameDashboard = () => {
                   type="color"
                   value={mainColors.color1}
                   onChange={(e) => setMainColors({ ...mainColors, color1: e.target.value })}
-                  className="w-full h-10 cursor-pointer rounded-lg border-2 border-gray-300"
+                  className="w-full h-8 sm:h-10 cursor-pointer rounded-lg border-2 border-gray-300"
                   disabled={isLoading}
                 />
                 <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded">
@@ -1017,12 +964,12 @@ const WheelGameDashboard = () => {
 
           <motion.div
             whileHover={{ scale: 1.05 }}
-            className="bg-gradient-to-b from-white to-gray-50 p-4 rounded-lg shadow-sm"
+            className="bg-gradient-to-b from-white to-gray-50 p-3 sm:p-4 rounded-lg shadow-sm"
           >
-            <div className="mb-2 text-center font-medium text-gray-700">{t.color2}</div>
+            <div className="mb-2 text-center font-medium text-sm sm:text-base text-gray-700">{t.color2}</div>
             <div className="relative">
               <div
-                className="w-full h-16 rounded-lg mb-2 shadow-inner"
+                className="w-full h-12 sm:h-16 rounded-lg mb-2 shadow-inner"
                 style={{ backgroundColor: mainColors.color2 }}
               ></div>
               <motion.div
@@ -1033,7 +980,7 @@ const WheelGameDashboard = () => {
                   type="color"
                   value={mainColors.color2}
                   onChange={(e) => setMainColors({ ...mainColors, color2: e.target.value })}
-                  className="w-full h-10 cursor-pointer rounded-lg border-2 border-gray-300"
+                  className="w-full h-8 sm:h-10 cursor-pointer rounded-lg border-2 border-gray-300"
                   disabled={isLoading}
                 />
                 <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded">
@@ -1045,12 +992,12 @@ const WheelGameDashboard = () => {
 
           <motion.div
             whileHover={{ scale: 1.05 }}
-            className="bg-gradient-to-b from-white to-gray-50 p-4 rounded-lg shadow-sm"
+            className="bg-gradient-to-b from-white to-gray-50 p-3 sm:p-4 rounded-lg shadow-sm"
           >
-            <div className="mb-2 text-center font-medium text-gray-700">{t.color3}</div>
+            <div className="mb-2 text-center font-medium text-sm sm:text-base text-gray-700">{t.color3}</div>
             <div className="relative">
               <div
-                className="w-full h-16 rounded-lg mb-2 shadow-inner"
+                className="w-full h-12 sm:h-16 rounded-lg mb-2 shadow-inner"
                 style={{ backgroundColor: mainColors.color3 }}
               ></div>
               <motion.div
@@ -1061,7 +1008,7 @@ const WheelGameDashboard = () => {
                   type="color"
                   value={mainColors.color3}
                   onChange={(e) => setMainColors({ ...mainColors, color3: e.target.value })}
-                  className="w-full h-10 cursor-pointer rounded-lg border-2 border-gray-300"
+                  className="w-full h-8 sm:h-10 cursor-pointer rounded-lg border-2 border-gray-300"
                   disabled={isLoading}
                 />
                 <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded">
@@ -1072,9 +1019,9 @@ const WheelGameDashboard = () => {
           </motion.div>
         </div>
 
-        <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-          <div className="font-medium mb-2">{t.preview}</div>
-          <div className="h-8 w-full rounded-lg" style={{
+        <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-gray-50 rounded-lg">
+          <div className="font-medium mb-2 text-sm sm:text-base">{t.preview}</div>
+          <div className="h-6 sm:h-8 w-full rounded-lg" style={{
             background: `linear-gradient(to right, ${mainColors.color1} 0%, ${mainColors.color1} 33%, ${mainColors.color2} 33%, ${mainColors.color2} 66%, ${mainColors.color3} 66%, ${mainColors.color3} 100%)`
           }}></div>
         </div>
@@ -1083,20 +1030,20 @@ const WheelGameDashboard = () => {
       {/* Logo */}
       <motion.div
         ref={logoRef}
-        className={`bg-white p-6 rounded-xl shadow-lg border ${validationErrors.logo ? 'border-red-500 shadow-red-100' : 'border-gray-100'}`}
+        className={`bg-white p-4 sm:p-6 rounded-xl shadow-lg border ${validationErrors.logo ? 'border-red-500 shadow-red-100' : 'border-gray-100'}`}
         variants={itemVariants}
         onMouseEnter={() => setActiveSection('logo')}
         whileHover={{ boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
       >
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 gap-3">
           <div className="flex items-center">
-            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-4">
-              <Upload className="w-5 h-5 text-green-600" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-100 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+              <Upload className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
             </div>
-            <label className="font-semibold text-gray-800 text-lg">{t.logo} <span className="text-red-500">*</span></label>
+            <label className="font-semibold text-gray-800 text-base sm:text-lg">{t.logo} <span className="text-red-500">*</span></label>
           </div>
-          <div className="flex w-3/4 items-center">
-            <div className="relative flex-grow mr-6">
+          <div className="flex flex-col sm:flex-row sm:w-3/4 items-center gap-3 sm:gap-0">
+            <div className="relative flex-grow w-full sm:mr-6">
               <input
                 type="file"
                 id="logo-file"
@@ -1112,12 +1059,12 @@ const WheelGameDashboard = () => {
               />
               <label
                 htmlFor="logo-file"
-                className={`cursor-pointer flex items-center justify-center bg-white border-2 border-dashed ${validationErrors.logo ? 'border-red-500 bg-red-50' : 'border-gray-300'} rounded-lg py-4 px-4 w-full transition duration-300 ease-in-out hover:border-green-500 hover:bg-green-50 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`cursor-pointer flex items-center justify-center bg-white border-2 border-dashed ${validationErrors.logo ? 'border-red-500 bg-red-50' : 'border-gray-300'} rounded-lg py-3 sm:py-4 px-3 sm:px-4 w-full transition duration-300 ease-in-out hover:border-green-500 hover:bg-green-50 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 <div className="flex flex-col items-center">
-                  <Upload className={`w-8 h-8 ${validationErrors.logo ? 'text-red-400' : 'text-gray-400'} mb-2`} />
-                  <span className={`${validationErrors.logo ? 'text-red-600' : 'text-gray-600'} font-medium`}>{t.chooseFile}</span>
-                  <span className={`${validationErrors.logo ? 'text-red-400' : 'text-gray-400'} text-sm mt-1`}>{t.dragAndDrop}</span>
+                  <Upload className={`w-6 h-6 sm:w-8 sm:h-8 ${validationErrors.logo ? 'text-red-400' : 'text-gray-400'} mb-1 sm:mb-2`} />
+                  <span className={`${validationErrors.logo ? 'text-red-600' : 'text-gray-600'} font-medium text-sm sm:text-base`}>{t.chooseFile}</span>
+                  <span className={`${validationErrors.logo ? 'text-red-400' : 'text-gray-400'} text-xs sm:text-sm mt-1`}>{t.dragAndDrop}</span>
                 </div>
               </label>
               {logoFile && (
@@ -1127,12 +1074,12 @@ const WheelGameDashboard = () => {
                   animate={{ scale: 1 }}
                   transition={{ type: 'spring', stiffness: 500, damping: 15 }}
                 >
-                  <Check className="text-white w-4 h-4" />
+                  <Check className="text-white w-3 h-3 sm:w-4 sm:h-4" />
                 </motion.div>
               )}
             </div>
             <motion.div
-              className={`w-32 h-24 ${validationErrors.logo ? 'bg-red-50 border-red-200' : 'bg-gray-100 border-gray-200'} rounded-lg border flex items-center justify-center overflow-hidden shadow-inner`}
+              className={`w-24 sm:w-32 h-20 sm:h-24 ${validationErrors.logo ? 'bg-red-50 border-red-200' : 'bg-gray-100 border-gray-200'} rounded-lg border flex items-center justify-center overflow-hidden shadow-inner`}
               whileHover={{ scale: 1.05 }}
             >
               {logoPreview ? (
@@ -1144,7 +1091,7 @@ const WheelGameDashboard = () => {
           </div>
         </div>
         {validationErrors.logo && (
-          <div className="mt-2 text-red-500 text-sm">
+          <div className="mt-2 text-red-500 text-xs sm:text-sm">
             {t.uploadLogo}
           </div>
         )}
@@ -1153,134 +1100,136 @@ const WheelGameDashboard = () => {
       {/* Lots */}
       <motion.div
         ref={lotsRef}
-        className={`bg-white p-6 rounded-xl shadow-lg border ${validationErrors.lots.some(error => error) ? 'border-red-500 shadow-red-100' : 'border-gray-100'}`}
+        className={`bg-white p-4 sm:p-6 rounded-xl shadow-lg border ${validationErrors.lots.some(error => error) ? 'border-red-500 shadow-red-100' : 'border-gray-100'}`}
         variants={itemVariants}
         onMouseEnter={() => setActiveSection('lots')}
         whileHover={{ boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
       >
-        <div className="flex items-center mb-6">
-          <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center mr-4">
+        <div className="flex items-center mb-4 sm:mb-6">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-amber-100 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
             <div className="text-amber-600 font-bold text-lg">🎁</div>
           </div>
-          <label className="font-semibold text-gray-800 text-lg">{t.wheelLotsConfiguration} <span className="text-red-500">*</span></label>
+          <label className="font-semibold text-gray-800 text-base sm:text-lg">{t.wheelLotsConfiguration} <span className="text-red-500">*</span></label>
         </div>
 
-        <div className="mt-4 bg-blue-50 rounded-lg p-4 border border-blue-100 mb-6">
-          <div className="space-y-3">
+        <div className="mt-3 sm:mt-4 bg-blue-50 rounded-lg p-3 sm:p-4 border border-blue-100 mb-4 sm:mb-6">
+          <div className="space-y-2 sm:space-y-3">
             <div className="flex items-start">
-              <div className="text-blue-500 mr-2 mt-1">▲</div>
-              <div className="text-blue-800">{t.lotInfo1}</div>
+              <div className="text-blue-500 mr-2 mt-1 flex-shrink-0">▲</div>
+              <div className="text-blue-800 text-xs sm:text-sm">{t.lotInfo1}</div>
             </div>
 
             <div className="flex items-start">
-              <div className="text-blue-500 mr-2 mt-1">▲</div>
-              <div className="text-blue-800">{t.lotInfo2}</div>
+              <div className="text-blue-500 mr-2 mt-1 flex-shrink-0">▲</div>
+              <div className="text-blue-800 text-xs sm:text-sm">{t.lotInfo2}</div>
             </div>
 
             <div className="flex items-start">
-              <div className="text-blue-500 mr-2 mt-1">▲</div>
-              <div className="text-blue-800">{t.lotInfo3}</div>
+              <div className="text-blue-500 mr-2 mt-1 flex-shrink-0">▲</div>
+              <div className="text-blue-800 text-xs sm:text-sm">{t.lotInfo3}</div>
             </div>
           </div>
         </div>
 
-        <div className="mt-4">
-          <div className="mb-4 bg-gray-50 rounded-lg p-3 grid grid-cols-12 gap-4 font-medium text-gray-700">
+        <div className="mt-3 sm:mt-4">
+          <div className="mb-3 sm:mb-4 bg-gray-50 rounded-lg p-2 sm:p-3 grid grid-cols-12 gap-2 sm:gap-4 font-medium text-gray-700 text-xs sm:text-sm">
             <div className="col-span-5">{t.lotName} <span className="text-red-500">*</span></div>
             <div className="col-span-2 text-center">{t.odds} <span className="text-red-500">*</span></div>
             <div className="col-span-5">{t.promoCode}</div>
           </div>
 
-          {lots.map((lot, index) => (
-            <motion.div
-              key={index}
-              className="grid grid-cols-12 gap-4 mb-3"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.05 }}
-              whileHover={{ scale: 1.01 }}
-            >
-              <div className="col-span-5 relative">
-                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center font-medium text-gray-800">
-                  {String.fromCharCode(65 + index)}
+          <div className="space-y-3">
+            {lots.map((lot, index) => (
+              <motion.div
+                key={index}
+                className="grid grid-cols-12 gap-2 sm:gap-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+                whileHover={{ scale: 1.01 }}
+              >
+                <div className="col-span-5 relative">
+                  <div className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 bg-gray-200 rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center font-medium text-gray-800 text-xs sm:text-sm">
+                    {String.fromCharCode(65 + index)}
+                  </div>
+                  <input
+                    type="text"
+                    value={lot.name}
+                    onChange={(e) => {
+                      const newLots = [...lots];
+                      newLots[index].name = e.target.value;
+                      setLots(newLots);
+                      
+                      if (validationErrors.lots[index]) {
+                        const newLotErrors = [...validationErrors.lots];
+                        newLotErrors[index] = false;
+                        setValidationErrors({...validationErrors, lots: newLotErrors});
+                      }
+                    }}
+                    placeholder={`${t.prize} ${index + 1}`}
+                    className={`w-full p-2 sm:p-3 pl-8 sm:pl-12 text-xs sm:text-sm border ${validationErrors.lots[index] ? 'border-red-500 bg-red-50' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition duration-200`}
+                    disabled={isLoading}
+                    required
+                  />
+                  {lot.name && (
+                    <motion.div
+                      className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: 'spring', stiffness: 500, damping: 15 }}
+                    >
+                      <Check className="text-green-500 w-4 h-4 sm:w-5 sm:h-5" />
+                    </motion.div>
+                  )}
                 </div>
-                <input
-                  type="text"
-                  value={lot.name}
-                  onChange={(e) => {
-                    const newLots = [...lots];
-                    newLots[index].name = e.target.value;
-                    setLots(newLots);
-                    
-                    if (validationErrors.lots[index]) {
-                      const newLotErrors = [...validationErrors.lots];
-                      newLotErrors[index] = false;
-                      setValidationErrors({...validationErrors, lots: newLotErrors});
-                    }
-                  }}
-                  placeholder={`${t.prize} ${index + 1}`}
-                  className={`w-full p-3 pl-12 border ${validationErrors.lots[index] ? 'border-red-500 bg-red-50' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition duration-200`}
-                  disabled={isLoading}
-                  required
-                />
-                {lot.name && (
-                  <motion.div
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: 'spring', stiffness: 500, damping: 15 }}
-                  >
-                    <Check className="text-green-500 w-5 h-5" />
-                  </motion.div>
-                )}
-              </div>
-              <div className="col-span-2">
-                <input
-                  type="text"
-                  value={lot.odds}
-                  onChange={(e) => {
-                    const newLots = [...lots];
-                    newLots[index].odds = e.target.value;
-                    setLots(newLots);
-                    
-                    if (validationErrors.lots[index]) {
-                      const newLotErrors = [...validationErrors.lots];
-                      newLotErrors[index] = false;
-                      setValidationErrors({...validationErrors, lots: newLotErrors});
-                    }
-                  }}
-                  className={`w-full p-3 text-center border ${validationErrors.lots[index] ? 'border-red-500 bg-red-50' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition duration-200`}
-                  disabled={isLoading}
-                  required
-                />
-              </div>
-              <div className="col-span-5">
-                <input
-                  type="text"
-                  value={lot.promoCode}
-                  onChange={(e) => {
-                    const newLots = [...lots];
-                    newLots[index].promoCode = e.target.value;
-                    setLots(newLots);
-                  }}
-                  placeholder={t.promoCode}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition duration-200"
-                  disabled={isLoading}
-                />
-              </div>
-            </motion.div>
-          ))}
+                <div className="col-span-2">
+                  <input
+                    type="text"
+                    value={lot.odds}
+                    onChange={(e) => {
+                      const newLots = [...lots];
+                      newLots[index].odds = e.target.value;
+                      setLots(newLots);
+                      
+                      if (validationErrors.lots[index]) {
+                        const newLotErrors = [...validationErrors.lots];
+                        newLotErrors[index] = false;
+                        setValidationErrors({...validationErrors, lots: newLotErrors});
+                      }
+                    }}
+                    className={`w-full p-2 sm:p-3 text-center text-xs sm:text-sm border ${validationErrors.lots[index] ? 'border-red-500 bg-red-50' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition duration-200`}
+                    disabled={isLoading}
+                    required
+                  />
+                </div>
+                <div className="col-span-5">
+                  <input
+                    type="text"
+                    value={lot.promoCode}
+                    onChange={(e) => {
+                      const newLots = [...lots];
+                      newLots[index].promoCode = e.target.value;
+                      setLots(newLots);
+                    }}
+                    placeholder={t.promoCode}
+                    className="w-full p-2 sm:p-3 text-xs sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition duration-200"
+                    disabled={isLoading}
+                  />
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
 
         {validationErrors.lots.some(error => error) && (
-          <div className="mt-4 text-red-500 text-sm">
+          <div className="mt-3 sm:mt-4 text-red-500 text-xs sm:text-sm">
             {t.fillLotFields}
           </div>
         )}
 
-        <div className="mt-6 flex justify-end">
+        <div className="mt-4 sm:mt-6 flex justify-end">
           <motion.button
-            className="bg-amber-100 text-amber-700 py-2 px-4 rounded-lg flex items-center space-x-2 font-medium hover:bg-amber-200"
+            className="bg-amber-100 text-amber-700 py-1.5 sm:py-2 px-3 sm:px-4 rounded-lg flex items-center space-x-1 sm:space-x-2 font-medium hover:bg-amber-200 text-xs sm:text-sm"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleResetForm}
@@ -1293,16 +1242,16 @@ const WheelGameDashboard = () => {
 
       {/* Save Button and QR Section */}
       <motion.div
-        className="bg-white p-6 rounded-xl shadow-lg border border-gray-100"
+        className="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-gray-100"
         variants={itemVariants}
         onMouseEnter={() => setActiveSection('save')}
         whileHover={{ boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
       >
-        <div className={`flex ${isWheelSaved ? 'items-center justify-between' : 'justify-between items-center'}`}>
+        <div className={`flex flex-col ${isWheelSaved ? 'sm:flex-row sm:items-center sm:justify-between' : 'sm:flex-row sm:justify-between sm:items-center'} gap-4`}>
           {!isWheelSaved ? (
             <>
               <motion.button
-                className="bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-10 rounded-lg font-medium text-lg shadow-lg"
+                className="bg-indigo-600 hover:bg-indigo-700 text-white py-2 sm:py-3 px-6 sm:px-10 rounded-lg font-medium text-base sm:text-lg shadow-lg w-full sm:w-auto"
                 whileHover={{ scale: 1.05, boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)' }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleSubmit}
@@ -1312,16 +1261,16 @@ const WheelGameDashboard = () => {
               </motion.button>
               <div className="bg-amber-50 p-3 rounded-lg border border-amber-200 text-amber-800 max-w-md">
                 <div className="flex items-start">
-                  <div className="text-amber-500 mr-2 mt-1">⚠️</div>
-                  <div>{t.requiredFieldsWarning}</div>
+                  <div className="text-amber-500 mr-2 mt-1 flex-shrink-0">⚠️</div>
+                  <div className="text-xs sm:text-sm">{t.requiredFieldsWarning}</div>
                 </div>
               </div>
             </>
           ) : (
             <>
-              <div className="w-1/2 flex flex-col items-center space-y-8">
+              <div className="w-full sm:w-1/2 flex flex-col items-center space-y-6 sm:space-y-8">
                 <motion.button
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-10 rounded-lg font-medium text-lg shadow-lg"
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white py-2 sm:py-3 px-6 sm:px-10 rounded-lg font-medium text-base sm:text-lg shadow-lg w-full sm:w-auto"
                   whileHover={{ scale: 1.05, boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)' }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleSubmit}
@@ -1331,7 +1280,7 @@ const WheelGameDashboard = () => {
                 </motion.button>
 
                 <motion.div
-                  className="w-40 h-40 bg-white border-2 border-gray-200 rounded-xl p-3 flex items-center justify-center shadow-md"
+                  className="w-32 h-32 sm:w-40 sm:h-40 bg-white border-2 border-gray-200 rounded-xl p-3 flex items-center justify-center shadow-md"
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.3, delay: 0.2 }}
@@ -1341,7 +1290,7 @@ const WheelGameDashboard = () => {
                     <QRCodeSVG
                       id="wheel-qr-code"
                       value={getQrCodeUrl()}
-                      size={128}
+                      size={wheelId ? (window.innerWidth < 640 ? 100 : 128) : 0}
                       level="H"
                       includeMargin={true}
                       imageSettings={{
@@ -1355,16 +1304,16 @@ const WheelGameDashboard = () => {
                     />
                   ) : (
                     <div className="text-gray-400 text-center">
-                      <div className="text-3xl mb-2">🎮</div>
-                      <div className="text-sm">{t.saveWheel}</div>
+                      <div className="text-2xl sm:text-3xl mb-1 sm:mb-2">🎮</div>
+                      <div className="text-xs sm:text-sm">{t.saveWheel}</div>
                     </div>
                   )}
                 </motion.div>
 
                 {wheelId && (
                   <div className="text-center">
-                    <div className="text-sm font-medium text-gray-600 mb-1">{t.scanToPlay}</div>
-                    <div className="text-xs text-gray-500 break-all max-w-[200px]">
+                    <div className="text-xs sm:text-sm font-medium text-gray-600 mb-1">{t.scanToPlay}</div>
+                    <div className="text-xs text-gray-500 break-all max-w-[180px] sm:max-w-[200px]">
                       {getQrCodeUrl()}
                     </div>
                   </div>
@@ -1372,62 +1321,61 @@ const WheelGameDashboard = () => {
               </div>
 
               <motion.div
-                className="w-1/2 space-y-6"
+                className="w-full sm:w-1/2 space-y-4 sm:space-y-6"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: 0.3 }}
-              ><div className="space-y-3">
-                  <h3 className="text-lg font-semibold text-gray-700 mb-2">{t.posterOptions}</h3>
-                  <div className="flex space-x-3">
+              >
+                <div className="space-y-2 sm:space-y-3">
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-700 mb-1 sm:mb-2">{t.posterOptions}</h3>
+                  <div className="flex flex-col sm:flex-row gap-2 sm:space-x-3">
                     <motion.button
-                      className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg flex items-center justify-center space-x-2 shadow-md"
+                      className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center space-x-1 sm:space-x-2 shadow-md text-xs sm:text-sm"
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
                       onClick={downloadEnglishPoster}
                       disabled={isLoading || !wheelId}
                     >
-                      <Download className="w-4 h-4" />
+                      <Download className="w-3 h-3 sm:w-4 sm:h-4" />
                       <span>{t.englishPoster}</span>
                     </motion.button>
                     <motion.button
-                      className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg flex items-center justify-center space-x-2 shadow-md"
+                      className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center space-x-1 sm:space-x-2 shadow-md text-xs sm:text-sm"
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
                       onClick={downloadFrenchPoster}
                       disabled={isLoading || !wheelId}
                     >
-                      <Download className="w-4 h-4" />
+                      <Download className="w-3 h-3 sm:w-4 sm:h-4" />
                       <span>{t.frenchPoster}</span>
                     </motion.button>
                   </div>
                 </div>
-                <div className="space-y-3">
-                  <h3 className="text-lg font-semibold text-gray-700 mb-2">{t.downloadOptions}</h3>
-                  <div className="flex space-x-3">
+                <div className="space-y-2 sm:space-y-3">
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-700 mb-1 sm:mb-2">{t.downloadOptions}</h3>
+                  <div className="flex flex-col sm:flex-row gap-2 sm:space-x-3">
                     <motion.button
-                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg flex items-center justify-center space-x-2 shadow-md"
+                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center space-x-1 sm:space-x-2 shadow-md text-xs sm:text-sm"
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
                       onClick={downloadQRCodeAsSVG}
                       disabled={isLoading || !wheelId}
                     >
-                      <Download className="w-4 h-4" />
+                      <Download className="w-3 h-3 sm:w-4 sm:h-4" />
                       <span>{t.downloadSVG}</span>
                     </motion.button>
                     <motion.button
-                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg flex items-center justify-center space-x-2 shadow-md"
+                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 sm:px-4 rounded-lg flex items-center justify-center space-x-1 sm:space-x-2 shadow-md text-xs sm:text-sm"
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
                       onClick={downloadQRCodeAsPNG}
                       disabled={isLoading || !wheelId}
                     >
-                      <Download className="w-4 h-4" />
+                      <Download className="w-3 h-3 sm:w-4 sm:h-4" />
                       <span>{t.downloadPNG}</span>
                     </motion.button>
                   </div>
                 </div>
-
-
               </motion.div>
             </>
           )}
@@ -1436,7 +1384,7 @@ const WheelGameDashboard = () => {
 
       {/* Footer */}
       <motion.div
-        className="flex justify-center mt-8 mb-6 text-sm text-gray-500"
+        className="flex justify-center mt-6 sm:mt-8 mb-4 sm:mb-6 text-xs sm:text-sm text-gray-500"
         variants={itemVariants}
       >
         <p>{t.lastUpdated}: {new Date().toLocaleDateString()}</p>

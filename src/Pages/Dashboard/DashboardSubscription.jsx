@@ -11,7 +11,11 @@ const DashboardSubscription = () => {
   ];
 
   return (
-    <div className=" bg-gray-50 min-h-screen">
+    <div className="bg-gray-50 min-h-screen px-3 sm:px-6 py-4 sm:py-8">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-xl md:text-2xl font-bold text-gray-800">Subscription Plans</h1>
+        <p className="text-sm md:text-base text-gray-600 mt-1">Choose the right plan for your business needs</p>
+      </div>
       <PricingSection />
     </div>
   );

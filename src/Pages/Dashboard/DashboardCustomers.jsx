@@ -79,9 +79,13 @@ const DashboardCustomers = () => {
       setActiveMenu(null);
     } else {
       const rect = e.currentTarget.getBoundingClientRect();
+      // Adjust position for mobile
+      const isMobile = window.innerWidth < 640;
       setMenuPosition({
         top: rect.bottom + window.scrollY + 5,
-        left: rect.left + window.scrollX - 120, // Offset to position menu better
+        left: isMobile ? 
+          Math.min(rect.left + window.scrollX - 80, window.innerWidth - 160) : 
+          rect.left + window.scrollX - 120, // Offset to position menu better
       });
       setActiveMenu(customerId);
     }
@@ -181,7 +185,7 @@ const DashboardCustomers = () => {
 
   // Filter customers based on search
   const filteredCustomers = customers.filter(customer =>
-    customer.email.includes(searchEmail) && customer.phone.includes(searchPhone)
+    customer.email.toLowerCase().includes(searchEmail.toLowerCase()) && customer.phone.includes(searchPhone)
   );
 
   // Calculate pagination
@@ -225,8 +229,8 @@ const DashboardCustomers = () => {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-xl font-medium text-gray-700">{t('loading')}</p>
+          <div className="animate-spin rounded-full h-12 w-12 md:h-16 md:w-16 border-t-4 border-b-4 border-indigo-600 mx-auto mb-4"></div>
+          <p className="text-lg md:text-xl font-medium text-gray-700">{t('loading')}</p>
         </div>
       </div>
     );
@@ -234,11 +238,11 @@ const DashboardCustomers = () => {
 
   if (error) {
     return (
-      <div className="p-8 bg-gray-50 min-h-screen">
+      <div className="p-4 sm:p-8 bg-gray-50 min-h-screen">
         <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded shadow-md" role="alert">
           <div className="flex items-center">
-            <X className="h-6 w-6 mr-3" />
-            <p><strong className="font-bold">{t('errorMessage')} </strong> {error}</p>
+            <X className="h-5 w-5 md:h-6 md:w-6 mr-2 md:mr-3" />
+            <p className="text-sm sm:text-base"><strong className="font-bold">{t('errorMessage')} </strong> {error}</p>
           </div>
         </div>
       </div>
@@ -247,20 +251,19 @@ const DashboardCustomers = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      <div className="max-w-full mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-full mx-auto py-4 sm:py-8 px-3 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">{t('customerManagement')}</h1>
-              <p className="mt-2 text-sm text-gray-500">{t('manageParticipants')}</p>
+        <div className="mb-6 sm:mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+            <div className="mb-4 sm:mb-0">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">{t('customerManagement')}</h1>
+              <p className="mt-1 text-xs sm:text-sm text-gray-500">{t('manageParticipants')}</p>
             </div>
-            <div className="bg-white px-4 py-2 rounded-lg shadow-sm flex items-center">
-              <span className="text-gray-700 font-medium">{t('totalCustomers')}: </span>
-              <span className="text-indigo-600 font-bold mr-4">{customers.length}</span>
+            <div className="bg-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg shadow-sm flex flex-col sm:flex-row items-start sm:items-center">
+              <span className="text-sm text-gray-700 font-medium mb-2 sm:mb-0 sm:mr-4">{t('totalCustomers')}: <span className="text-indigo-600 font-bold">{customers.length}</span></span>
               <button
                 onClick={handleExportCSV}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-1.5 sm:py-2 border border-transparent text-xs sm:text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 {t('exportToCSV')}
               </button>
@@ -269,50 +272,50 @@ const DashboardCustomers = () => {
         </div>
 
         {/* Search Inputs */}
-        <div className="flex space-x-4 mb-4">
+        <div className="flex flex-col sm:flex-row gap-2 sm:space-x-4 mb-4">
           <input
             type="text"
             placeholder={t('searchByEmail')}
             value={searchEmail}
             onChange={(e) => setSearchEmail(e.target.value)}
-            className="border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="w-full sm:w-auto border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
           />
           <input
             type="text"
             placeholder={t('searchByPhone')}
             value={searchPhone}
             onChange={(e) => setSearchPhone(e.target.value)}
-            className="border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="w-full sm:w-auto border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
 
         {/* Pagination Controls */}
-        <div className="flex justify-between items-center mt-4">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mt-4 gap-2 sm:gap-0">
           <div className="flex items-center space-x-2">
-            <span>{t('rowsPerPage')}:</span>
+            <span className="text-sm">{t('rowsPerPage')}:</span>
             <select
               value={rowsPerPage}
               onChange={(e) => setRowsPerPage(Number(e.target.value))}
-              className="border border-gray-300 rounded-md shadow-sm py-1 px-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="border border-gray-300 rounded-md shadow-sm py-1 px-2 text-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             >
               {[10, 20, 50].map(size => (
                 <option key={size} value={size}>{size}</option>
               ))}
             </select>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 justify-end">
             <button
               onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className="text-gray-500 hover:text-indigo-600 focus:outline-none"
+              className="text-xs sm:text-sm text-gray-500 hover:text-indigo-600 focus:outline-none disabled:opacity-50"
             >
               {t('previous')}
             </button>
-            <span>{t('page')} {currentPage} {t('of')} {totalPages}</span>
+            <span className="text-xs sm:text-sm">{t('page')} {currentPage} {t('of')} {totalPages}</span>
             <button
               onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
-              className="text-gray-500 hover:text-indigo-600 focus:outline-none"
+              className="text-xs sm:text-sm text-gray-500 hover:text-indigo-600 focus:outline-none disabled:opacity-50"
             >
               {t('next')}
             </button>
@@ -321,87 +324,87 @@ const DashboardCustomers = () => {
 
         {/* Customer Table */}
         {currentCustomers.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-md p-6 text-center">
-            <div className="flex flex-col items-center justify-center py-12">
-              <User className="h-16 w-16 text-gray-300 mb-4" />
-              <h3 className="text-xl font-medium text-gray-900">{t('noCustomersFound')}</h3>
-              <p className="mt-2 text-gray-500">{t('noCustomerData')}</p>
+          <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 text-center mt-4">
+            <div className="flex flex-col items-center justify-center py-8 sm:py-12">
+              <User className="h-12 w-12 sm:h-16 sm:w-16 text-gray-300 mb-4" />
+              <h3 className="text-lg sm:text-xl font-medium text-gray-900">{t('noCustomersFound')}</h3>
+              <p className="mt-2 text-sm sm:text-base text-gray-500">{t('noCustomerData')}</p>
             </div>
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-md overflow-hidden">
+          <div className="bg-white rounded-xl shadow-md overflow-hidden mt-4">
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-3 sm:px-6 py-2 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       <div className="flex items-center space-x-1">
-                        <Calendar className="h-4 w-4" />
+                        <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
                         <span>{t('date')}</span>
                       </div>
                     </th>
-                    <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-3 sm:px-6 py-2 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       <div className="flex items-center space-x-1">
-                        <Mail className="h-4 w-4" />
+                        <Mail className="h-3 w-3 sm:h-4 sm:w-4" />
                         <span>{t('email')}</span>
                       </div>
                     </th>
-                    <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-3 sm:px-6 py-2 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       <div className="flex items-center space-x-1">
-                        <Phone className="h-4 w-4" />
+                        <Phone className="h-3 w-3 sm:h-4 sm:w-4" />
                         <span>{t('phone')}</span>
                       </div>
                     </th>
-                    <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-3 sm:px-6 py-2 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       <div className="flex items-center space-x-1">
-                        <Award className="h-4 w-4" />
+                        <Award className="h-3 w-3 sm:h-4 sm:w-4" />
                         <span>{t('prize')}</span>
                       </div>
                     </th>
-                    <th scope="col" className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">{t('status')}</th>
-                    <th scope="col" className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">{t('enriched')}</th>
-                    <th scope="col" className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">{t('actions')}</th>
+                    <th scope="col" className="px-3 sm:px-6 py-2 sm:py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">{t('status')}</th>
+                    <th scope="col" className="px-3 sm:px-6 py-2 sm:py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">{t('enriched')}</th>
+                    <th scope="col" className="px-3 sm:px-6 py-2 sm:py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">{t('actions')}</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {currentCustomers.map((customer) => (
                     <tr key={customer._id} className="bg-white">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{formatDate(customer.createdAt)}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{customer.email}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{customer.phone}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="px-3 py-1 inline-flex text-sm leading-5 font-medium rounded-full bg-indigo-100 text-indigo-800">
-                          {customer.prize}
+                      <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">{formatDate(customer.createdAt)}</td>
+                      <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-600">{customer.email}</td>
+                      <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-600">{customer.phone}</td>
+                      <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
+                        <span className="px-2 py-1 inline-flex text-xs sm:text-sm leading-5 font-medium rounded-full bg-indigo-100 text-indigo-800">
+                          {customer.prize.length > 10 ? `${customer.prize.substring(0, 10)}...` : customer.prize}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-center">
+                      <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-center">
                         {customer.status ? (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                            <CheckCircle className="text-green-500 h-4 w-4 mr-1" /> {t('taken')}
+                          <span className="inline-flex items-center px-1.5 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            <CheckCircle className="text-green-500 h-3 w-3 sm:h-4 sm:w-4 mr-0.5 sm:mr-1" /> <span className="hidden xs:inline">{t('taken')}</span>
                           </span>
                         ) : (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                            <XCircle className="text-yellow-500 h-4 w-4 mr-1" /> {t('pending')}
+                          <span className="inline-flex items-center px-1.5 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                            <XCircle className="text-yellow-500 h-3 w-3 sm:h-4 sm:w-4 mr-0.5 sm:mr-1" /> <span className="hidden xs:inline">{t('pending')}</span>
                           </span>
                         )}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-center">
+                      <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-center">
                         {customer.enriched ? (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                            <CheckCircle className="text-green-500 h-4 w-4 mr-1" /> {t('yes')}
+                          <span className="inline-flex items-center px-1.5 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            <CheckCircle className="text-green-500 h-3 w-3 sm:h-4 sm:w-4 mr-0.5 sm:mr-1" /> <span className="hidden xs:inline">{t('yes')}</span>
                           </span>
                         ) : (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                            <XCircle className="text-gray-500 h-4 w-4 mr-1" /> {t('no')}
+                          <span className="inline-flex items-center px-1.5 sm:px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            <XCircle className="text-gray-500 h-3 w-3 sm:h-4 sm:w-4 mr-0.5 sm:mr-1" /> <span className="hidden xs:inline">{t('no')}</span>
                           </span>
                         )}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                      <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-center text-sm font-medium">
                         <button
                           onClick={(e) => toggleMenu(customer._id, e)}
                           className="text-gray-500 hover:text-indigo-600 focus:outline-none"
                         >
-                          <MoreVertical className="h-5 w-5" />
+                          <MoreVertical className="h-4 w-4 sm:h-5 sm:w-5" />
                         </button>
                       </td>
                     </tr>
@@ -415,7 +418,7 @@ const DashboardCustomers = () => {
         {/* Floating Menu - Positioned outside the table */}
         {activeMenu && (
           <div
-            className="fixed z-50 w-48 bg-white rounded-md shadow-lg border border-gray-200"
+            className="fixed z-50 w-40 sm:w-48 bg-white rounded-md shadow-lg border border-gray-200"
             style={{
               top: `${menuPosition.top}px`,
               left: `${menuPosition.left}px`,
@@ -426,9 +429,9 @@ const DashboardCustomers = () => {
               {customers.find(c => c._id === activeMenu)?.status === false && (
                 <button
                   onClick={(e) => handleMarkPrizeAsTaken(activeMenu, e)}
-                  className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 flex items-center"
+                  className="w-full text-left px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 flex items-center"
                 >
-                  <Gift className="h-4 w-4 mr-2" />
+                  <Gift className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
                   {t('markPrizeAsTaken')}
                 </button>
               )}
@@ -436,25 +439,25 @@ const DashboardCustomers = () => {
               {/* View Details option - always visible */}
               <button
                 onClick={(e) => handleViewDetails(customers.find(c => c._id === activeMenu), e)}
-                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 flex items-center"
+                className="w-full text-left px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 flex items-center"
               >
-                <Eye className="h-4 w-4 mr-2" />
+                <Eye className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
                 {t('viewDetails')}
               </button>
               
               {/* Enrich Client option - always visible, changes to "Update Client" if already enriched */}
               <button
                 onClick={(e) => handleOpenEnrichModal(customers.find(c => c._id === activeMenu), e)}
-                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 flex items-center"
+                className="w-full text-left px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 flex items-center"
               >
                 {customers.find(c => c._id === activeMenu)?.enriched ? (
                   <>
-                    <User className="h-4 w-4 mr-2" />
+                    <User className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
                     {t('updateClientInfo')}
                   </>
                 ) : (
                   <>
-                    <UserPlus className="h-4 w-4 mr-2" />
+                    <UserPlus className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
                     {t('enrichClient')}
                   </>
                 )}
@@ -462,9 +465,9 @@ const DashboardCustomers = () => {
               
               <button
                 onClick={(e) => handleDeleteCustomer(activeMenu, e)}
-                className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center"
+                className="w-full text-left px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-red-600 hover:bg-red-50 flex items-center"
               >
-                <Trash2 className="h-4 w-4 mr-2" />
+                <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
                 {t('delete')}
               </button>
             </div>
@@ -476,100 +479,100 @@ const DashboardCustomers = () => {
       {showEnrichModal && currentCustomer && (
         <div className="fixed inset-0 bg-black/10 backdrop-blur-sm bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full overflow-hidden">
-            <div className="bg-indigo-600 px-6 py-4">
+            <div className="bg-indigo-600 px-4 sm:px-6 py-3 sm:py-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-medium text-white">
+                <h3 className="text-base sm:text-lg font-medium text-white">
                   {currentCustomer.enriched ? t('updateCustomerInfo') : t('enrichCustomerInfo')}
                 </h3>
                 <button
                   onClick={() => setShowEnrichModal(false)}
                   className="text-white hover:text-gray-200"
                 >
-                  <X className="h-5 w-5" />
+                  <X className="h-4 w-4 sm:h-5 sm:w-5" />
                 </button>
               </div>
             </div>
 
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
               <div className="mb-4 p-3 bg-indigo-50 rounded-md">
-                <p className="text-sm text-indigo-800">
+                <p className="text-xs sm:text-sm text-indigo-800">
                   <span className="font-medium">{t('email')}:</span> {currentCustomer.email}
                 </p>
-                <p className="text-sm text-indigo-800">
+                <p className="text-xs sm:text-sm text-indigo-800">
                   <span className="font-medium">{t('phone')}:</span> {currentCustomer.phone}
                 </p>
-                <p className="text-sm text-indigo-800">
+                <p className="text-xs sm:text-sm text-indigo-800">
                   <span className="font-medium">{t('prize')}:</span> {currentCustomer.prize}
                 </p>
               </div>
 
               <form onSubmit={handleEnrichSubmit}>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
-                      <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">{t('firstName')}</label>
+                      <label htmlFor="firstName" className="block text-xs sm:text-sm font-medium text-gray-700">{t('firstName')}</label>
                       <input
                         type="text"
                         id="firstName"
                         name="firstName"
                         value={enrichData.firstName}
                         onChange={handleEnrichInputChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1.5 sm:py-2 px-2 sm:px-3 text-xs sm:text-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         required
                       />
                     </div>
                     <div>
-                      <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">{t('lastName')}</label>
+                      <label htmlFor="lastName" className="block text-xs sm:text-sm font-medium text-gray-700">{t('lastName')}</label>
                       <input
                         type="text"
                         id="lastName"
                         name="lastName"
                         value={enrichData.lastName}
                         onChange={handleEnrichInputChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1.5 sm:py-2 px-2 sm:px-3 text-xs sm:text-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         required
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label htmlFor="birthdate" className="block text-sm font-medium text-gray-700">{t('birthdate')}</label>
+                    <label htmlFor="birthdate" className="block text-xs sm:text-sm font-medium text-gray-700">{t('birthdate')}</label>
                     <input
                       type="date"
                       id="birthdate"
                       name="birthdate"
                       value={enrichData.birthdate}
                       onChange={handleEnrichInputChange}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1.5 sm:py-2 px-2 sm:px-3 text-xs sm:text-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                       required
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="address" className="block text-sm font-medium text-gray-700">{t('address')}</label>
+                    <label htmlFor="address" className="block text-xs sm:text-sm font-medium text-gray-700">{t('address')}</label>
                     <textarea
                       id="address"
                       name="address"
                       value={enrichData.address}
                       onChange={handleEnrichInputChange}
                       rows="3"
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1.5 sm:py-2 px-2 sm:px-3 text-xs sm:text-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                       required
                     ></textarea>
                   </div>
                 </div>
 
-                <div className="mt-6 flex justify-end space-x-3">
+                <div className="mt-4 sm:mt-6 flex justify-end space-x-2 sm:space-x-3">
                   <button
                     type="button"
                     onClick={() => setShowEnrichModal(false)}
-                    className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 border border-gray-300 shadow-sm text-xs sm:text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
                     {t('cancel')}
                   </button>
                   <button
                     type="submit"
-                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 border border-transparent text-xs sm:text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
                     {currentCustomer.enriched ? t('updateInformation') : t('saveInformation')}
                   </button>
