@@ -173,7 +173,7 @@ const PricingSection = () => {
   ];
 
   return (
-    <section className="py-16 bg-gray-50 overflow-hidden relative">
+    <section id="pricing" className="py-16 bg-gray-50 overflow-hidden relative">
       {/* Decorative element */}
       <div className="absolute top-40 left-10">
         <svg width="80" height="80" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">

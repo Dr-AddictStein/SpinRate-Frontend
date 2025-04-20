@@ -2,7 +2,7 @@ import Banner from "./Component/Banner";
 import ClientReviews from "./Component/ClientReviews";
 import Clients from "./Component/Clients";
 import CloudManagement from "./Component/CloudManagement";
-import Features from "./Component/FeatureCard";
+// import Features from "./Component/FeatureCard";
 import Feedback from "./Component/Feedback";
 import IntegrationCard from "./Component/IntegrationCard";
 import Overview from "./Component/Overview";
@@ -13,6 +13,9 @@ import VideoSection from "./Component/VideoSection";
 import StatsSection from "./Component/StatsSection";
 import CalendlySection from "./Component/CalendlySection";
 import HowItWorks from "./Component/HowItWorks";
+import WheelFeatures from "./Component/WheelFeatures";
+import CTABanner from "./Component/CTABanner";
+import ScrollToTop from "../../Components/ScrollToTop";
 
 
 
@@ -25,22 +28,26 @@ const LandingPage = () => {
       <div className="pt-10">
         <Banner />
       </div>
-
-      <div className="">
-        <Features />
-      </div>
-
+      
       <div className="">
         <HowItWorks />
+      </div>
+      
+      <div className="">
+        <CTABanner />
+      </div>
+      
+      <div className="">
+        <WheelFeatures />
       </div>
 
       <div className="">
         {/* <VideoSection /> */}
       </div>
 
-      <div className="">
+      {/* <div className="">
         <StatsSection />
-      </div>
+      </div> */}
 
       <div className="">
         <ClientReviews />
@@ -60,6 +67,7 @@ const LandingPage = () => {
         {/* <Setting /> */}
       </div>
 
+      <ScrollToTop />
     </>
 
   );

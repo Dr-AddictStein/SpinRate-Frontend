@@ -2,6 +2,10 @@ export const en = {
   // Navbar
   getStarted: "Get Started",
   signIn: "Sign In",
+  howItWorks: "How It Works",
+  features: "Features",
+  reviews: "Reviews",
+  pricing: "Pricing",
   
   // Common buttons/actions
   submit: "Submit",
@@ -31,9 +35,7 @@ export const en = {
   services: "Services",
   contactUs: "Contact Us",
   usefulLinks: "Useful Links",
-  pricing: "Pricing",
   appDownload: "App Download",
-  howItWorks: "How It Works",
   termsAndConditions: "Terms & Conditions",
   privacyPolicy: "Privacy Policy",
   downloadLink: "Download Link",

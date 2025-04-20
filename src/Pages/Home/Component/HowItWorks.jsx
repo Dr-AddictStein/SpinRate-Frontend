@@ -1,66 +1,48 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { QrCode, Star, RotateCw, Award, Database } from 'lucide-react';
+import { QrCode, Star, RotateCw, Database, Smartphone, BarChart, Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../../context/LanguageContext';
 
 // Translations object
 const translations = {
   en: {
-    howItWorks: "How Does It",
-    workHighlight: "Work?",
-    processDescription: "Our simple 5-step process makes it easy to boost your Google reviews and grow your business",
-    startNow: "Start now!",
+    howItWorks: "How does",
+    workHighlight: "Wheelix work?",
     steps: [
       {
-        title: "Invite your clients to scan the QR code",
-        description: "We provide you with flyers for your sales counter, and in your delivery bags."
+        title: "Your customers scan a QR code and interact with a prize wheel that you customize.",
+        description: "Increase your sales and retain customers with interactive and personalized engagement, powered by our AI."
       },
       {
-        title: "Clients leave a Google Review",
-        description: "The client sees on the flyer there's a prize wheel spin after they leave a review."
+        title: "They leave a Google review, spin the wheel, for a chance to win a reward.",
+        description: "Boost your online visibility and get an average of 300 additional google reviews each month."
       },
       {
-        title: "Time to turn the wheel!",
-        description: "Once the google review is submitted, the client spin the wheel and hopes to land on a gift"
-      },
-      {
-        title: "#1 on Google",
-        description: "You boost your ranking on Google reviews, enhance customer trust and drive new clients!"
-      },
-      {
-        title: "Data collected",
-        description: "You communicate through the data you collected for offers, events, to drive repeat business, and increase your turnover!"
+        title: "You collect valuable customer data, boost your reviews effortlessly, and strengthen customer loyalty.",
+        description: "Collect key data and launch campaigns to retain your customers and maximize returns."
       }
-    ]
+    ],
+    startNow: "Start now!"
   },
   fr: {
-    howItWorks: "Comment ça",
-    workHighlight: "Fonctionne?",
-    processDescription: "Notre processus simple en 5 étapes facilite l'augmentation de vos avis Google et le développement de votre entreprise",
-    startNow: "Commencer!",
+    howItWorks: "Comment fonctionne",
+    workHighlight: "Wheelix ?",
     steps: [
       {
-        title: "Invitez vos clients à scanner le code QR",
-        description: "Nous vous fournissons des flyers pour votre comptoir de vente et dans vos sacs de livraison."
+        title: "Vos clients scannent un QR code et interagissent avec une roue de la fortune, que vous personnalisez.",
+        description: "Stimulez vos ventes et fidélisez vos clients avec un engagement interactif et personnalisé, grâce à notre IA."
       },
       {
-        title: "Les clients laissent un avis Google",
-        description: "Le client voit sur le flyer qu'il y a une roue de prix à faire tourner après avoir laissé un avis."
+        title: "Ils laissent un avis Google, font tourner la roue pour avoir une chance de remporter une récompense.",
+        description: "Boostez votre visibilité en ligne et obtenez en moyenne 300 avis supplémentaires chaque mois."
       },
       {
-        title: "C'est le moment de faire tourner la roue!",
-        description: "Une fois l'avis Google soumis, le client fait tourner la roue et espère gagner un cadeau, que vous prédéfinissez en avance avec notre outil."
-      },
-      {
-        title: "#1 sur Google",
-        description: "Vous améliorez votre classement sur les avis Google, renforcez la confiance des clients et attirez de nouveaux clients!"
-      },
-      {
-        title: "Données collectées",
-        description: "Vous communiquez via les données collectées pour des offres, des événements, pour fidéliser vos clients et augmenter votre chiffre d'affaires!"
+        title: "Vous collectez leurs informations, les fidélisez pour qu'ils reviennent, et boostez votre visibilité grâce à leurs avis.",
+        description: "Collectez des données clés et lancez des campagnes pour fidéliser vos clients et maximiser les retours."
       }
-    ]
+    ],
+    startNow: "Commencer!"
   }
 };
 
@@ -72,7 +54,7 @@ const HowItWorks = () => {
   const { language } = useLanguage();
   const t = translations[language] || translations.en;
 
-  // Steps data
+  // Steps data with icons
   const steps = [
     {
       icon: <QrCode size={48} className="text-blue-500" />,
@@ -81,28 +63,16 @@ const HowItWorks = () => {
       color: "blue"
     },
     {
-      icon: <Star size={48} className="text-yellow-500" />,
+      icon: <RotateCw size={48} className="text-yellow-500" />,
       title: t.steps[1].title,
       description: t.steps[1].description,
       color: "yellow"
     },
     {
-      icon: <RotateCw size={48} className="text-green-500" />,
+      icon: <Database size={48} className="text-green-500" />,
       title: t.steps[2].title,
       description: t.steps[2].description,
       color: "green"
-    },
-    {
-      icon: <Award size={48} className="text-purple-500" />,
-      title: t.steps[3].title,
-      description: t.steps[3].description,
-      color: "purple"
-    },
-    {
-      icon: <Database size={48} className="text-indigo-500" />,
-      title: t.steps[4].title,
-      description: t.steps[4].description,
-      color: "indigo"
     }
   ];
 
@@ -136,9 +106,7 @@ const HowItWorks = () => {
     const colors = {
       blue: "bg-blue-50",
       yellow: "bg-yellow-50",
-      green: "bg-green-50",
-      purple: "bg-purple-50",
-      indigo: "bg-indigo-50"
+      green: "bg-green-50"
     };
     return colors[color] || "bg-gray-50";
   };
@@ -148,15 +116,13 @@ const HowItWorks = () => {
     const colors = {
       blue: "border-blue-200",
       yellow: "border-yellow-200",
-      green: "border-green-200",
-      purple: "border-purple-200",
-      indigo: "border-indigo-200"
+      green: "border-green-200"
     };
     return colors[color] || "border-gray-200";
   };
 
   return (
-    <section ref={sectionRef} className="py-20 md:py-32 bg-white relative overflow-hidden w-full">
+    <section ref={sectionRef} className="py-20 md:py-32 bg-white relative overflow-hidden w-full" id="how-it-works">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full">
@@ -164,7 +130,6 @@ const HowItWorks = () => {
           <div className="absolute top-10 left-10 w-2 h-2 bg-blue-400 rounded-full animate-ping" style={{ animationDuration: '3s' }}></div>
           <div className="absolute top-1/4 right-1/4 w-2 h-2 bg-yellow-400 rounded-full animate-ping" style={{ animationDuration: '2.5s' }}></div>
           <div className="absolute bottom-1/3 left-1/3 w-2 h-2 bg-green-400 rounded-full animate-ping" style={{ animationDuration: '4s' }}></div>
-          <div className="absolute bottom-1/4 right-1/5 w-2 h-2 bg-purple-400 rounded-full animate-ping" style={{ animationDuration: '3.5s' }}></div>
 
           {/* Decorative circles */}
           <div className="absolute -top-20 -left-20 w-64 h-64 bg-blue-50 rounded-full opacity-50"></div>
@@ -172,7 +137,7 @@ const HowItWorks = () => {
         </div>
       </div>
 
-      <div className="2xl:max-w-[78%] max-w-full  mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="2xl:max-w-[78%] max-w-full mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -183,57 +148,44 @@ const HowItWorks = () => {
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             {t.howItWorks} <span className="text-blue-600">{t.workHighlight}</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {t.processDescription}
-          </p>
         </motion.div>
 
-        {/* Steps */}
+        {/* Steps in a row for desktop */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
-          className="relative"
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
         >
-          {/* Connecting line - moved to a lower z-index */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gray-100 transform -translate-x-1/2 hidden md:block z-0"></div>
-
           {steps.map((step, index) => (
             <motion.div
               key={index}
               variants={itemVariants}
-              className={`flex flex-col md:flex-row items-center mb-16 md:mb-24 ${index % 2 === 1 ? 'md:flex-row-reverse' : ''}`}
+              className="flex flex-col items-center bg-white rounded-xl shadow-lg p-6 transition-transform duration-300 hover:transform hover:scale-105"
             >
-              {/* Icon container with animations - increased z-index */}
-              <div className="flex-shrink-0 mb-6 md:mb-0 md:mx-8 z-20">
+              {/* Icon with circle background */}
+              <div className="mb-6">
                 <motion.div
                   whileHover={{ scale: 1.1, rotate: 5 }}
-                  className={`w-24 h-24 md:w-32 md:h-32 rounded-full ${getBgColor(step.color)} border-2 ${getBorderColor(step.color)} flex items-center justify-center shadow-lg relative`}
+                  className={`w-20 h-20 rounded-full ${getBgColor(step.color)} border ${getBorderColor(step.color)} flex items-center justify-center shadow-md`}
                 >
-                  <motion.div
-                    animate={{ rotate: [0, 360] }}
-                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                    className="absolute inset-0 rounded-full border-2 border-dashed border-gray-200 opacity-50"
-                  ></motion.div>
                   {step.icon}
                 </motion.div>
               </div>
 
-              {/* Content - increased z-index and added background */}
-              <div className={`flex-1 text-center md:text-left ${index % 2 === 1 ? 'md:text-right' : ''} max-w-lg mx-auto md:mx-0 z-10 relative`}>
-                <div className="bg-white bg-opacity-90 p-4 rounded-lg">
-                  <motion.h3
-                    whileHover={{ scale: 1.02 }}
-                    className="text-2xl md:text-3xl font-bold mb-4"
-                  >
-                    {step.title}
-                  </motion.h3>
-                  <motion.p
-                    className="text-lg text-gray-600"
-                  >
-                    {step.description}
-                  </motion.p>
-                </div>
+              {/* Number */}
+              <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold mb-4">
+                {index + 1}
+              </div>
+
+              {/* Content */}
+              <div className="text-center">
+                <h3 className="text-lg font-semibold mb-4 text-gray-800">
+                  {step.title}
+                </h3>
+                <p className="text-gray-600">
+                  {step.description}
+                </p>
               </div>
             </motion.div>
           ))}
@@ -244,7 +196,7 @@ const HowItWorks = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.6, delay: 1 }}
-          className="text-center mt-12"
+          className="text-center mt-16"
         >
           <motion.button
             onClick={() => navigate('/dashboard')}

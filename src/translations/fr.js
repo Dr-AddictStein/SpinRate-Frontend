@@ -2,6 +2,10 @@ export const fr = {
   // Navbar
   getStarted: "Commencer",
   signIn: "Se Connecter",
+  howItWorks: "Comment Ça Marche",
+  features: "Fonctionnalités",
+  reviews: "Avis",
+  pricing: "Tarification",
   
   // Common buttons/actions
   submit: "Soumettre",
@@ -31,9 +35,7 @@ export const fr = {
   services: "Services",
   contactUs: "Contactez-Nous",
   usefulLinks: "Liens Utiles",
-  pricing: "Tarification",
   appDownload: "Téléchargement de l'Application",
-  howItWorks: "Comment Ça Marche",
   termsAndConditions: "Conditions Générales",
   privacyPolicy: "Politique de Confidentialité",
   downloadLink: "Lien de Téléchargement",

@@ -35,6 +35,15 @@ const Navbar = () => {
         setIsOpen(!isOpen);
     };
 
+    // Function to handle smooth scrolling to section
+    const scrollToSection = (sectionId) => {
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.scrollIntoView({ behavior: 'smooth' });
+            setIsOpen(false); // Close mobile menu if open
+        }
+    };
+
     return (
         <nav className="fixed w-full z-50 transition-all duration-300 bg-white shadow-md">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -52,6 +61,34 @@ const Navbar = () => {
 
                     {/* Desktop navigation layout */}
                     <div className="hidden md:flex items-center space-x-6">
+                        {/* Navigation links */}
+                        <div className="flex items-center space-x-6">
+                            <button
+                                onClick={() => scrollToSection('how-it-works')}
+                                className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+                            >
+                                {t('howItWorks')}
+                            </button>
+                            <button
+                                onClick={() => scrollToSection('features')}
+                                className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+                            >
+                                {t('features')}
+                            </button>
+                            <button
+                                onClick={() => scrollToSection('reviews')}
+                                className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+                            >
+                                {t('reviews')}
+                            </button>
+                            <button
+                                onClick={() => scrollToSection('pricing')}
+                                className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+                            >
+                                {t('pricing')}
+                            </button>
+                        </div>
+
                         {/* Action buttons */}
                         <div className="flex items-center space-x-4">
                             <Link
@@ -124,6 +161,31 @@ const Navbar = () => {
                 className={`md:hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}
             >
                 <div className="px-4 pt-2 pb-4 space-y-2 bg-white shadow-lg rounded-b-lg">
+                    {/* Navigation links */}
+                    <button
+                        className="block w-full px-3 py-2 text-left text-gray-700 hover:bg-gray-100 rounded-lg font-medium"
+                        onClick={() => scrollToSection('how-it-works')}
+                    >
+                        {t('howItWorks')}
+                    </button>
+                    <button
+                        className="block w-full px-3 py-2 text-left text-gray-700 hover:bg-gray-100 rounded-lg font-medium"
+                        onClick={() => scrollToSection('features')}
+                    >
+                        {t('features')}
+                    </button>
+                    <button
+                        className="block w-full px-3 py-2 text-left text-gray-700 hover:bg-gray-100 rounded-lg font-medium"
+                        onClick={() => scrollToSection('reviews')}
+                    >
+                        {t('reviews')}
+                    </button>
+                    <button
+                        className="block w-full px-3 py-2 text-left text-gray-700 hover:bg-gray-100 rounded-lg font-medium"
+                        onClick={() => scrollToSection('pricing')}
+                    >
+                        {t('pricing')}
+                    </button>
                     <Link
                         to="/dashboard"
                         className="block w-full px-3 py-3 text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg mt-3 transition-colors duration-200"
