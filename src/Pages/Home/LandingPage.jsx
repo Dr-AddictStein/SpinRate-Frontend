@@ -15,6 +15,7 @@ import CalendlySection from "./Component/CalendlySection";
 import HowItWorks from "./Component/HowItWorks";
 import WheelFeatures from "./Component/WheelFeatures";
 import CTABanner from "./Component/CTABanner";
+import FAQSection from "./Component/FAQSection";
 import ScrollToTop from "../../Components/ScrollToTop";
 
 
@@ -56,10 +57,14 @@ const LandingPage = () => {
       <div className="">
         <PricingCard />
       </div>
-
+      
       <div className="">
-        <CalendlySection />
+        <FAQSection />
       </div>
+
+      {/* <div className="">
+        <CalendlySection />
+      </div> */}
 
 
 

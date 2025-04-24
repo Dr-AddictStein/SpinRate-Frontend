@@ -99,8 +99,8 @@ const ImageCarousel = ({ images }) => {
   
   // For multiple images, create a carousel
   return (
-    <div className="relative overflow-hidden rounded-xl shadow-xl">
-      <div className="relative h-[400px] md:h-[500px]">
+    <div className="relative overflow-hidden rounded-xl shadow-xl h-[400px] md:h-[500px]">
+      <div className="relative w-full h-full">
         {images.map((image, index) => (
           <motion.div
             key={index}
@@ -116,7 +116,7 @@ const ImageCarousel = ({ images }) => {
             <img 
               src={image}
               alt={`Feature showcase ${index + 1}`}
-              className="w-full h-full object-contain rounded-xl"
+              className="w-full h-full object-cover rounded-xl"
             />
           </motion.div>
         ))}
@@ -216,10 +216,10 @@ const WheelFeatureSection = ({ title, description, images, index }) => {
           transition: { duration: 0.8, delay: 0.2 }
         }
       }}
-      className={`flex flex-col ${isReversed ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-12 py-16`}
+      className={`flex flex-col ${isReversed ? 'md:flex-row-reverse' : 'md:flex-row'} items-center justify-center gap-12 py-16 max-w-6xl mx-auto`}
     >
       {/* Text Content - Styled to match the image design */}
-      <div className="w-full md:w-1/2 space-y-6 px-4">
+      <div className="w-full md:w-2/5 space-y-6 px-4">
         <motion.h2
           variants={{
             hidden: { opacity: 0, y: 20 },
@@ -264,7 +264,7 @@ const WheelFeatureSection = ({ title, description, images, index }) => {
             transition: { duration: 0.8, delay: 0.4 }
           }
         }}
-        className="w-full md:w-1/2"
+        className="w-full md:w-3/5 px-4"
       >
         <ImageCarousel images={images} />
       </motion.div>
@@ -305,17 +305,17 @@ const WheelFeatures = () => {
         transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center">
         {/* Section title */}
         <div className="text-center mb-16">
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             className="inline-block px-4 py-1 mb-4 bg-blue-50 text-blue-500 rounded-full text-sm font-medium"
           >
             {language === 'fr' ? 'FONCTIONNALITÉS' : 'FEATURES'}
-          </motion.div>
+          </motion.div> */}
           
           <motion.h2
             ref={titleRef}
@@ -332,7 +332,7 @@ const WheelFeatures = () => {
         </div>
 
         {/* Features sections */}
-        <div className="space-y-20">
+        <div className="space-y-20 w-full">
           {t.features.map((feature, index) => (
             <WheelFeatureSection
               key={index}

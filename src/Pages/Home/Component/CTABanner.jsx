@@ -5,11 +5,11 @@ import { useLanguage } from '../../../context/LanguageContext';
 
 const translations = {
   en: {
-    title: "Start your 10-day free trial on Wheelix.",
+    title: "Start your 7-day free trial on Wheelix.",
     buttonText: "Get Started For Free"
   },
   fr: {
-    title: "Démarrez votre essai gratuit de 10 jours sur Wheelix.",
+    title: "Démarrez votre essai gratuit de 7 jours sur Wheelix.",
     buttonText: "Commencez gratuitement"
   }
 };

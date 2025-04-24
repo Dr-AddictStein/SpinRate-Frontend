@@ -2,6 +2,7 @@ import React from "react";
 import { Instagram } from "lucide-react";
 import logo from "../../../assets/Design_sans_titre__10_-ai-brush-removebg-5gtqgd1e.png";
 import { useTranslation } from "../../../hooks/useTranslation";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
     const { t } = useTranslation();
@@ -88,7 +89,7 @@ const Footer = () => {
                         <h3 className="text-xl font-bold text-gray-900 mb-6">{t('usefulLinks')}</h3>
                         <ul className="space-y-4">
                             <li>
-                                <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
+                                <a href="#pricing" className="text-gray-600 hover:text-blue-500 flex items-center">
                                     <span className="text-blue-500 mr-2">›</span>
                                     {t('pricing')}
                                 </a>
@@ -106,16 +107,16 @@ const Footer = () => {
                                 </a>
                             </li>
                             <li>
-                                <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
+                                <Link to="/terms-and-conditions" className="text-gray-600 hover:text-blue-500 flex items-center">
                                     <span className="text-blue-500 mr-2">›</span>
                                     {t('termsAndConditions')}
-                                </a>
+                                </Link>
                             </li>
                             <li>
-                                <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
+                                <Link to="/privacy-policy" className="text-gray-600 hover:text-blue-500 flex items-center">
                                     <span className="text-blue-500 mr-2">›</span>
                                     {t('privacyPolicy')}
-                                </a>
+                                </Link>
                             </li>
                         </ul>
                     </div>

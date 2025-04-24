@@ -4,10 +4,11 @@ import LandingPage from "../Pages/Home/LandingPage";
 import DashboardLayout from "../Pages/Dashboard/DashboardLayout";
 import DashboardHome from "../Pages/Dashboard/DashboardHome";
 import DashboardCustomers from "../Pages/Dashboard/DashboardCustomers";
-import DashboardSubscription from "../Pages/Dashboard/DashboardSubscription"; 
+import DashboardSubscription from "../Pages/Dashboard/DashboardSubscription";
 import DashboardSettings from "../Pages/Dashboard/DashboardSettings";
 import WheelGamePage from "../Pages/Home/WheelGamePage";
 import TermsAndConditions from "../Pages/Home/TermsAndConditions";
+import PrivacyPolicy from "../Pages/Home/PrivacyPolicy";
 import DashboardAnalytics from "../Pages/Dashboard/DashboardAnalytics";
 
 // Define your route objects
@@ -19,6 +20,14 @@ const routes = [
       {
         path: "",
         element: <LandingPage />,
+      },
+      {
+        path: "/terms-and-conditions",
+        element: <TermsAndConditions />,
+      },
+      {
+        path: "/privacy-policy",
+        element: <PrivacyPolicy />,
       },
     ],
   },
@@ -56,10 +65,7 @@ const routes = [
     path: "/wheelGame/:id",
     element: <WheelGamePage />,
   },
-  {
-    path: "/terms-and-conditions",
-    element: <TermsAndConditions />,
-  },
+
 ];
 
 // Create the router instance

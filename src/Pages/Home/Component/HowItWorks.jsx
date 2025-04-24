@@ -122,7 +122,7 @@ const HowItWorks = () => {
   };
 
   return (
-    <section ref={sectionRef} className="py-20 md:py-32 bg-white relative overflow-hidden w-full" id="how-it-works">
+    <section ref={sectionRef} className="py-12 md:py-20 bg-white relative overflow-hidden w-full" id="how-it-works">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full">
@@ -143,7 +143,7 @@ const HowItWorks = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16 md:mb-24"
+          className="text-center mb-12 md:mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             {t.howItWorks} <span className="text-blue-600">{t.workHighlight}</span>
@@ -192,7 +192,7 @@ const HowItWorks = () => {
         </motion.div>
 
         {/* CTA Button */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.6, delay: 1 }}
@@ -200,13 +200,13 @@ const HowItWorks = () => {
         >
           <motion.button
             onClick={() => navigate('/dashboard')}
-            whileHover={{ scale: 1.05, boxShadow: "0 10px 25px -5px rgba(59, 130, 246, 0.5)" }}
+            whileHover={{ scale: 1.05, boxShadow: "0 10px 25px -5px rgba(255, 142, 99, 0.5)" }}
             whileTap={{ scale: 0.95 }}
-            className="px-10 py-5 bg-blue-600 text-white text-xl font-bold rounded-xl shadow-lg hover:bg-blue-700 transition-all duration-300"
+            className="px-10 py-5 bg-gradient-to-r from-[#FF8E63] via-[#FFAF58] to-[#FFEB70] text-white text-xl font-bold rounded-xl shadow-lg transition-all duration-300"
           >
             {t.startNow}
           </motion.button>
-        </motion.div>
+        </motion.div> */}
       </div>
     </section>
   );

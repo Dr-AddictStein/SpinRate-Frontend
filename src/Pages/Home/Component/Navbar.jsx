@@ -93,13 +93,13 @@ const Navbar = () => {
                         <div className="flex items-center space-x-4">
                             <Link
                                 to="/dashboard"
-                                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg px-6 py-3 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
+                                className="bg-gradient-to-r from-[#FF8E63] via-[#FFAF58] to-[#FFEB70] text-white font-semibold rounded-lg px-6 py-3 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
                             >
                                 {t('getStarted')}
                             </Link>
                             <button
                                 onClick={() => setIsLoginModalOpen(true)}
-                                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg px-6 py-3 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
+                                className="bg-gradient-to-r from-[#FF8E63] via-[#FFAF58] to-[#FFEB70] text-white font-semibold rounded-lg px-6 py-3 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
                             >
                                 {t('signIn')}
                             </button>
@@ -188,13 +188,13 @@ const Navbar = () => {
                     </button>
                     <Link
                         to="/dashboard"
-                        className="block w-full px-3 py-3 text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg mt-3 transition-colors duration-200"
+                        className="block w-full px-3 py-3 text-center bg-gradient-to-r from-[#FF8E63] via-[#FFAF58] to-[#FFEB70] text-white font-semibold rounded-lg mt-3 transition-colors duration-200"
                         onClick={toggleMenu}
                     >
                         {t('getStarted')}
                     </Link>
                     <button
-                        className="block w-full px-3 py-3 text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg mt-3 transition-colors duration-200"
+                        className="block w-full px-3 py-3 text-center bg-gradient-to-r from-[#FF8E63] via-[#FFAF58] to-[#FFEB70] text-white font-semibold rounded-lg mt-3 transition-colors duration-200"
                         onClick={() => {
                             toggleMenu();
                             setIsLoginModalOpen(true);

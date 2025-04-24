@@ -1,8 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 
 const ClientReviews = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  
   const testimonials = [
     {
       id: 1,
@@ -24,41 +22,8 @@ const ClientReviews = () => {
       role: "Gérant, Burger Avenue",
       quote: "Grâce à Wheelix, nous avons triplé nos avis Google en un mois ! Les clients adorent le concept du jeu et reviennent plus souvent. Simple et efficace !",
       avatar: "https://randomuser.me/api/portraits/men/32.jpg"
-    },
-    {
-      id: 4,
-      name: "Thomas P.",
-      role: "Propriétaire, Pizza Napoli",
-      quote: "Depuis qu'on utilise Wheelix, nos clients sont plus engagés. Ils laissent des avis positifs et notre visibilité a considérablement augmenté sur les plateformes de recherche.",
-      avatar: "https://randomuser.me/api/portraits/men/36.jpg"
-    },
-    {
-      id: 5,
-      name: "Julie R.",
-      role: "Manager, Sushi Express",
-      quote: "Outil indispensable pour notre restaurant ! Les avis clients ont doublé et notre liste email s'est agrandie rapidement. L'aspect ludique fait toute la différence.",
-      avatar: "https://randomuser.me/api/portraits/women/24.jpg"
     }
   ];
-  
-  // Display only 3 testimonials at a time
-  const visibleTestimonials = [
-    testimonials[activeIndex % testimonials.length],
-    testimonials[(activeIndex + 1) % testimonials.length],
-    testimonials[(activeIndex + 2) % testimonials.length]
-  ];
-  
-  const handlePrev = () => {
-    setActiveIndex((prevIndex) => 
-      prevIndex === 0 ? testimonials.length - 1 : prevIndex - 1
-    );
-  };
-  
-  const handleNext = () => {
-    setActiveIndex((prevIndex) => 
-      (prevIndex + 1) % testimonials.length
-    );
-  };
 
   return (
     <section id="reviews" className="py-16 relative overflow-hidden bg-gradient-to-r from-indigo-500 via-purple-500 to-blue-500">
@@ -69,7 +34,7 @@ const ClientReviews = () => {
           </h2>
         </div>
 
-        <div className="flex justify-center mb-8">
+        <div className="flex justify-center mb-12">
           <div className="flex">
             {[1, 2, 3, 4, 5].map((star) => (
               <svg
@@ -85,63 +50,29 @@ const ClientReviews = () => {
           </div>
         </div>
 
-        <div className="text-center mb-16">
-          <p className="text-xl text-white">
-            We've seen some incredible results and received amazing feedback from users of Wheelix exit intent popups:
-          </p>
-        </div>
-
-        <div className="relative">
-          {/* Left arrow - positioned exactly like in the image */}
-          <div className="absolute -left-16 top-1/2 transform -translate-y-1/2 z-30">
-            <button 
-              onClick={handlePrev}
-              className="bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 focus:outline-none"
-              aria-label="Previous testimonial"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600">
-                <path d="M15 18l-6-6 6-6"></path>
-              </svg>
-            </button>
-          </div>
-          
-          {/* Right arrow - positioned exactly like in the image */}
-          <div className="absolute -right-16 top-1/2 transform -translate-y-1/2 z-30">
-            <button 
-              onClick={handleNext}
-              className="bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 focus:outline-none"
-              aria-label="Next testimonial"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600">
-                <path d="M9 18l6-6-6-6"></path>
-              </svg>
-            </button>
-          </div>
-
-          <div className="flex flex-wrap -mx-4">
-            {visibleTestimonials.map((testimonial, index) => (
-              <div key={`${testimonial.id}-${index}`} className="w-full md:w-1/3 px-4 mb-8" style={{minHeight: "350px"}}>
-                <div className="bg-white rounded-lg shadow-lg p-8 pt-16 relative h-full">
-                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <img
-                      src={testimonial.avatar}
-                      alt={testimonial.name}
-                      className="w-20 h-20 rounded-full border-4 border-white object-cover"
-                    />
-                  </div>
-                  <p className="text-gray-800 text-center italic mb-6">
-                    "{testimonial.quote}"
+        <div className="flex flex-wrap justify-center gap-8">
+          {testimonials.map((testimonial) => (
+            <div key={testimonial.id} className="w-full md:w-[30%] max-w-sm">
+              <div className="bg-white rounded-lg shadow-lg p-6 pt-12 relative flex flex-col">
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                  <img
+                    src={testimonial.avatar}
+                    alt={testimonial.name}
+                    className="w-16 h-16 rounded-full border-4 border-white object-cover"
+                  />
+                </div>
+                <p className="text-gray-800 text-center italic mb-4 flex-grow">
+                  "{testimonial.quote}"
+                </p>
+                <div className="border-t pt-3 mt-2">
+                  <h4 className="font-semibold text-center text-gray-900">— {testimonial.name}</h4>
+                  <p className="text-blue-500 text-center text-sm">
+                    {testimonial.role.split(',')[0]}, <span className="text-blue-400">{testimonial.role.split(',')[1]?.trim()}</span>
                   </p>
-                  <div className="border-t pt-4 mt-auto">
-                    <h4 className="font-semibold text-center text-gray-900">— {testimonial.name}</h4>
-                    <p className="text-blue-500 text-center text-sm">
-                      {testimonial.role.split(',')[0]}, <span className="text-blue-400">{testimonial.role.split(',')[1]?.trim()}</span>
-                    </p>
-                  </div>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
