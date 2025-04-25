@@ -9,16 +9,20 @@ const translations = {
     en: {
         tagline: "Welcome to SpinRate",
         heading: "Boost your Google Reviews Effortlessly!",
+        headingSecondLine: "",
         description: "Businesses increase their Google reviews by an average of 300 per month with us.",
         startNow: "Start Free Trial",
-        learnMore: "Learn more"
+        learnMore: "Learn more",
+        reviewsText: "Google Reviews"
     },
     fr: {
         tagline: "Bienvenue à SpinRate",
         heading: "Boostez vos Avis Google Sans effort!",
+        headingSecondLine: "",
         description: "Les entreprises augmentent en moyenne leurs avis Google de 300 par mois avec nous.",
         startNow: "Commencer l'essai gratuit",
-        learnMore: "En savoir plus"
+        learnMore: "En savoir plus",
+        reviewsText: "Avis Google"
     }
 };
 
@@ -29,9 +33,9 @@ const Hero = () => {
     const t = translations[language] || translations.en;
 
     return (
-        <section className="relative bg-white pt-16 md:pt-20 pb-16 md:pb-24 overflow-hidden flex flex-col items-center">
+        <section className="relative bg-white 2xl:pt-20 pb-16 md:pb-24 overflow-hidden flex flex-col items-center">
             {/* Background image covering top section plus half of video */}
-            <div className="absolute top-0 left-0 w-full h-[65%] z-0"
+            <div className="absolute top-0 left-0 w-full h-[55%] z-0"
                 style={{
                     backgroundImage: `url(${heroBG})`,
                     backgroundSize: 'cover',
@@ -40,7 +44,7 @@ const Hero = () => {
                 }}
             />
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-24 md:pt-28">
                 {/* Centered content for both mobile and desktop */}
                 <div className="flex flex-col items-center text-center">
                     {/* Centered Text Content */}
@@ -48,24 +52,25 @@ const Hero = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
-                        className="space-y-6 md:space-y-8 z-10 mb-8 max-w-3xl"
+                        className="space-y-6 md:space-y-8 z-10 mb-8 max-w-6xl"
                     >
                         {/* Main Heading with animations - More compact and smaller */}
                         <motion.h1
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.8, delay: 0.6 }}
-                            className="text-2xl sm:text-3xl lg:text-5xl font-extrabold tracking-tight text-white"
+                            className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white"
                         >
-                            <span className="text-white">
-                                {t.heading.split('Google Reviews')[0]}
-                            </span>
-                            <span className="text-yellow-300">
-                                Google Reviews
-                            </span>
-                            <span className="text-white">
-                                {t.heading.split('Google Reviews')[1]}
-                            </span>
+                            <div>
+                                <span className="text-white">
+                                    {t.heading}
+                                </span>
+                            </div>
+                            <div className="mt-1">
+                                <span className="text-white">
+                                    {t.headingSecondLine}
+                                </span>
+                            </div>
                         </motion.h1>
 
                         {/* Description text - BIGGER & centered */}

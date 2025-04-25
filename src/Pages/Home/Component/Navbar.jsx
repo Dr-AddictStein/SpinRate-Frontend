@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react"; // Icons for menu toggle
-import logo from "../../../assets/Design_sans_titre__10_-ai-brush-removebg-5gtqgd1e.png";
+import logo from "../../../assets/Wheelix final logo.png";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../../../context/LanguageContext";
 import { useTranslation } from "../../../hooks/useTranslation";
@@ -13,12 +13,12 @@ const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const { language, changeLanguage } = useLanguage();
-    const { t } = useTranslation();
+    const { t } = useTranslation(); 
 
     // Handle scroll event to change navbar appearance
     useEffect(() => {
         const handleScroll = () => {
-            if (window.scrollY > 100) {
+            if (window.scrollY > 20) {
                 setScrolled(true);
             } else {
                 setScrolled(false);
@@ -45,7 +45,7 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="fixed w-full z-50 transition-all duration-300 bg-white shadow-md">
+        <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16 md:h-20">
                     {/* Logo */}
@@ -54,7 +54,7 @@ const Navbar = () => {
                             <img 
                                 src={logo} 
                                 alt="Klane Logo" 
-                                className="h-20 md:h-28 lg:h-32 xl:h-36 w-auto object-contain transition-transform duration-300 hover:scale-105 -my-8 md:-my-10 lg:-my-12 xl:-my-14" 
+                                className={`h-20 md:h-28 lg:h-32 xl:h-36 w-auto object-contain transition-transform duration-300 hover:scale-105 -my-8 md:-my-10 lg:-my-12 xl:-my-14 ${!scrolled ? 'brightness-110 contrast-125' : ''}`}
                             />
                         </Link>
                     </div>
@@ -65,25 +65,25 @@ const Navbar = () => {
                         <div className="flex items-center space-x-6">
                             <button
                                 onClick={() => scrollToSection('how-it-works')}
-                                className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+                                className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-blue-400 font-medium transition-colors duration-200`}
                             >
                                 {t('howItWorks')}
                             </button>
                             <button
                                 onClick={() => scrollToSection('features')}
-                                className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+                                className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-blue-400 font-medium transition-colors duration-200`}
                             >
                                 {t('features')}
                             </button>
                             <button
                                 onClick={() => scrollToSection('reviews')}
-                                className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+                                className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-blue-400 font-medium transition-colors duration-200`}
                             >
                                 {t('reviews')}
                             </button>
                             <button
                                 onClick={() => scrollToSection('pricing')}
-                                className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+                                className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-blue-400 font-medium transition-colors duration-200`}
                             >
                                 {t('pricing')}
                             </button>
@@ -146,7 +146,7 @@ const Navbar = () => {
                         
                         <button
                             onClick={toggleMenu}
-                            className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-indigo-600 focus:outline-none transition-colors duration-200"
+                            className={`inline-flex items-center justify-center p-2 rounded-md ${scrolled ? 'text-gray-700' : 'text-white'} hover:text-indigo-400 focus:outline-none transition-colors duration-200`}
                             aria-expanded={isOpen}
                         >
                             <span className="sr-only">{isOpen ? 'Close menu' : 'Open menu'}</span>

@@ -26,7 +26,7 @@ const LandingPage = () => {
 
   return (
     <>
-      <div className="pt-10">
+      <div className="">
         <Banner />
       </div>
       

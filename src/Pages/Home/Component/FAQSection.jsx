@@ -1,13 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { motion, useAnimation, useInView } from 'framer-motion';
-import { ChevronDown, HelpCircle } from 'lucide-react';
+import React from 'react';
 import { useLanguage } from '../../../context/LanguageContext';
 
 // Translations object
 const translations = {
   en: {
-    sectionTitle: "FAQ",
-    subtitle: "Got questions? We've got answers.",
+    sectionTitle: "Questions",
+    sectionSubtitle: "and answers",
+    introduction: "Here are some questions new users often ask when first getting their popup wheels setup.",
+    contactText: "But if you have any other questions,",
+    contactLinkText: "don't hesitate to contact us!",
     questions: [
       {
         question: "Will it work for my business (restaurant, hair salon, shop, café, hotel, etc.)?",
@@ -60,8 +61,11 @@ const translations = {
     ]
   },
   fr: {
-    sectionTitle: "FAQ",
-    subtitle: "Vous avez des questions ? Nous avons les réponses.",
+    sectionTitle: "Questions",
+    sectionSubtitle: "et réponses",
+    introduction: "Voici quelques questions que les nouveaux utilisateurs posent souvent lors de la première configuration de leurs roues popup.",
+    contactText: "Mais si vous avez d'autres questions,",
+    contactLinkText: "n'hésitez pas à nous contacter !",
     questions: [
       {
         question: "Cela fonctionnera-t-il pour mon entreprise (restaurant, salon de coiffure, boutique, café, hôtel, etc.) ?",
@@ -115,123 +119,71 @@ const translations = {
   }
 };
 
-const FAQAccordion = ({ question, answer, isActive, toggleAccordion, index }) => {
-  const contentRef = useRef(null);
-  const questionRef = useRef(null);
-  const isInView = useInView(questionRef, { once: true, amount: 0.1 });
-  const controls = useAnimation();
-
-  useEffect(() => {
-    if (isInView) {
-      controls.start({
-        opacity: 1,
-        y: 0,
-        transition: { 
-          delay: index * 0.1,
-          duration: 0.5 
-        }
-      });
-    }
-  }, [isInView, controls, index]);
-
+const FAQItem = ({ question, answer }) => {
   return (
-    <motion.div
-      ref={questionRef}
-      initial={{ opacity: 0, y: 20 }}
-      animate={controls}
-      className="mb-4 border border-gray-200 rounded-xl overflow-hidden"
-    >
-      <button
-        className={`w-full p-5 text-left transition-colors flex justify-between items-center ${
-          isActive ? 'bg-blue-50' : 'bg-white hover:bg-gray-50'
-        }`}
-        onClick={toggleAccordion}
-      >
-        <span className="text-lg font-medium text-gray-800">{question}</span>
-        <ChevronDown 
-          size={20} 
-          className={`text-blue-500 transition-transform duration-300 ${isActive ? 'rotate-180' : ''}`} 
-        />
-      </button>
-      <div
-        ref={contentRef}
-        className="overflow-hidden transition-all duration-300 ease-in-out"
-        style={{
-          maxHeight: isActive ? `${contentRef.current?.scrollHeight}px` : '0px',
-        }}
-      >
-        <div className="p-5 text-gray-700 whitespace-pre-line">
-          {answer}
+    <div className="mb-8">
+      <div className="flex items-start">
+        <div className="flex-shrink-0 mr-4">
+          <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">?</div>
+        </div>
+        <div className="flex-grow">
+          <div className="font-medium mb-2">{question}</div>
+          <div className="text-gray-600 mt-2">
+            {answer}
+          </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
 const FAQSection = () => {
-  const [activeIndex, setActiveIndex] = useState(null);
   const { language } = useLanguage();
   const t = translations[language] || translations.en;
-  const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
-  const headerControls = useAnimation();
 
-  useEffect(() => {
-    if (isInView) {
-      headerControls.start({
-        opacity: 1,
-        y: 0,
-        transition: { duration: 0.5 }
-      });
-    }
-  }, [isInView, headerControls]);
-
-  const toggleAccordion = (index) => {
-    setActiveIndex(activeIndex === index ? null : index);
-  };
+  // Split questions into two columns
+  const leftColumnFAQs = t.questions.filter((_, index) => index % 2 === 0);
+  const rightColumnFAQs = t.questions.filter((_, index) => index % 2 === 1);
 
   return (
-    <section id="faq" ref={sectionRef} className="py-16 bg-gray-50 overflow-hidden relative">
-      {/* Decorative elements */}
-      <div className="absolute top-40 left-10">
-        <svg width="80" height="80" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M165 50C165 63.807 153.807 75 140 75C126.193 75 115 63.807 115 50C115 36.193 126.193 25 140 25C153.807 25 165 36.193 165 50Z" fill="#3B82F6" opacity="0.2"/>
-        </svg>
-      </div>
-      <div className="absolute bottom-40 right-10">
-        <svg width="80" height="80" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M35 140C35 153.807 23.807 165 10 165C-3.80698 165 -15 153.807 -15 140C-15 126.193 -3.80698 115 10 115C23.807 115 35 126.193 35 140Z" fill="#3B82F6" opacity="0.2"/>
-        </svg>
-      </div>
-
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={headerControls}
-          className="text-center mb-12"
-        >
-          <div className="inline-block p-3 bg-blue-100 rounded-full mb-4">
-            <HelpCircle size={24} className="text-blue-500" />
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            {t.sectionTitle}
+    <section id="faq" className="py-16 bg-white">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold">
+            {t.sectionTitle} <span className="font-normal text-gray-600">{t.sectionSubtitle}</span>
           </h2>
-          <p className="text-xl text-gray-600">
-            {t.subtitle}
+          
+          <p className="text-gray-600 mt-8 mb-4 max-w-3xl mx-auto">
+            {t.introduction}
           </p>
-        </motion.div>
+          
+          <p className="text-gray-600">
+            {t.contactText} <a href="#contact" className="text-blue-500 hover:underline">{t.contactLinkText}</a>
+          </p>
+        </div>
 
-        <div className="mt-12">
-          {t.questions.map((faq, index) => (
-            <FAQAccordion
-              key={index}
-              question={faq.question}
-              answer={faq.answer}
-              isActive={activeIndex === index}
-              toggleAccordion={() => toggleAccordion(index)}
-              index={index}
-            />
-          ))}
+        <div className="grid md:grid-cols-2 gap-12 mt-12">
+          {/* Left Column */}
+          <div className="flex flex-col items-center">
+            {leftColumnFAQs.map((faq, index) => (
+              <FAQItem
+                key={`left-${index}`}
+                question={faq.question}
+                answer={faq.answer}
+              />
+            ))}
+          </div>
+          
+          {/* Right Column */}
+          <div className="flex flex-col items-center">
+            {rightColumnFAQs.map((faq, index) => (
+              <FAQItem
+                key={`right-${index}`}
+                question={faq.question}
+                answer={faq.answer}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>

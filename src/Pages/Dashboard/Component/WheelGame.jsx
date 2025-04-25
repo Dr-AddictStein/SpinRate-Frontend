@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import spinRateLogo from "../../../assets/Design_sans_titre__10_-ai-brush-removebg-5gtqgd1e.png";
+import spinRateLogo from "../../../assets/Wheelix final logo.png";
 
 const WheelGame = ({ lots, mainColors, customerInstruction = "Give us a review" }) => {
   const [isSpinning, setIsSpinning] = useState(false);

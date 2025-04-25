@@ -1,6 +1,6 @@
 import React from "react";
 import { Instagram } from "lucide-react";
-import logo from "../../../assets/Design_sans_titre__10_-ai-brush-removebg-5gtqgd1e.png";
+import logo from "../../../assets/Wheelix final logo.png";
 import { useTranslation } from "../../../hooks/useTranslation";
 import { Link } from "react-router-dom";
 
