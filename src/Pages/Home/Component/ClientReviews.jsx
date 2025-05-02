@@ -1,4 +1,5 @@
 import React from "react";
+import heroBG from "../../../../public/hero-bg-scaled.jpg";
 
 const ClientReviews = () => {
   const testimonials = [
@@ -26,7 +27,16 @@ const ClientReviews = () => {
   ];
 
   return (
-    <section id="reviews" className="py-16 relative overflow-hidden bg-gradient-to-r from-indigo-500 via-purple-500 to-blue-500">
+    <section 
+      id="reviews" 
+      className="relative min-h-screen flex items-center py-16"
+      style={{
+        backgroundImage: `url(${heroBG})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center top',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-white">

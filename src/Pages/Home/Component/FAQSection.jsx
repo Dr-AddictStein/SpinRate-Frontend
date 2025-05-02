@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLanguage } from '../../../context/LanguageContext';
 
 // Translations object
@@ -119,18 +119,29 @@ const translations = {
   }
 };
 
-const FAQItem = ({ question, answer }) => {
+const FAQItem = ({ question, answer, isOpen, toggleOpen }) => {
   return (
-    <div className="mb-8">
-      <div className="flex items-start">
-        <div className="flex-shrink-0 mr-4">
-          <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">?</div>
-        </div>
-        <div className="flex-grow">
-          <div className="font-medium mb-2">{question}</div>
-          <div className="text-gray-600 mt-2">
-            {answer}
-          </div>
+    <div className="mb-4 border border-gray-200 rounded-lg overflow-hidden">
+      <button 
+        className="w-full px-6 py-4 text-left bg-white hover:bg-gray-50 flex justify-between items-center transition-colors duration-200"
+        onClick={toggleOpen}
+      >
+        <span className="font-medium">{question}</span>
+        <span className="transform transition-transform duration-200 text-2xl" style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>
+          ↓
+        </span>
+      </button>
+      
+      <div 
+        className="overflow-hidden transition-all duration-300 ease-in-out"
+        style={{ 
+          maxHeight: isOpen ? '2000px' : '0',
+          opacity: isOpen ? 1 : 0,
+          transition: isOpen ? 'max-height 0.5s ease-in-out, opacity 0.3s ease-in-out 0.2s' : 'max-height 0.5s ease-in-out, opacity 0.1s ease-in-out'
+        }}
+      >
+        <div className="px-6 py-4 bg-gray-50 whitespace-pre-wrap text-gray-600">
+          {answer}
         </div>
       </div>
     </div>
@@ -140,10 +151,11 @@ const FAQItem = ({ question, answer }) => {
 const FAQSection = () => {
   const { language } = useLanguage();
   const t = translations[language] || translations.en;
+  const [openItemIndex, setOpenItemIndex] = useState(null);
 
-  // Split questions into two columns
-  const leftColumnFAQs = t.questions.filter((_, index) => index % 2 === 0);
-  const rightColumnFAQs = t.questions.filter((_, index) => index % 2 === 1);
+  const toggleItem = (index) => {
+    setOpenItemIndex(openItemIndex === index ? null : index);
+  };
 
   return (
     <section id="faq" className="py-16 bg-white">
@@ -162,28 +174,16 @@ const FAQSection = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-12 mt-12">
-          {/* Left Column */}
-          <div className="flex flex-col items-center">
-            {leftColumnFAQs.map((faq, index) => (
-              <FAQItem
-                key={`left-${index}`}
-                question={faq.question}
-                answer={faq.answer}
-              />
-            ))}
-          </div>
-          
-          {/* Right Column */}
-          <div className="flex flex-col items-center">
-            {rightColumnFAQs.map((faq, index) => (
-              <FAQItem
-                key={`right-${index}`}
-                question={faq.question}
-                answer={faq.answer}
-              />
-            ))}
-          </div>
+        <div className="max-w-3xl mx-auto">
+          {t.questions.map((faq, index) => (
+            <FAQItem
+              key={index}
+              question={faq.question}
+              answer={faq.answer}
+              isOpen={openItemIndex === index}
+              toggleOpen={() => toggleItem(index)}
+            />
+          ))}
         </div>
       </div>
     </section>
