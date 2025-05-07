@@ -39,7 +39,7 @@ const Hero = () => {
     return (
         <section className="relative bg-white 2xl:pt-20 pb-16 md:pb-24 overflow-hidden flex flex-col items-center">
             {/* Background image covering top section plus half of video */}
-            <div className="absolute top-0 left-0 w-full h-[55%] z-0"
+            <div className="absolute top-0 left-0 w-full h-[75%] z-0"
                 style={{
                     backgroundImage: `url(${heroBG})`,
                     backgroundSize: 'cover',

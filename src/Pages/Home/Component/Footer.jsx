@@ -7,6 +7,14 @@ import { Link } from "react-router-dom";
 const Footer = () => {
     const { t } = useTranslation();
     
+    // Function to handle smooth scrolling to section
+    const scrollToSection = (sectionId) => {
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+    
     return (
         <footer className="bg-white py-16 border-t border-gray-100">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -15,7 +23,7 @@ const Footer = () => {
                     <div>
                         <img
                             src={logo}
-                            alt="Klane Logo"
+                            alt="Wheelix Logo"
                             className="h-20 md:h-28 w-auto object-contain transition-transform duration-300 hover:scale-105 -my-2"
                         />
                         <p className="text-gray-600 mb-6">
@@ -23,14 +31,18 @@ const Footer = () => {
                         </p>
                         <div className="flex space-x-4 mt-4">
                             <a
-                                href="#"
+                                href="https://www.instagram.com/wheelix.fr/"
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 aria-label="Instagram"
                                 className="w-8 h-8 rounded-full flex items-center justify-center border border-blue-300 text-blue-500 hover:bg-blue-50 transition-colors"
                             >
                                 <Instagram size={18} />
                             </a>
                             <a
-                                href="#"
+                                href="https://www.tiktok.com/@wheelix.fr?is_from_webapp=1&sender_device=pc"
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 aria-label="TikTok"
                                 className="w-8 h-8 rounded-full flex items-center justify-center border border-blue-300 text-blue-500 hover:bg-blue-50 transition-colors"
                             >
@@ -47,63 +59,72 @@ const Footer = () => {
                         </div>
                     </div>
 
-                    {/* Company Links */}
+                    {/* Main Navigation */}
                     <div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-6">{t('company')}</h3>
+                        <h3 className="text-xl font-bold text-gray-900 mb-6">{t('navigation')}</h3>
                         <ul className="space-y-4">
                             <li>
-                                <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
+                                <button 
+                                    onClick={() => scrollToSection('how-it-works')}
+                                    className="text-gray-600 hover:text-blue-500 flex items-center"
+                                >
                                     <span className="text-blue-500 mr-2">›</span>
-                                    {t('aboutUs')}
-                                </a>
+                                    {t('howItWorks')}
+                                </button>
                             </li>
                             <li>
-                                <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
+                                <button 
+                                    onClick={() => scrollToSection('features')}
+                                    className="text-gray-600 hover:text-blue-500 flex items-center"
+                                >
                                     <span className="text-blue-500 mr-2">›</span>
-                                    {t('blog')}
-                                </a>
+                                    {t('features')}
+                                </button>
                             </li>
                             <li>
-                                <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
+                                <button 
+                                    onClick={() => scrollToSection('reviews')}
+                                    className="text-gray-600 hover:text-blue-500 flex items-center"
+                                >
                                     <span className="text-blue-500 mr-2">›</span>
-                                    {t('ourTeam')}
-                                </a>
+                                    {t('reviews')}
+                                </button>
                             </li>
                             <li>
-                                <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
+                                <button 
+                                    onClick={() => scrollToSection('pricing')}
+                                    className="text-gray-600 hover:text-blue-500 flex items-center"
+                                >
                                     <span className="text-blue-500 mr-2">›</span>
-                                    {t('services')}
-                                </a>
+                                    {t('pricing')}
+                                </button>
                             </li>
                             <li>
-                                <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
+                                <button 
+                                    onClick={() => scrollToSection('faq')}
+                                    className="text-gray-600 hover:text-blue-500 flex items-center"
+                                >
                                     <span className="text-blue-500 mr-2">›</span>
-                                    {t('contactUs')}
-                                </a>
+                                    {t('faq')}
+                                </button>
                             </li>
                         </ul>
                     </div>
 
-                    {/* Useful Links */}
+                    {/* Account & Legal */}
                     <div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-6">{t('usefulLinks')}</h3>
+                        <h3 className="text-xl font-bold text-gray-900 mb-6">{t('account')}</h3>
                         <ul className="space-y-4">
                             <li>
-                                <a href="#pricing" className="text-gray-600 hover:text-blue-500 flex items-center">
+                                <Link to="/dashboard" className="text-gray-600 hover:text-blue-500 flex items-center">
                                     <span className="text-blue-500 mr-2">›</span>
-                                    {t('pricing')}
-                                </a>
+                                    {t('getStarted')}
+                                </Link>
                             </li>
                             <li>
-                                <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
+                                <a href="#" onClick={(e) => { e.preventDefault(); /* Handle login modal */ }} className="text-gray-600 hover:text-blue-500 flex items-center">
                                     <span className="text-blue-500 mr-2">›</span>
-                                    {t('appDownload')}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" className="text-gray-600 hover:text-blue-500 flex items-center">
-                                    <span className="text-blue-500 mr-2">›</span>
-                                    {t('howItWorks')}
+                                    {t('signIn')}
                                 </a>
                             </li>
                             <li>
@@ -145,11 +166,11 @@ const Footer = () => {
             </div>
 
             {/* Copyright Bar */}
-            {/* <div className="border-t border-gray-200 mt-12 pt-8">
+            <div className="border-t border-gray-200 mt-12 pt-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-600">
-                    <p>{t('copyright')} <a href="#" className="text-blue-500 hover:underline">HiboTheme</a></p>
+                    <p>© {new Date().getFullYear()} Wheelix. {t('allRightsReserved')}</p>
                 </div>
-            </div> */}
+            </div>
         </footer>
     );
 };

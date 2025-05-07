@@ -121,15 +121,21 @@ const translations = {
 
 const FAQItem = ({ question, answer, isOpen, toggleOpen }) => {
   return (
-    <div className="mb-4 border border-gray-200 rounded-lg overflow-hidden">
+    <div className="mb-4 border border-gray-200 rounded-lg overflow-hidden shadow-sm">
       <button 
         className="w-full px-6 py-4 text-left bg-white hover:bg-gray-50 flex justify-between items-center transition-colors duration-200"
         onClick={toggleOpen}
       >
         <span className="font-medium">{question}</span>
-        <span className="transform transition-transform duration-200 text-2xl" style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>
-          ↓
-        </span>
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          className={`h-5 w-5 transition-transform duration-300 ease-in-out ${isOpen ? 'transform rotate-180' : ''}`} 
+          fill="none" 
+          viewBox="0 0 24 24" 
+          stroke="currentColor"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
       </button>
       
       <div 
@@ -137,7 +143,9 @@ const FAQItem = ({ question, answer, isOpen, toggleOpen }) => {
         style={{ 
           maxHeight: isOpen ? '2000px' : '0',
           opacity: isOpen ? 1 : 0,
-          transition: isOpen ? 'max-height 0.5s ease-in-out, opacity 0.3s ease-in-out 0.2s' : 'max-height 0.5s ease-in-out, opacity 0.1s ease-in-out'
+          transition: isOpen 
+            ? 'max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-in-out 0.1s' 
+            : 'max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.1s ease-in-out'
         }}
       >
         <div className="px-6 py-4 bg-gray-50 whitespace-pre-wrap text-gray-600">

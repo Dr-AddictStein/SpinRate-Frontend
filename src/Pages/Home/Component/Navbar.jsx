@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react"; // Icons for menu toggle
-import logo from "../../../assets/Wheelix final logo.png";
+import logo from "../../../assets/wheelix3500.png";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../../../context/LanguageContext";
 import { useTranslation } from "../../../hooks/useTranslation";
