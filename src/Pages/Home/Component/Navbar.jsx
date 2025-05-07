@@ -46,7 +46,7 @@ const Navbar = () => {
 
     return (
         <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16 md:h-20">
                     {/* Logo */}
                     <div className="flex-shrink-0">
@@ -62,30 +62,36 @@ const Navbar = () => {
                     {/* Desktop navigation layout */}
                     <div className="hidden md:flex items-center space-x-6">
                         {/* Navigation links */}
-                        <div className="flex items-center space-x-6">
+                        <div className="flex items-center space-x-10 gap-5">
                             <button
                                 onClick={() => scrollToSection('how-it-works')}
-                                className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-blue-400 font-medium transition-colors duration-200`}
+                                className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-blue-400 font-bold text-md transition-colors duration-200`}
                             >
                                 {t('howItWorks')}
                             </button>
                             <button
                                 onClick={() => scrollToSection('features')}
-                                className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-blue-400 font-medium transition-colors duration-200`}
+                                className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-blue-400 font-bold text-md transition-colors duration-200`}
                             >
                                 {t('features')}
                             </button>
                             <button
                                 onClick={() => scrollToSection('reviews')}
-                                className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-blue-400 font-medium transition-colors duration-200`}
+                                className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-blue-400 font-bold text-md transition-colors duration-200`}
                             >
                                 {t('reviews')}
                             </button>
                             <button
                                 onClick={() => scrollToSection('pricing')}
-                                className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-blue-400 font-medium transition-colors duration-200`}
+                                className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-blue-400 font-bold text-md transition-colors duration-200`}
                             >
                                 {t('pricing')}
+                            </button>
+                            <button
+                                onClick={() => scrollToSection('faq')}
+                                className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-blue-400 font-bold text-md transition-colors duration-200`}
+                            >
+                                {t('faq')}
                             </button>
                         </div>
 
@@ -163,28 +169,34 @@ const Navbar = () => {
                 <div className="px-4 pt-2 pb-4 space-y-2 bg-white shadow-lg rounded-b-lg">
                     {/* Navigation links */}
                     <button
-                        className="block w-full px-3 py-2 text-left text-gray-700 hover:bg-gray-100 rounded-lg font-medium"
+                        className="block w-full px-3 py-2 text-left text-gray-700 hover:bg-gray-100 rounded-lg font-bold text-md"
                         onClick={() => scrollToSection('how-it-works')}
                     >
                         {t('howItWorks')}
                     </button>
                     <button
-                        className="block w-full px-3 py-2 text-left text-gray-700 hover:bg-gray-100 rounded-lg font-medium"
+                        className="block w-full px-3 py-2 text-left text-gray-700 hover:bg-gray-100 rounded-lg font-bold text-md"
                         onClick={() => scrollToSection('features')}
                     >
                         {t('features')}
                     </button>
                     <button
-                        className="block w-full px-3 py-2 text-left text-gray-700 hover:bg-gray-100 rounded-lg font-medium"
+                        className="block w-full px-3 py-2 text-left text-gray-700 hover:bg-gray-100 rounded-lg font-bold text-md"
                         onClick={() => scrollToSection('reviews')}
                     >
                         {t('reviews')}
                     </button>
                     <button
-                        className="block w-full px-3 py-2 text-left text-gray-700 hover:bg-gray-100 rounded-lg font-medium"
+                        className="block w-full px-3 py-2 text-left text-gray-700 hover:bg-gray-100 rounded-lg font-bold text-md"
                         onClick={() => scrollToSection('pricing')}
                     >
                         {t('pricing')}
+                    </button>
+                    <button
+                        className="block w-full px-3 py-2 text-left text-gray-700 hover:bg-gray-100 rounded-lg font-bold text-md"
+                        onClick={() => scrollToSection('faq')}
+                    >
+                        {t('faq')}
                     </button>
                     <Link
                         to="/dashboard"

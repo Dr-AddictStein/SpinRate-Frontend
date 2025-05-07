@@ -18,7 +18,7 @@ const translations = {
     discount: "discount",
     getStarted: "Get Started",
     popular: "Popular",
-    freeTrial: "Free Trial",
+    freeTrial: "START YOUR 7-DAY FREE TRIAL ON WHEELIX",
     smallBusiness: "Small Business",
     mediumBusiness: "Medium Business",
     bigBusiness: "Big Business",
@@ -65,7 +65,7 @@ const translations = {
     discount: "de réduction",
     getStarted: "Commencer",
     popular: "Populaire",
-    freeTrial: "Essai Gratuit",
+    freeTrial: "START YOUR 7-DAY FREE TRIAL ON WHEELIX",
     smallBusiness: "Petite Entreprise",
     mediumBusiness: "Moyenne Entreprise",
     bigBusiness: "Grande Entreprise",
@@ -218,7 +218,7 @@ const PricingCard = ({ title, price, period, features = [], popular, buttonText 
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.98 }}
         >
-          {t.freeTrial}
+          <span className="font-bold">START</span> YOUR 7-DAY FREE TRIAL ON WHEELIX
         </motion.button>
       </div>
     </motion.div>

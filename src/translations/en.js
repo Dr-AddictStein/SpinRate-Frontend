@@ -1,11 +1,12 @@
 export const en = {
   // Navbar
-  getStarted: "Get Started",
-  signIn: "Sign In",
+  getStarted: "REGISTER",
+  signIn: "LOGIN",
   howItWorks: "How It Works",
   features: "Features",
   reviews: "Reviews",
   pricing: "Pricing",
+  faq: "FAQ",
   
   // Common buttons/actions
   submit: "Submit",

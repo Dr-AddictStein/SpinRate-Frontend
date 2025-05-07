@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { QrCode, Star, RotateCw, Database, Smartphone, BarChart, Users } from 'lucide-react';
+import { QrCode, Star, RotateCw, Database, Smartphone, BarChart, Users, IndentIncrease, Banknote, TrendingUp, DatabaseBackup, ChartSpline } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../../context/LanguageContext';
 
@@ -11,16 +11,16 @@ const translations = {
     workHighlight: "Wheelix work?",
     steps: [
       {
-        title: "Just when visitors are about to leave your website, a special prize wheel pops up.",
-        description: "Unique exit intent pop up that's interactive, customizable and fun for visitors."
+        title: "Your customers scan a QR code and interact with a prize wheel that you customize.",
+        description: "Increase your sales and retain customers with interactive and personalized engagement, powered by our AI."
       },
       {
-        title: "They enter their email address, spin the prize wheel and win a random discount.",
-        description: "Grow your email signup conversion rates 3x and boost sales 35%."
+        title: "They leave a Google review, spin the wheel, for a chance to win a reward.",
+        description: "Boost your online visibility and get an average of 300 additional google reviews each month."
       },
       {
         title: "You collect valuable customer data, boost your reviews effortlessly, and strengthen customer loyalty.",
-        description: "Responsive to any device screen size so it always looks good on desktop or mobile"
+        description: "Collect key data and launch campaigns to retain your customers and maximize returns."
       }
     ],
     startNow: "Start now!"
@@ -30,16 +30,16 @@ const translations = {
     workHighlight: "Wheelix ?",
     steps: [
       {
-        title: "Lorsque les visiteurs sont sur le point de quitter votre site, une roue de prix spéciale apparaît.",
-        description: "Pop-up d'intention de sortie unique, interactif, personnalisable et amusant pour les visiteurs."
+        title: "Vos clients scannent un QR code et interagissent avec une roue de la fortune, que vous personnalisez.",
+        description: "“Stimulez vos ventes et fidélisez vos clients avec un engagement interactif et personnalisé, grâce à notre IA."
       },
       {
-        title: "Ils entrent leur adresse e-mail, font tourner la roue et gagnent une remise aléatoire.",
-        description: "Augmentez vos taux de conversion d'inscription par e-mail par 3 et stimulez vos ventes de 35%."
+        title: " Ils laissent un avis Google, font tourner la roue pour avoir une chance de remporter une récompense.",
+        description: "Boostez votre visibilité en ligne et obtenez en moyenne 300 avis supplémentaires chaque mois."
       },
       {
-        title: "Vous collectez des données clients précieuses, augmentez vos avis sans effort et renforcez la fidélité.",
-        description: "Responsive sur tous les appareils pour toujours avoir un bon rendu sur ordinateur ou mobile"
+        title: "Vous collectez leurs informations, les fidélisez pour qu'ils reviennent, et boostez votre visibilité grâce à leurs avis.",
+        description: "Collectez des données clés et lancez des campagnes pour fidéliser vos clients et maximiser les retours."
       }
     ],
     startNow: "Commencer!"
@@ -56,9 +56,9 @@ const HowItWorks = () => {
 
   // Steps data with icons
   const boxIcons = [
-    <QrCode size={48} className="text-blue-500" />,
-    <Database size={48} className="text-green-500" />,
-    <Smartphone size={48} className="text-purple-500" />
+    <TrendingUp size={48} className="text-blue-500" />,
+    <ChartSpline size={48} className="text-green-500" />,
+    <DatabaseBackup size={48} className="text-purple-500" />
   ];
 
   // Animation variants
@@ -105,8 +105,8 @@ const HowItWorks = () => {
         <div className="mb-16 max-w-4xl mx-auto">
           {t.steps.map((step, index) => (
             <div key={index} className="text-center mb-8 whitespace-nowrap">
-              <span className="font-bold mr-2 text-lg">{index + 1}.</span>
-              <span className="font-semibold text-lg">{step.title}</span>
+              <span className="font-normal mr-2 text-lg">{index + 1}.</span>
+              <span className="font-normal text-lg">{step.title}</span>
             </div>
           ))}
         </div>
@@ -134,7 +134,7 @@ const HowItWorks = () => {
               {/* Feature label */}
               <div className="text-center mb-4">
                 <h3 className="text-xl font-bold text-gray-800">
-                  {index === 0 ? "Unique" : index === 1 ? "Grow" : "Responsive"}
+                  {index === 0 ? "Increase" : index === 1 ? "Boost" : "Collect"}
                 </h3>
               </div>
 

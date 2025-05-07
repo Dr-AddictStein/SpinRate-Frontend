@@ -8,19 +8,23 @@ import heroBG from "../../../../public/hero-bg-scaled.jpg"
 const translations = {
     en: {
         tagline: "Welcome to SpinRate",
-        heading: "Boost your Google Reviews Effortlessly!",
-        headingSecondLine: "",
-        description: "Businesses increase their Google reviews by an average of 300 per month with us.",
-        startNow: "Start Free Trial",
+        heading: "Boost your Google Reviews Effortlessly",
+        headingSecondLine: "with our unique reward wheel!",
+        description: "Businesses increase their Google reviews by an average of ",
+        descriptionBold: "300 per month",
+        descriptionEnd: " with us.",
+        startNow: "START FREE TRIAL",
         learnMore: "Learn more",
         reviewsText: "Google Reviews"
     },
     fr: {
         tagline: "Bienvenue à SpinRate",
-        heading: "Boostez vos Avis Google Sans effort!",
-        headingSecondLine: "",
-        description: "Les entreprises augmentent en moyenne leurs avis Google de 300 par mois avec nous.",
-        startNow: "Commencer l'essai gratuit",
+        heading: "Boostez vos avis Google sans effort",
+        headingSecondLine: "avec notre roue à bonus unique !",
+        description: "Les entreprises augmentent en moyenne leurs avis Google de ",
+        descriptionBold: "300 par mois",
+        descriptionEnd: " avec nous.",
+        startNow: "START FREE TRIAL",
         learnMore: "En savoir plus",
         reviewsText: "Avis Google"
     }
@@ -59,15 +63,15 @@ const Hero = () => {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.8, delay: 0.6 }}
-                            className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white"
+                            className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white"
                         >
                             <div>
                                 <span className="text-white">
                                     {t.heading}
                                 </span>
                             </div>
-                            <div className="mt-1">
-                                <span className="text-white">
+                            <div className="mt-3 text-2xl sm:text-3xl lg:text-4xl">
+                                <span className="text-white font-normal">
                                     {t.headingSecondLine}
                                 </span>
                             </div>
@@ -78,9 +82,9 @@ const Hero = () => {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.8, delay: 1.2 }}
-                            className="text-lg md:text-xl text-gray-100 max-w-3xl mx-auto leading-relaxed font-medium"
+                            className="text-lg md:text-xl text-gray-100 max-w-4xl mx-auto leading-relaxed font-medium"
                         >
-                            {t.description}
+                            {t.description}<span className="font-bold">{t.descriptionBold}</span>{t.descriptionEnd}
                         </motion.p>
 
                         {/* CTA Buttons - ENHANCED and centered */}
