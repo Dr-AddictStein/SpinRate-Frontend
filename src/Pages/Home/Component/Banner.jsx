@@ -70,8 +70,8 @@ const Hero = () => {
                                     {t.heading}
                                 </span>
                             </div>
-                            <div className="mt-3 text-2xl sm:text-3xl lg:text-4xl">
-                                <span className="text-white font-normal">
+                            <div className="mt-3">
+                                <span className="text-white text-2xl sm:text-3xl lg:text-4xl font-bold">
                                     {t.headingSecondLine}
                                 </span>
                             </div>
