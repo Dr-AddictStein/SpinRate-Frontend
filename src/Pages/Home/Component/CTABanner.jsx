@@ -5,12 +5,12 @@ import { useLanguage } from '../../../context/LanguageContext';
 
 const translations = {
   en: {
-    title: "Start your 7-day free trial on Wheelix.",
-    buttonText: "Get Started For Free"
+    title: "<b>Start</b> your 7-day free trial on Wheelix.",
+    buttonText: "GET STARTED FOR FREE"
   },
   fr: {
-    title: "Démarrez votre essai gratuit de 7 jours sur Wheelix.",
-    buttonText: "Commencez gratuitement"
+    title: "<b>Démarrez</b> votre essai gratuit de 7 jours sur Wheelix.",
+    buttonText: "COMMENCEZ GRATUITEMENT"
   }
 };
 
@@ -26,10 +26,9 @@ const CTABanner = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-16"
-        >
-          {t.title}
-        </motion.h2>
+          className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-16"
+          dangerouslySetInnerHTML={{ __html: t.title }}
+        />
         
         <motion.div
           initial={{ opacity: 0, y: 20 }}

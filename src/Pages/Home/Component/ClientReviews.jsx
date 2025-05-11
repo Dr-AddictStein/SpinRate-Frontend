@@ -1,30 +1,64 @@
 import React from "react";
 import heroBG from "../../../../public/hero-bg-scaled.jpg";
+import { useLanguage } from "../../../context/LanguageContext";
 
 const ClientReviews = () => {
-  const testimonials = [
-    {
-      id: 1,
-      name: "Marie D.",
-      role: "Gérant, Le Bistrot Parisien",
-      quote: "Nos clients laissent enfin des avis sans qu'on ait besoin de leur demander. Et en plus, ils reviennent pour tenter leur chance à la roue ! Wheelix est un vrai game-changer.",
-      avatar: "https://randomuser.me/api/portraits/women/44.jpg"
+  const { language } = useLanguage();
+  
+  const translations = {
+    en: {
+      title: "Customers about Wheelix",
+      testimonials: [
+        {
+          id: 1,
+          name: "Marie D.",
+          role: "Manager, Le Bistrot Parisien",
+          quote: "Our customers finally leave reviews without us having to ask them. And what's more, they come back to try their luck at the wheel! Wheelix is a real game-changer.",
+          avatar: "https://randomuser.me/api/portraits/women/44.jpg"
+        },
+        {
+          id: 2,
+          name: "Sophie L.",
+          role: "Director, Café de la Plage",
+          quote: "Our Google score exploded in just a few weeks! The rewards system really motivates customers, and we've collected hundreds of emails for our marketing campaigns.",
+          avatar: "https://randomuser.me/api/portraits/women/63.jpg"
+        },
+        {
+          id: 3,
+          name: "Jerome M.",
+          role: "Manager, Burger Avenue",
+          quote: "Thanks to Wheelix, we've tripled our Google reviews in a month! Customers love the game concept and come back more often. Simple and effective!",
+          avatar: "https://randomuser.me/api/portraits/men/32.jpg"
+        }
+      ]
     },
-    {
-      id: 2,
-      name: "Sophie L.",
-      role: "Directrice, Café de la Plage",
-      quote: "Notre score Google a explosé en quelques semaines ! Le système de récompenses motive vraiment les clients, et nous avons récupéré des centaines d'emails pour nos campagnes marketing.",
-      avatar: "https://randomuser.me/api/portraits/women/63.jpg"
-    },
-    {
-      id: 3,
-      name: "Jerôme M.",
-      role: "Gérant, Burger Avenue",
-      quote: "Grâce à Wheelix, nous avons triplé nos avis Google en un mois ! Les clients adorent le concept du jeu et reviennent plus souvent. Simple et efficace !",
-      avatar: "https://randomuser.me/api/portraits/men/32.jpg"
+    fr: {
+      title: "Clients à propos de Wheelix",
+      testimonials: [
+        {
+          id: 1,
+          name: "Marie D.",
+          role: "Gérant, Le Bistrot Parisien",
+          quote: "Nos clients laissent enfin des avis sans qu'on ait besoin de leur demander. Et en plus, ils reviennent pour tenter leur chance à la roue ! Wheelix est un vrai game-changer.",
+          avatar: "https://randomuser.me/api/portraits/women/44.jpg"
+        },
+        {
+          id: 2,
+          name: "Sophie L.",
+          role: "Directrice, Café de la Plage",
+          quote: "Notre score Google a explosé en quelques semaines ! Le système de récompenses motive vraiment les clients, et nous avons récupéré des centaines d'emails pour nos campagnes marketing.",
+          avatar: "https://randomuser.me/api/portraits/women/63.jpg"
+        },
+        {
+          id: 3,
+          name: "Jerôme M.",
+          role: "Gérant, Burger Avenue",
+          quote: "Grâce à Wheelix, nous avons triplé nos avis Google en un mois ! Les clients adorent le concept du jeu et reviennent plus souvent. Simple et efficace !",
+          avatar: "https://randomuser.me/api/portraits/men/32.jpg"
+        }
+      ]
     }
-  ];
+  };
 
   return (
     <section 
@@ -40,7 +74,7 @@ const ClientReviews = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-white">
-            Customers about Wheelix
+            {translations[language].title}
           </h2>
         </div>
 
@@ -61,7 +95,7 @@ const ClientReviews = () => {
         </div>
 
         <div className="flex flex-wrap justify-center gap-8">
-          {testimonials.map((testimonial) => (
+          {translations[language].testimonials.map((testimonial) => (
             <div key={testimonial.id} className="w-full md:w-[30%] max-w-sm">
               <div className="bg-white rounded-lg shadow-lg p-6 pt-12 relative flex flex-col">
                 <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">

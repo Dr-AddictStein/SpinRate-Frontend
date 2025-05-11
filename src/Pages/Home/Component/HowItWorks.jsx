@@ -11,16 +11,16 @@ const translations = {
     workHighlight: "Wheelix work?",
     steps: [
       {
-        title: "Your customers scan a QR code and interact with a prize wheel that you customize.",
-        description: "Increase your sales and retain customers with interactive and personalized engagement, powered by our AI."
+        title: "Your customers scan a QR code and interact with a <strong>prize wheel</strong> that <strong>you customize</strong>.",
+        description: "<strong>Increase</strong> your sales and retain customers with interactive and personalized engagement, powered by our AI."
       },
       {
-        title: "They leave a Google review, spin the wheel, for a chance to win a reward.",
-        description: "Boost your online visibility and get an average of 300 additional google reviews each month."
+        title: "They leave a <strong>Google review</strong>, spin the wheel, for a chance to win a <strong>reward</strong>.",
+        description: "<strong>Boost</strong> your online visibility and get an average of 300 additional google reviews each month."
       },
       {
-        title: "You collect valuable customer data, boost your reviews effortlessly, and strengthen customer loyalty.",
-        description: "Collect key data and launch campaigns to retain your customers and maximize returns."
+        title: "You <strong>collect</strong> valuable <strong>customer data</strong>, <strong>boost your reviews effortlessly</strong>, and <strong>strengthen</strong> customer <strong>loyalty</strong>.",
+        description: "<strong>Collect</strong> key data and launch campaigns to retain your customers and maximize returns."
       }
     ],
     startNow: "Start now!"
@@ -30,16 +30,16 @@ const translations = {
     workHighlight: "Wheelix ?",
     steps: [
       {
-        title: "Vos clients scannent un QR code et interagissent avec une roue de la fortune, que vous personnalisez.",
-        description: "“Stimulez vos ventes et fidélisez vos clients avec un engagement interactif et personnalisé, grâce à notre IA."
+        title: "Vos clients scannent un QR code et interagissent avec une <strong>roue de la fortune</strong>, que <strong>vous personnalisez</strong>.",
+        description: "<strong>Stimulez</strong> vos ventes et fidélisez vos clients avec un engagement interactif et personnalisé, grâce à notre IA."
       },
       {
-        title: " Ils laissent un avis Google, font tourner la roue pour avoir une chance de remporter une récompense.",
-        description: "Boostez votre visibilité en ligne et obtenez en moyenne 300 avis supplémentaires chaque mois."
+        title: " Ils laissent un <strong>avis Google</strong>, font tourner la roue pour avoir une chance de remporter une <strong>récompense</strong>.",
+        description: "<strong>Boostez</strong> votre visibilité en ligne et obtenez en moyenne 300 avis supplémentaires chaque mois."
       },
       {
-        title: "Vous collectez leurs informations, les fidélisez pour qu'ils reviennent, et boostez votre visibilité grâce à leurs avis.",
-        description: "Collectez des données clés et lancez des campagnes pour fidéliser vos clients et maximiser les retours."
+        title: "Vous <strong>collectez leurs informations</strong>, les fidélisez pour <strong>qu'ils reviennent, et boostez votre visibilité</strong> grâce à leurs avis.",
+        description: "<strong>Collectez</strong> des données clés et lancez des campagnes pour fidéliser vos clients et maximiser les retours."
       }
     ],
     startNow: "Commencer!"
@@ -106,7 +106,10 @@ const HowItWorks = () => {
           {t.steps.map((step, index) => (
             <div key={index} className="text-center mb-8 whitespace-nowrap">
               <span className="font-normal mr-2 text-lg">{index + 1}.</span>
-              <span className="font-normal text-lg">{step.title}</span>
+              <span 
+                className="font-normal text-lg"
+                dangerouslySetInnerHTML={{ __html: step.title }}
+              />
             </div>
           ))}
         </div>
@@ -133,15 +136,18 @@ const HowItWorks = () => {
 
               {/* Feature label */}
               <div className="text-center mb-4">
-                <h3 className="text-xl font-bold text-gray-800">
-                  {index === 0 ? "Increase" : index === 1 ? "Boost" : "Collect"}
+                <h3 className="text-xl font-extrabold text-gray-800" style={{ fontWeight: 900 }}>
+                  {index === 0 ? 
+                    (language === 'en' ? "Increase" : "Stimulez") : 
+                    index === 1 ? 
+                    (language === 'en' ? "Boost" : "Boostez") : 
+                    (language === 'en' ? "Collect" : "Collectez")
+                  }
                 </h3>
               </div>
 
               {/* Description */}
-              <p className="text-gray-600 text-center">
-                {step.description}
-              </p>
+              <p className="text-gray-600 text-center" dangerouslySetInnerHTML={{ __html: step.description }} />
             </motion.div>
           ))}
         </motion.div>

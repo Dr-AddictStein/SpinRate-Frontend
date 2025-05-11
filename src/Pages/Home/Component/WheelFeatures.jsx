@@ -8,7 +8,7 @@ const translations = {
     sectionTitle: "Wheel Features",
     features: [
       {
-        title: "Fully Customized for your brand",
+        title: "<span class='font-bold'>Fully Customized</span> for your brand",
         description: [
           "Control all the text and colors so you can design it to match your website.",
           "Add your company's logo for additional branding.",
@@ -16,14 +16,14 @@ const translations = {
         ]
       },
       {
-        title: "Get Results - Emails, Sales & Analytics",
+        title: "<span class='font-bold'>Get Results</span> - Emails, Sales & Analytics",
         description: [
           "Thanks to our Artificial Intelligence, track and analyze key metrics automatically: QR code scans, prizes distributed, accounts created, enriched, and prize redemption rates.",
           "Collect names, emails, and phone numbers once your visitors have spun the wheel. Enrich this data during prize redemption and export it at any time."
         ]
       },
       {
-        title: "Mobile Responsive + Marketing Materials",
+        title: "<span class='font-bold'>Mobile, Marketing</span> Materials",
         description: [
           "Wheelix is fully responsive, ensuring a smooth experience on all devices.",
           "We also provide printable marketing materials, with your QR code and logo automatically integrated, for counters or tables."
@@ -35,7 +35,7 @@ const translations = {
     sectionTitle: "Fonctionnalités de la roue",
     features: [
       {
-        title: "Personnalisation complète pour votre marque",
+        title: "<span class='font-bold'>Personnalisation complète</span> pour votre marque",
         description: [
           "Personnalisez le texte, les couleurs pour que la roue s'adapte parfaitement à votre marque.",
           "Ajoutez le logo de votre entreprise pour renforcer votre branding.",
@@ -43,14 +43,14 @@ const translations = {
         ]
       },
       {
-        title: "Obtenez des résultats - Emails, ventes & analyses",
+        title: "<span class='font-bold'>Obtenez des résultats</span> - Emails, ventes & analyses",
         description: [
           "Grâce à notre Intelligence artificielle, suivez et analysez automatiquement les métriques clés : scans du QR code, prix distribués, comptes créés, enrichis et taux de rédemption des prix.",
           "Récupérez les noms, emails, numéros de téléphone après que vos visiteurs aient tourné la roue. Enrichissez ces données lors de la rédemption du prix et exportez-les à tout moment."
         ]
       },
       {
-        title: "Mobile responsive + Supports marketing",
+        title: "<span class='font-bold'>Mobile, Supports</span> marketing",
         description: [
           "Wheelix est entièrement responsive, garantissant une expérience fluide sur tous les appareils.",
           "Nous vous fournissons également des supports marketing imprimables, avec votre QR code et logo automatiquement intégrés, pour le comptoir ou sur les tables."
@@ -229,10 +229,9 @@ const WheelFeatureSection = ({ title, description, images, index }) => {
               transition: { duration: 0.6 }
             }
           }}
-          className="text-3xl md:text-4xl font-bold text-gray-800"
-        >
-          {title}
-        </motion.h2>
+          className="text-3xl md:text-4xl font-normal text-gray-800"
+          dangerouslySetInnerHTML={{ __html: title }}
+        />
         
         <div className="space-y-5">
           {description.map((paragraph, i) => (
