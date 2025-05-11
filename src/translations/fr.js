@@ -1,7 +1,8 @@
 export const fr = {
   // Navbar
-  getStarted: "REGISTER",
-  signIn: "LOGIN",
+  getStarted: "S'INSCRIRE",
+  signIn: "SE CONNECTER",
+  login: "SE CONNECTER",
   howItWorks: "Comment Ça Marche",
   features: "Fonctionnalités",
   reviews: "Avis",

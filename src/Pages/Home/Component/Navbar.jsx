@@ -54,7 +54,7 @@ const Navbar = () => {
                             <img 
                                 src={logo} 
                                 alt="Klane Logo" 
-                                className={`h-20 md:h-28 lg:h-32 xl:h-36 w-auto object-contain transition-transform duration-300 hover:scale-105 -my-8 md:-my-10 lg:-my-12 xl:-my-14 ${!scrolled ? 'brightness-110 contrast-125' : ''}`}
+                                className={`h-14 md:h-16 lg:h-20 xl:h-24 w-auto object-contain transition-transform duration-300 hover:scale-105 -my-6 md:-my-6 lg:-my-8 xl:-my-10 ${!scrolled ? 'brightness-110 contrast-125' : ''}`}
                             />
                         </Link>
                     </div>
@@ -107,7 +107,7 @@ const Navbar = () => {
                                 onClick={() => setIsLoginModalOpen(true)}
                                 className="bg-gradient-to-r from-[#FF8E63] via-[#FFAF58] to-[#FFEB70] text-white font-semibold rounded-lg px-6 py-3 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
                             >
-                                {t('signIn')}
+                                {t('login')}
                             </button>
                         </div>
 
@@ -212,7 +212,7 @@ const Navbar = () => {
                             setIsLoginModalOpen(true);
                         }}
                     >
-                        {t('signIn')}
+                        {t('login')}
                     </button>
                 </div>
             </div>

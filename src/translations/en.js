@@ -2,6 +2,7 @@ export const en = {
   // Navbar
   getStarted: "REGISTER",
   signIn: "LOGIN",
+  login: "LOGIN",
   howItWorks: "How It Works",
   features: "Features",
   reviews: "Reviews",
