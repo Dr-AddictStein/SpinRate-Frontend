@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../../../context/LanguageContext';
 
 // Translations object
@@ -119,9 +119,17 @@ const translations = {
   }
 };
 
-const FAQItem = ({ question, answer, isOpen, toggleOpen }) => {
+const FAQItem = ({ question, answer, isOpen, toggleOpen, index, isVisible }) => {
   return (
-    <div className="mb-4 border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+    <div 
+      className="mb-4 border border-gray-200 rounded-lg overflow-hidden shadow-sm"
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'scale(1)' : 'scale(0.95)',
+        transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+        transitionDelay: `${index * 100}ms`
+      }}
+    >
       <button 
         className="w-full px-6 py-4 text-left bg-white hover:bg-gray-50 flex justify-between items-center transition-colors duration-200"
         onClick={toggleOpen}
@@ -160,13 +168,36 @@ const FAQSection = () => {
   const { language } = useLanguage();
   const t = translations[language] || translations.en;
   const [openItemIndex, setOpenItemIndex] = useState(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '50px'
+      }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   const toggleItem = (index) => {
     setOpenItemIndex(openItemIndex === index ? null : index);
   };
 
   return (
-    <section id="faq" className="py-16 bg-white">
+    <section ref={sectionRef} id="faq" className="py-16 bg-white">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold">
@@ -190,6 +221,8 @@ const FAQSection = () => {
               answer={faq.answer}
               isOpen={openItemIndex === index}
               toggleOpen={() => toggleItem(index)}
+              index={index}
+              isVisible={isVisible}
             />
           ))}
         </div>
