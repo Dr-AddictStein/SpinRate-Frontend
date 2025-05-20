@@ -9,7 +9,7 @@ import { useTranslation } from '../../hooks/useTranslation';
 import ukFlag from "../../assets/flags/uk-flag.svg";
 import franceFlag from "../../assets/flags/france-flag.svg";
 import instagramLogo from "../../../public/instagram.webp";
-import googleReview from "../../../public/googleReview.jpg";
+import googleReview from "../../../public/googleReview.webp";
 import facebookLogo from "../../../public/tiltok.webp";
 
 const API_URL = 'https://spin-rate-backend.vercel.app/api';
@@ -54,7 +54,8 @@ const WheelGamePage = () => {
   const [showUserInfoModal, setShowUserInfoModal] = useState(false);
   const [userInfo, setUserInfo] = useState({
     email: '',
-    phone: ''
+    phone: '',
+    agreed: false
   });
   
   // New state for validation popup
@@ -191,14 +192,13 @@ const WheelGamePage = () => {
       // Get the parent container width (accounting for any padding)
       const containerWidth = canvas.parentElement.clientWidth;
       
-      // Set display size (css pixels) - increased size by 10%
-      const wheelSize = containerWidth * 1.1;
-      canvas.style.width = `${wheelSize}px`;
-      canvas.style.height = `${wheelSize}px`;
+      // Set display size (css pixels)
+      canvas.style.width = `${containerWidth}px`;
+      canvas.style.height = `${containerWidth}px`;
       
       // Set actual size in memory (scaled for pixel ratio)
-      canvas.width = wheelSize * pixelRatio;
-      canvas.height = wheelSize * pixelRatio;
+      canvas.width = containerWidth * pixelRatio;
+      canvas.height = containerWidth * pixelRatio;
       
       // Force a redraw with the new dimensions
       drawWheel(containerWidth);
@@ -246,65 +246,252 @@ const WheelGamePage = () => {
       ];
       
       const displayLots = wheel.lots && wheel.lots.length > 0 
-        ? wheel.lots 
+        ? wheel.lots.filter(lot => parseInt(lot.odds) > 0)
         : sampleLots;
       
-      // Filter out lots with odds of 0
-      const validLots = displayLots.filter(lot => parseInt(lot.odds) > 0);
+      // Add outer border/ring
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius * 1.02, 0, 2 * Math.PI);
+      ctx.lineWidth = 8;
+      ctx.strokeStyle = '#FFFFFF'; // White border to match black and white theme
+      ctx.stroke();
       
-      // If all lots have odds of 0, use default odds of 1
-      const lotsToUse = validLots.length > 0 ? validLots : displayLots.map(lot => ({...lot, odds: '1'}));
+      // Draw segments
+      const segmentAngle = (2 * Math.PI) / displayLots.length;
       
-      // Calculate total odds
-      const totalOdds = lotsToUse.reduce((sum, lot) => sum + (parseInt(lot.odds) || 1), 0);
+      // Position the top segment properly - the pointer in the image points to the top
+      const topPosition = Math.PI * 1.5; // 270 degrees
+      const startOffset = topPosition - (segmentAngle / 2);
       
-      // Select winning segment based on odds
-      let randomValue = Math.random() * totalOdds;
-      let winner = 0;
+      // Center glow/light effect (subtle white radial gradient)
+      const gradient = ctx.createRadialGradient(
+        centerX, centerY, 0,
+        centerX, centerY, radius * 0.9
+      );
+      gradient.addColorStop(0, 'rgba(255, 255, 255, 0.2)');
+      gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
       
-      for (let i = 0; i < lotsToUse.length; i++) {
-        randomValue -= (parseInt(lotsToUse[i].odds) || 1);
-        if (randomValue <= 0) {
-          // Find the original index in displayLots
-          winner = displayLots.findIndex(lot => lot === lotsToUse[i]);
-          break;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+      ctx.fillStyle = gradient;
+      ctx.fill();
+      
+      // Draw each segment
+      displayLots.forEach((lot, index) => {
+        const startAngle = startOffset + (index * segmentAngle);
+        const endAngle = startOffset + ((index + 1) * segmentAngle);
+        const midAngle = startAngle + (segmentAngle / 2);
+        
+        // Use all three colors in a repeating pattern
+        const segmentColor = primaryColors[index % 3];
+        
+        // Draw segment
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+        ctx.closePath();
+        
+        ctx.fillStyle = segmentColor;
+        ctx.fill();
+        
+        // Add white divider lines between segments
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(
+          centerX + Math.cos(startAngle) * radius,
+          centerY + Math.sin(startAngle) * radius
+        );
+        
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.stroke();
+        
+        // Draw text with the same orientation as before
+        ctx.save();
+        
+        // Get prize text
+        let displayText = lot.name || '$8 mandatory';
+        
+        // Set text properties - increase font size for better readability, especially on mobile
+        // Increased the multiplier from 0.09 to 0.11 and minimum size from 16 to 18
+        const fontSize = Math.max(Math.min(radius * 0.11, 24), 18);
+        ctx.font = `bold ${Math.floor(fontSize)}px Arial, sans-serif`;
+        ctx.fillStyle = '#FFFFFF';
+        
+        // Position context at center of wheel
+        ctx.translate(centerX, centerY);
+        
+        // Rotate to match the segment's midpoint angle
+        ctx.rotate(midAngle);
+        
+        // Draw text along the radial line path (but without drawing the line)
+        ctx.textAlign = 'center'; // Center the text on the line
+        ctx.textBaseline = 'middle';
+        
+        // Add shadow for better readability against dark backgrounds
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
+        ctx.shadowBlur = 5;
+        ctx.shadowOffsetX = 1;
+        ctx.shadowOffsetY = 1;
+        
+        // Place text in middle of where the line would be - moved slightly outward
+        // Adjusted positioning from 0.6 to 0.65 for better placement with larger text
+        const textDistance = radius * 0.65;
+        
+        // Handle text wrapping for long text
+        if (displayText.length > 13) {
+          // Split text into two lines
+          const words = displayText.split(' ');
+          let line1 = '';
+          let line2 = '';
+          
+          // Simple split at middle if no spaces
+          if (words.length === 1) {
+            const mid = Math.ceil(displayText.length / 2);
+            line1 = displayText.substring(0, mid);
+            line2 = displayText.substring(mid);
+          } else {
+            // Try to split at a space
+            const mid = Math.ceil(words.length / 2);
+            line1 = words.slice(0, mid).join(' ');
+            line2 = words.slice(mid).join(' ');
+          }
+          
+          // Draw first line
+          ctx.fillText(line1, textDistance, -fontSize/2);
+          // Draw second line
+          ctx.fillText(line2, textDistance, fontSize/2);
+        } else {
+          // Draw single line text
+          ctx.fillText(displayText, textDistance, 0);
         }
+        
+        ctx.restore();
+      });
+      
+      // Remove center circle completely - no gradient, no stroke
+      
+      // Add a center logo circle
+      const centerCircleRadius = radius * 0.14; // Increased from 0.12 to 0.14
+      
+      // Draw white circle background with shadow
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, centerCircleRadius, 0, 2 * Math.PI);
+      ctx.fillStyle = "#FFFFFF";
+      ctx.shadowColor = "rgba(0, 0, 0, 0.4)";
+      ctx.shadowBlur = 10;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 0;
+      ctx.fill();
+      
+      // Add a black border around the white circle
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, centerCircleRadius, 0, 2 * Math.PI);
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = "#000000";
+      ctx.stroke();
+      
+      // If a logo URL exists, draw it in the center circle
+      if (wheel.logoUrl) {
+        // Create an image object for the logo
+        const logoImg = new Image();
+        logoImg.src = wheel.logoUrl;
+        
+        // Draw the logo once it's loaded
+        logoImg.onload = () => {
+          // Clear the existing center to redraw
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, centerCircleRadius, 0, 2 * Math.PI);
+          ctx.fillStyle = "#FFFFFF";
+          ctx.fill();
+          
+          // Draw the logo in the center circle with clipping
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, centerCircleRadius - 3, 0, 2 * Math.PI);
+          ctx.clip();
+          
+          // Calculate dimensions to maintain aspect ratio and fit within circle
+          // Using the same size factor as for the primary logo
+          ctx.drawImage(
+            logoImg, 
+            centerX - centerCircleRadius * 1.7/2, 
+            centerY - centerCircleRadius * 1.7/2, 
+            centerCircleRadius * 1.7, 
+            centerCircleRadius * 1.7
+          );
+          
+          ctx.restore();
+          
+          // Redraw the black border
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, centerCircleRadius, 0, 2 * Math.PI);
+          ctx.lineWidth = 3;
+          ctx.strokeStyle = "#000000";
+          ctx.stroke();
+        };
+        
+        // Handle image loading error
+        logoImg.onerror = () => {
+          // Draw SR text as fallback
+          drawCenterText();
+        };
+      } else {
+        // Draw SR text when no logo is available
+        drawCenterText();
       }
       
-      // Calculate rotation to position the winning segment at the top
-      const segmentSize = 360 / displayLots.length;
-      
-      // Calculate correct degrees to rotate
-      // Add more rotations for a more exciting spin (3-5 full rotations)
-      const rotations = 3 + Math.floor(Math.random() * 2);
-      const indexToRotate = (displayLots.length - winner) % displayLots.length;
-      const spinDegrees = (360 * rotations) + (indexToRotate * segmentSize);
-      
-      // Add a bit of randomness to the final position for more realism
-      const randomOffset = Math.random() * (segmentSize * 0.3) - (segmentSize * 0.15);
-      const targetRotation = rotationDegrees + spinDegrees + randomOffset;
-      
-      setRotationDegrees(targetRotation);
-      
-      // Play spin sound if available
-      const spinSound = new Audio();
-      spinSound.src = "https://assets.mixkit.co/active_storage/sfx/212/212-preview.mp3"; // Wheel spinning sound
-      spinSound.volume = 0.5;
-      spinSound.play().catch(e => console.log("Audio play failed:", e));
-      
-      // Set a timer to show the result
-      setTimeout(() => {
-        // Play win sound
-        const winSound = new Audio();
-        winSound.src = "https://assets.mixkit.co/active_storage/sfx/2008/2008-preview.mp3"; // Win sound
-        winSound.volume = 0.5;
-        winSound.play().catch(e => console.log("Audio play failed:", e));
+      // Function to draw text in the center if no logo is available
+      function drawCenterText() {
+        // Create an image object for the SpinRate logo
+        const logoImg = new Image();
+        logoImg.src = spinRateLogo;
         
-        setResult(displayLots[winner]);
-        setIsSpinning(false);
-        setHasSpun(true);
-        setShowResultModal(true);
-      }, 5000); // Match this timing with the animation duration
+        // Draw the logo once it's loaded
+        logoImg.onload = () => {
+          // Clear the existing center
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, centerCircleRadius, 0, 2 * Math.PI);
+          ctx.fillStyle = "#FFFFFF";
+          ctx.fill();
+          
+          // Draw the SpinRate logo in the center circle with clipping
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, centerCircleRadius - 3, 0, 2 * Math.PI);
+          ctx.clip();
+          
+          // Calculate dimensions to maintain aspect ratio and fit within circle
+          // Using the same size factor as for the primary logo
+          ctx.drawImage(
+            logoImg, 
+            centerX - centerCircleRadius * 1.7/2, 
+            centerY - centerCircleRadius * 1.7/2, 
+            centerCircleRadius * 1.7, 
+            centerCircleRadius * 1.7
+          );
+          
+          ctx.restore();
+          
+          // Redraw the black border
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, centerCircleRadius, 0, 2 * Math.PI);
+          ctx.lineWidth = 3;
+          ctx.strokeStyle = "#000000";
+          ctx.stroke();
+        };
+        
+        // Handle image loading error
+        logoImg.onerror = () => {
+          // Fallback to text if logo fails to load
+          ctx.font = `bold ${Math.floor(centerCircleRadius * 1.1)}px Arial, sans-serif`; // Increased from 0.9 to 1.1
+          ctx.fillStyle = "#000000";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.shadowColor = "transparent";
+          ctx.fillText("SR", centerX, centerY);
+        };
+      }
     }
     
     // Clean up event listener when component unmounts
@@ -333,29 +520,33 @@ const WheelGamePage = () => {
       { name: 'ZERO', odds: '1' },
     ];
     
-    // Get wheel lots
+    // Get wheel lots and filter out lots with 0 odds
     const displayLots = wheel.lots && wheel.lots.length > 0 
-      ? wheel.lots 
+      ? wheel.lots.filter(lot => parseInt(lot.odds) > 0)
       : sampleLots;
     
-    // Filter out lots with odds of 0
-    const validLots = displayLots.filter(lot => parseInt(lot.odds) > 0);
-    
-    // If all lots have odds of 0, use default odds of 1
-    const lotsToUse = validLots.length > 0 ? validLots : displayLots.map(lot => ({...lot, odds: '1'}));
+    // If no valid lots remain after filtering, show error
+    if (displayLots.length === 0) {
+      toast.error(
+        language === 'fr'
+          ? 'Aucun lot valide disponible'
+          : 'No valid prizes available'
+      );
+      setIsSpinning(false);
+      return;
+    }
     
     // Calculate total odds
-    const totalOdds = lotsToUse.reduce((sum, lot) => sum + (parseInt(lot.odds) || 1), 0);
+    const totalOdds = displayLots.reduce((sum, lot) => sum + (parseInt(lot.odds) || 1), 0);
     
     // Select winning segment based on odds
     let randomValue = Math.random() * totalOdds;
     let winner = 0;
     
-    for (let i = 0; i < lotsToUse.length; i++) {
-      randomValue -= (parseInt(lotsToUse[i].odds) || 1);
+    for (let i = 0; i < displayLots.length; i++) {
+      randomValue -= (parseInt(displayLots[i].odds) || 1);
       if (randomValue <= 0) {
-        // Find the original index in displayLots
-        winner = displayLots.findIndex(lot => lot === lotsToUse[i]);
+        winner = i;
         break;
       }
     }
@@ -427,16 +618,26 @@ const WheelGamePage = () => {
   
   // Handle user info input changes
   const handleUserInfoChange = (e) => {
-    const { name, value } = e.target;
+    const { name: inputName, value: inputValue, type, checked } = e.target;
     setUserInfo(prev => ({
       ...prev,
-      [name]: value
+      [inputName]: type === 'checkbox' ? checked : inputValue
     }));
   };
   
   // Handle user info submission
   const handleUserInfoSubmit = async () => {
     try {
+      // Check if agreement is checked
+      if (!userInfo.agreed) {
+        toast.error(
+          language === 'fr'
+            ? 'Veuillez accepter les conditions de partage d\'informations'
+            : 'Please agree to the information sharing terms'
+        );
+        return;
+      }
+
       // Only proceed if we have a wheel ID and a result
       if (id && result) {
         // Prepare the user data
@@ -757,19 +958,10 @@ const WheelGamePage = () => {
                 <p className="text-black text-base sm:text-lg md:text-xl">{wheel?.instructionStep3 || t('spinToWin')}</p>
               </div>
             </div>
-            <div className="flex w-full justify-center items-center gap-8 py-4">
-              <div className="flex flex-col items-center">
-                <img src={instagramLogo} alt="Instagram" className="w-[60px] h-[60px] object-contain"/>
-                <span className="text-xs mt-2 text-gray-600">Instagram</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <img src={googleReview} alt="Google Review" className="w-[120px] h-[60px] object-contain"/>
-                <span className="text-xs mt-2 text-gray-600">Google Review</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <img src={facebookLogo} alt="TikTok" className="w-[60px] h-[60px] object-contain"/>
-                <span className="text-xs mt-2 text-gray-600">TikTok</span>
-              </div>
+            <div className="flex w-full gap-3 justify-around items-center">
+              <img src={instagramLogo} alt="" className="w-[50px] h-[50px]"/>
+              <img src={googleReview} alt="" className="w-[33%]"/>
+              <img src={facebookLogo} alt="" className="w-[80px] h-[80px]"/>
             </div>
             <div className="mt-6 sm:mt-8 text-center">
               <motion.button
@@ -867,17 +1059,11 @@ const WheelGamePage = () => {
               transition={{ delay: 0.4, duration: 0.6 }}
               className="w-full"
             >
-              <h2 className="text-center text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2" style={{ color: wheel?.mainColors?.color1 || '#000000' }}>
-                {(result.name.toLowerCase() === 'lost' || result.name.toLowerCase() === 'perdu') 
-                  ? (language === 'fr' ? "Oups !" : "Oops!")
-                  : t('congratulations')}
-              </h2>
+              <h2 className="text-center text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2" style={{ color: wheel?.mainColors?.color1 || '#000000' }}>{t('congratulations')}</h2>
               <div className="w-8 sm:w-12 md:w-14 h-1 mx-auto mb-2 sm:mb-3" style={{ backgroundColor: wheel?.mainColors?.color1 || '#000000' }}></div>
               
               <p className="text-center text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4" style={{ color: wheel?.mainColors?.color1 || '#000000' }}>
-                {(result.name.toLowerCase() === 'lost' || result.name.toLowerCase() === 'perdu')
-                  ? (language === 'fr' ? "Bonne chance la prochaine fois !" : "Better luck next time!")
-                  : `${t('youWon')}: ${result.name}`}
+                {t('youWon')}: <span className="font-bold" style={{ color: wheel?.mainColors?.color1 || '#000000' }}>{result.name}</span>
               </p>
               
               {result.promoCode && (
@@ -935,6 +1121,27 @@ const WheelGamePage = () => {
                       }}
                     />
                   </div>
+
+                  {/* Agreement Checkbox */}
+                  <div className="flex items-start space-x-2 mt-3">
+                    <input
+                      type="checkbox"
+                      id="agreement"
+                      name="agreed"
+                      checked={userInfo.agreed}
+                      onChange={handleUserInfoChange}
+                      className="mt-1 h-4 w-4 rounded border-gray-300 focus:ring-2 focus:ring-offset-0"
+                      style={{ 
+                        borderColor: wheel?.mainColors?.color1 || '#000000',
+                        accentColor: wheel?.mainColors?.color1 || '#000000'
+                      }}
+                    />
+                    <label htmlFor="agreement" className="text-sm sm:text-base text-gray-700">
+                      {language === 'fr' 
+                        ? 'J\'accepte de partager mes informations pour recevoir mon prix'
+                        : 'I agree to share my information to receive my prize'}
+                    </label>
+                  </div>
                   
                   <div className="mt-2 sm:mt-3 text-center">
                     <motion.button
@@ -942,7 +1149,10 @@ const WheelGamePage = () => {
                       className="w-full px-4 py-2 sm:px-6 sm:py-3 text-white font-bold rounded-lg shadow-lg hover:opacity-90 transform transition-all duration-200 text-base sm:text-lg md:text-xl"
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
-                      style={{ backgroundColor: wheel?.mainColors?.color1 || '#000000' }}
+                      style={{ 
+                        backgroundColor: wheel?.mainColors?.color1 || '#000000',
+                        opacity: userInfo.agreed ? 1 : 0.7
+                      }}
                     >
                       {t('claimPrize')}
                     </motion.button>
