@@ -52,6 +52,7 @@ const WheelGamePage = () => {
   const [showInstructionModal, setShowInstructionModal] = useState(true);
   const [showWheelGame, setShowWheelGame] = useState(true);
   const [showUserInfoModal, setShowUserInfoModal] = useState(false);
+  const [isUserVerified, setIsUserVerified] = useState(false); // New state for user verification
   const [userInfo, setUserInfo] = useState({
     email: '',
     phone: '',
@@ -64,6 +65,18 @@ const WheelGamePage = () => {
   // References
   const canvasRef = useRef(null);
   const wheelRef = useRef(null);
+  
+  // Add debugging for button state
+  useEffect(() => {
+    console.log('Button state check:', { 
+      isSpinning, 
+      hasSpun, 
+      isUserVerified, 
+      showInstructionModal, 
+      showUserInfoModal,
+      buttonDisabled: isSpinning || hasSpun || !isUserVerified || showInstructionModal || showUserInfoModal
+    });
+  }, [isSpinning, hasSpun, isUserVerified, showInstructionModal, showUserInfoModal]);
   
   // Fetch wheel data from backend
   useEffect(() => {
@@ -505,7 +518,7 @@ const WheelGamePage = () => {
   
   // Handle wheel spin with enhanced animation
   const spinWheel = () => {
-    if (isSpinning || !wheel || hasSpun) return;
+    if (isSpinning || !wheel || hasSpun || !isUserVerified) return;
     
     setIsSpinning(true);
     setResult(null);
@@ -582,16 +595,34 @@ const WheelGamePage = () => {
     spinSound.play().catch(e => console.log("Audio play failed:", e));
     
     // Set a timer to show the result
-    setTimeout(() => {
-      // Play win sound
-      // const winSound = new Audio();
-      // winSound.src = "https://assets.mixkit.co/active_storage/sfx/2008/2008-preview.mp3"; // Win sound
-      // winSound.volume = 0.5;
-      // winSound.play().catch(e => console.log("Audio play failed:", e));
-      
-      setResult(allLots[winner]);
+    setTimeout(async () => {
+      // Store the winning result
+      const winningResult = allLots[winner];
+      setResult(winningResult);
       setIsSpinning(false);
       setHasSpun(true);
+      
+      // Save user data with prize information
+      try {
+        if (id && isUserVerified) {
+          // Prepare the user data
+          const userData = {
+            email: userInfo.email,
+            phone: userInfo.phone,
+            wheelId: id,
+            prize: winningResult.name || 'No Prize' // Send the prize name to the backend
+          };
+          
+          // Send data to the API endpoint
+          await axios.post(`${API_URL}/customer/create`, userData);
+          console.log('User data saved with prize information');
+        }
+      } catch (err) {
+        console.error('Error saving user data with prize:', err);
+        // Don't show error toast to user as this is a background operation
+      }
+      
+      // Show result modal
       setShowResultModal(true);
     }, 5000); // Match this timing with the animation duration
   };
@@ -599,23 +630,28 @@ const WheelGamePage = () => {
   // Close result modal - no longer needed since we don't transition to user info modal
   const closeResultModal = () => {
     setShowResultModal(false);
+    
+    // Optional: Navigate back to home or restart the game
+    // Uncomment if you want to redirect after showing result
+    // setTimeout(() => {
+    //   navigate('/');
+    // }, 500);
   };
   
   // Handle button click in instruction modal
   const handleReviewButtonClick = () => {
     if (wheel?.googleReviewLink) {
-      // Show validation popup
+      // Show validation popup first
       setShowValidationPopup(true);
       
       // Open the link immediately in a new tab
       window.open(wheel.googleReviewLink, '_blank');
       
-      // Set a timer to close the validation popup after 10 seconds
+      // Set a timer to show the user info modal after 5 seconds
       setTimeout(() => {
         setShowValidationPopup(false);
-        // Close instruction modal 
-        setShowInstructionModal(false);
-      }, 10000);
+        setShowUserInfoModal(true);
+      }, 5000);
     }
   };
   
@@ -636,6 +672,12 @@ const WheelGamePage = () => {
   
   // Handle user info submission
   const handleUserInfoSubmit = async () => {
+    // This function is no longer needed as we're using verifyUser and saving data in spinWheel
+    // We'll keep it for now but it's not being called anymore
+  };
+  
+  // Verify user function
+  const verifyUser = async () => {
     try {
       // Check if agreement is checked
       if (!userInfo.agreed) {
@@ -644,48 +686,45 @@ const WheelGamePage = () => {
             ? 'Veuillez accepter les conditions de partage d\'informations'
             : 'Please agree to the information sharing terms'
         );
-        return;
+        return false;
       }
 
-      // Only proceed if we have a wheel ID and a result
-      if (id && result) {
+      // Only proceed if we have a wheel ID
+      if (id) {
         // Prepare the user data
         const userData = {
           email: userInfo.email,
           phone: userInfo.phone,
-          wheelId: id,
-          prize: result.name || 'No Prize' // Send the prize name to the backend
+          wheelId: id
         };
         
-        // Send data to the API endpoint
-        const response = await axios.post('https://spin-rate-backend.vercel.app/api/customer/create', userData);
+        // Send data to the verification API endpoint
+        const response = await axios.post(`${API_URL}/customer/verify`, userData);
         
-        if (response.data && response.data.customer) {
+        if (response.data && response.data.verified) {
           // Show success message in the appropriate language
           toast.success(
             language === 'fr' 
-              ? 'Merci ! Vos informations ont été soumises avec succès.' 
-              : 'Thank you! Your information has been submitted successfully.'
+              ? 'Vérification réussie ! Vous pouvez maintenant jouer.' 
+              : 'Verification successful! You can now play.'
           );
           
-          // Close the modal
-          setShowResultModal(false);
+          // Close all modals
+          setShowValidationPopup(false);
+          setShowUserInfoModal(false);
+          setShowInstructionModal(false);
           
-          // Navigate to landing page after a short delay
-          setTimeout(() => {
-            navigate('/');
-          }, 1500);
+          // Set user as verified
+          setIsUserVerified(true);
+          
+          console.log('User verified successfully, isUserVerified set to true');
+          
+          return true;
         }
-      } else {
-        // If no result is available, show an error in the appropriate language
-        toast.error(
-          language === 'fr'
-            ? 'Aucune information sur le prix disponible. Veuillez réessayer de faire tourner la roue.'
-            : 'No prize information available. Please try spinning the wheel again.'
-        );
       }
+      return false;
     } catch (err) {
-      console.error('Error submitting user info:', err);
+      console.error('Error verifying user:', err);
       
       // Display specific error message from backend if available
       if (err.response && err.response.data && err.response.data.error) {
@@ -735,10 +774,11 @@ const WheelGamePage = () => {
       } else {
         toast.error(
           language === 'fr'
-            ? 'Échec de la soumission de vos informations. Veuillez réessayer.'
-            : 'Failed to submit your information. Please try again.'
+            ? 'Échec de la vérification. Veuillez réessayer.'
+            : 'Verification failed. Please try again.'
         );
       }
+      return false;
     }
   };
   
@@ -826,14 +866,14 @@ const WheelGamePage = () => {
                 <div className="text-center mb-6 sm:mb-8 md:mb-10">
                   <motion.button
                     className={`px-6 sm:px-8 py-3 sm:py-4 font-bold rounded-lg shadow-lg transform transition-all duration-200 text-base sm:text-lg md:text-xl
-                      ${hasSpun 
+                      ${hasSpun || !isUserVerified || isSpinning || showInstructionModal || showUserInfoModal
                         ? 'bg-gray-400 text-gray-200 cursor-not-allowed' 
                         : 'text-white hover:opacity-90'}`}
-                    whileHover={hasSpun ? {} : { scale: 1.05 }}
-                    whileTap={hasSpun ? {} : { scale: 0.95 }}
+                    whileHover={hasSpun || !isUserVerified || isSpinning || showInstructionModal || showUserInfoModal ? {} : { scale: 1.05 }}
+                    whileTap={hasSpun || !isUserVerified || isSpinning || showInstructionModal || showUserInfoModal ? {} : { scale: 0.95 }}
                     onClick={spinWheel}
-                    disabled={isSpinning || hasSpun || showInstructionModal}
-                    style={hasSpun ? {} : { backgroundColor: wheel?.mainColors?.color1 || '#000000' }}
+                    disabled={isSpinning || hasSpun || !isUserVerified || showInstructionModal || showUserInfoModal}
+                    style={hasSpun || !isUserVerified || isSpinning || showInstructionModal || showUserInfoModal ? {} : { backgroundColor: wheel?.mainColors?.color1 || '#000000' }}
                   >
                     {isSpinning ? (
                       <span className="flex items-center justify-center">
@@ -894,7 +934,11 @@ const WheelGamePage = () => {
           {!showInstructionModal && (
             <div className="mt-auto sm:mt-6 mb-3 sm:mb-4 text-center">
               <h2 className="text-base sm:text-lg md:text-xl font-bold text-black">
-                {wheel?.thankyouMessage || t('thankYouForReview')}
+                {isUserVerified 
+                  ? (hasSpun 
+                    ? (wheel?.thankyouMessage || t('thankYouForReview'))
+                    : t('spinTheWheel'))
+                  : t('leaveReview')}
               </h2>
             </div>
           )}
@@ -1106,85 +1150,164 @@ const WheelGamePage = () => {
                 </motion.div>
               )}
               
-              <div className="mt-3 sm:mt-4 border-t border-gray-300 pt-2 sm:pt-3">
-                <p className="text-center mb-2 text-sm sm:text-base md:text-lg" style={{ color: wheel?.mainColors?.color1 || '#000000' }}>
-                  {t('enterContactInfo')}
-                </p>
-                
-                <form className="space-y-2" onSubmit={(e) => { e.preventDefault(); handleUserInfoSubmit(); }}>
-                  <div>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={userInfo.email}
-                      onChange={handleUserInfoChange}
-                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border rounded-lg focus:ring-2 text-base sm:text-lg placeholder-gray-700"
-                      placeholder={t('email')}
-                      required
-                      style={{ 
-                        borderColor: wheel?.mainColors?.color1 || '#000000',
-                        color: wheel?.mainColors?.color1 || '#000000',
-                        focusRingColor: wheel?.mainColors?.color1 || '#000000'
-                      }}
-                    />
-                  </div>
-                  
-                  <div>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      value={userInfo.phone}
-                      onChange={handleUserInfoChange}
-                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border rounded-lg focus:ring-2 text-base sm:text-lg placeholder-gray-700"
-                      placeholder={t('phone')}
-                      required
-                      style={{ 
-                        borderColor: wheel?.mainColors?.color1 || '#000000',
-                        color: wheel?.mainColors?.color1 || '#000000' 
-                      }}
-                    />
-                  </div>
-
-                  {/* Agreement Checkbox */}
-                  <div className="flex items-start space-x-2 mt-3">
-                    <input
-                      type="checkbox"
-                      id="agreement"
-                      name="agreed"
-                      checked={userInfo.agreed}
-                      onChange={handleUserInfoChange}
-                      className="mt-1 h-4 w-4 rounded border-gray-300 focus:ring-2 focus:ring-offset-0"
-                      style={{ 
-                        borderColor: wheel?.mainColors?.color1 || '#000000',
-                        accentColor: wheel?.mainColors?.color1 || '#000000'
-                      }}
-                    />
-                    <label htmlFor="agreement" className="text-sm sm:text-base text-gray-700">
-                      {language === 'fr' 
-                        ? 'J\'accepte de partager mes informations pour recevoir mon prix'
-                        : 'I agree to share my information to receive my prize'}
-                    </label>
-                  </div>
-                  
-                  <div className="mt-2 sm:mt-3 text-center">
-                    <motion.button
-                      type="submit"
-                      className="w-full px-4 py-2 sm:px-6 sm:py-3 text-white font-bold rounded-lg shadow-lg hover:opacity-90 transform transition-all duration-200 text-base sm:text-lg md:text-xl"
-                      whileHover={{ scale: 1.03 }}
-                      whileTap={{ scale: 0.97 }}
-                      style={{ 
-                        backgroundColor: wheel?.mainColors?.color1 || '#000000',
-                        opacity: userInfo.agreed ? 1 : 0.7
-                      }}
-                    >
-                      {t('claimPrize')}
-                    </motion.button>
-                  </div>
-                </form>
+              <div className="mt-5 sm:mt-6 text-center">
+                <motion.button
+                  onClick={closeResultModal}
+                  className="px-6 sm:px-8 py-3 sm:py-4 bg-black text-white font-bold rounded-lg shadow-lg transform transition-all duration-200 text-base sm:text-lg md:text-xl"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {t('close')}
+                </motion.button>
               </div>
             </motion.div>
+          </motion.div>
+        </div>
+      )}
+      
+      {/* User Info Modal - appears after review button click */}
+      {showUserInfoModal && !isUserVerified && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
+          <motion.div 
+            className="bg-white rounded-2xl border-4 shadow-2xl max-w-md w-[95%] sm:w-[90%] md:w-full p-4 sm:p-6 md:p-8 relative pointer-events-auto max-h-[90vh] overflow-y-auto my-auto"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ 
+              duration: 0.5,
+              type: "spring",
+              stiffness: 300,
+              damping: 25
+            }}
+            style={{
+              maxHeight: "calc(100vh - 2rem)",
+              borderColor: wheel?.mainColors?.color1 || '#000000'
+            }}
+          >
+            {/* Decorative elements */}
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r" style={{ 
+              backgroundImage: `linear-gradient(to right, ${wheel?.mainColors?.color1 || '#000000'}, ${wheel?.mainColors?.color2 || '#666666'}, ${wheel?.mainColors?.color1 || '#000000'})` 
+            }}></div>
+            
+            {/* Language switcher in modal top right */}
+            <div className="absolute right-2 sm:right-4 top-2 sm:top-4 z-10 flex items-center space-x-2">
+              <button 
+                onClick={() => {
+                  console.log('Switching to French');
+                  changeLanguage('fr');
+                }}
+                className={`transition-all duration-200 transform hover:scale-110 ${language === 'fr' ? 'ring-2 ring-black scale-110' : 'opacity-75'}`}
+                aria-label="Switch to French"
+              >
+                <img src={franceFlag} alt="French" className="w-7 h-5 rounded-sm" />
+              </button>
+              <button 
+                onClick={() => {
+                  console.log('Switching to English');
+                  changeLanguage('en');
+                }}
+                className={`transition-all duration-200 transform hover:scale-110 ${language === 'en' ? 'ring-2 ring-black scale-110' : 'opacity-75'}`}
+                aria-label="Switch to English"
+              >
+                <img src={ukFlag} alt="English" className="w-7 h-5 rounded-sm" />
+              </button>
+            </div>
+            
+            <h2 className="text-center text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 mt-6" style={{ color: wheel?.mainColors?.color1 || '#000000' }}>
+              {language === 'fr' ? 'Vérification Requise' : 'Verification Required'}
+            </h2>
+            
+            <p className="text-center mb-4 text-sm sm:text-base md:text-lg text-gray-800">
+              {language === 'fr' 
+                ? 'Veuillez entrer vos coordonnées pour participer au jeu de la roue'
+                : 'Please enter your contact information to participate in the wheel game'}
+            </p>
+            
+            <form className="space-y-3" onSubmit={(e) => { 
+              e.preventDefault(); 
+              console.log('Verification form submitted');
+              verifyUser();
+            }}>
+              <div>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={userInfo.email}
+                  onChange={handleUserInfoChange}
+                  className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border rounded-lg focus:ring-2 text-base sm:text-lg placeholder-gray-700"
+                  placeholder={t('email')}
+                  required
+                  style={{ 
+                    borderColor: wheel?.mainColors?.color1 || '#000000',
+                    color: wheel?.mainColors?.color1 || '#000000',
+                    focusRingColor: wheel?.mainColors?.color1 || '#000000'
+                  }}
+                />
+              </div>
+              
+              <div>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={userInfo.phone}
+                  onChange={handleUserInfoChange}
+                  className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border rounded-lg focus:ring-2 text-base sm:text-lg placeholder-gray-700"
+                  placeholder={t('phone')}
+                  required
+                  style={{ 
+                    borderColor: wheel?.mainColors?.color1 || '#000000',
+                    color: wheel?.mainColors?.color1 || '#000000' 
+                  }}
+                />
+              </div>
+
+              {/* Agreement Checkbox */}
+              <div className="flex items-start space-x-2 mt-3">
+                <input
+                  type="checkbox"
+                  id="agreement"
+                  name="agreed"
+                  checked={userInfo.agreed}
+                  onChange={handleUserInfoChange}
+                  className="mt-1 h-4 w-4 rounded border-gray-300 focus:ring-2 focus:ring-offset-0"
+                  style={{ 
+                    borderColor: wheel?.mainColors?.color1 || '#000000',
+                    accentColor: wheel?.mainColors?.color1 || '#000000'
+                  }}
+                />
+                <label htmlFor="agreement" className="text-sm sm:text-base text-gray-700">
+                  {language === 'fr' 
+                    ? 'J\'accepte de partager mes informations pour participer au jeu'
+                    : 'I agree to share my information to participate in the game'}
+                </label>
+              </div>
+              
+              <div className="mt-4 sm:mt-5 text-center">
+                <motion.button
+                  type="submit"
+                  className="w-full px-4 py-2 sm:px-6 sm:py-3 text-white font-bold rounded-lg shadow-lg hover:opacity-90 transform transition-all duration-200 text-base sm:text-lg md:text-xl"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  style={{ 
+                    backgroundColor: wheel?.mainColors?.color1 || '#000000',
+                    opacity: userInfo.agreed ? 1 : 0.7
+                  }}
+                >
+                  {language === 'fr' ? 'Vérifier' : 'Verify'}
+                </motion.button>
+              </div>
+              
+              <div className="mt-2 text-center">
+                <button
+                  type="button"
+                  onClick={() => setShowUserInfoModal(false)}
+                  className="text-sm text-gray-600 hover:text-gray-800"
+                >
+                  {language === 'fr' ? 'Annuler' : 'Cancel'}
+                </button>
+              </div>
+            </form>
           </motion.div>
         </div>
       )}

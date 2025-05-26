@@ -109,6 +109,7 @@ export const en = {
   enterContactInfo: "Enter your contact info to claim your prize",
   claimPrize: "CLAIM PRIZE",
   spinTheWheel: "Spin the wheel",
+  spinning: "Spinning...",
   thankYouForReview: "Thank you for your review! Spin the wheel to win a prize!",
   spinRateCopyright: "SpinRate. All rights reserved.",
   spin: "SPIN",

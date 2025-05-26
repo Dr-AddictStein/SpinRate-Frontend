@@ -109,6 +109,7 @@ export const fr = {
   enterContactInfo: "Entrez vos coordonnées pour réclamer votre prix",
   claimPrize: "RÉCLAMER LE PRIX",
   spinTheWheel: "Tournez la roue",
+  spinning: "En cours...",
   thankYouForReview: "Merci pour votre avis ! Tournez la roue pour gagner un prix !",
   spinRateCopyright: "SpinRate. Tous droits réservés.",
   spin: "TOURNER",
