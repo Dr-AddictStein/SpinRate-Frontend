@@ -220,7 +220,8 @@ const WheelGamePage = () => {
       
       const centerX = containerWidth / 2;
       const centerY = containerWidth / 2;
-      const radius = Math.min(centerX, centerY) * 0.92;
+      // Increase the radius factor from 0.92 to 0.96 to make wheel bigger
+      const radius = Math.min(centerX, centerY) * 0.96;
       
       // Clear canvas
       ctx.clearRect(0, 0, containerWidth, containerWidth);
@@ -245,8 +246,9 @@ const WheelGamePage = () => {
         { name: 'ZERO', odds: '1' },
       ];
       
+      // Display all lots, including those with 0 odds
       const displayLots = wheel.lots && wheel.lots.length > 0 
-        ? wheel.lots.filter(lot => parseInt(lot.odds) > 0)
+        ? wheel.lots
         : sampleLots;
       
       // Add outer border/ring
@@ -312,9 +314,9 @@ const WheelGamePage = () => {
         // Get prize text
         let displayText = lot.name || '$8 mandatory';
         
-        // Set text properties - increase font size for better readability, especially on mobile
-        // Increased the multiplier from 0.09 to 0.11 and minimum size from 16 to 18
-        const fontSize = Math.max(Math.min(radius * 0.11, 24), 18);
+        // Reduce font size for better content fitting
+        // Reduced the multiplier from 0.11 to 0.09 and minimum size from 18 to 14
+        const fontSize = Math.max(Math.min(radius * 0.09, 20), 14);
         ctx.font = `bold ${Math.floor(fontSize)}px Arial, sans-serif`;
         ctx.fillStyle = '#FFFFFF';
         
@@ -334,12 +336,12 @@ const WheelGamePage = () => {
         ctx.shadowOffsetX = 1;
         ctx.shadowOffsetY = 1;
         
-        // Place text in middle of where the line would be - moved slightly outward
-        // Adjusted positioning from 0.6 to 0.65 for better placement with larger text
-        const textDistance = radius * 0.65;
+        // Place text in middle of where the line would be
+        // Adjust the positioning for the new wheel size - move text slightly outward
+        const textDistance = radius * 0.68;
         
         // Handle text wrapping for long text
-        if (displayText.length > 13) {
+        if (displayText.length > 14) {
           // Split text into two lines
           const words = displayText.split(' ');
           let line1 = '';
@@ -357,10 +359,10 @@ const WheelGamePage = () => {
             line2 = words.slice(mid).join(' ');
           }
           
-          // Draw first line
-          ctx.fillText(line1, textDistance, -fontSize/2);
+          // Draw first line - adjust line spacing for smaller text
+          ctx.fillText(line1, textDistance, -fontSize*0.6);
           // Draw second line
-          ctx.fillText(line2, textDistance, fontSize/2);
+          ctx.fillText(line2, textDistance, fontSize*0.6);
         } else {
           // Draw single line text
           ctx.fillText(displayText, textDistance, 0);
@@ -520,13 +522,16 @@ const WheelGamePage = () => {
       { name: 'ZERO', odds: '1' },
     ];
     
-    // Get wheel lots and filter out lots with 0 odds
-    const displayLots = wheel.lots && wheel.lots.length > 0 
-      ? wheel.lots.filter(lot => parseInt(lot.odds) > 0)
+    // Get all lots for display
+    const allLots = wheel.lots && wheel.lots.length > 0 
+      ? wheel.lots
       : sampleLots;
+      
+    // Filter lots for winner selection (exclude 0 odds)
+    const winnerLots = allLots.filter(lot => parseInt(lot.odds) > 0);
     
     // If no valid lots remain after filtering, show error
-    if (displayLots.length === 0) {
+    if (winnerLots.length === 0) {
       toast.error(
         language === 'fr'
           ? 'Aucun lot valide disponible'
@@ -537,27 +542,31 @@ const WheelGamePage = () => {
     }
     
     // Calculate total odds
-    const totalOdds = displayLots.reduce((sum, lot) => sum + (parseInt(lot.odds) || 1), 0);
+    const totalOdds = winnerLots.reduce((sum, lot) => sum + (parseInt(lot.odds) || 1), 0);
     
     // Select winning segment based on odds
     let randomValue = Math.random() * totalOdds;
-    let winner = 0;
+    let winnerIndex = 0;
     
-    for (let i = 0; i < displayLots.length; i++) {
-      randomValue -= (parseInt(displayLots[i].odds) || 1);
+    for (let i = 0; i < winnerLots.length; i++) {
+      randomValue -= (parseInt(winnerLots[i].odds) || 1);
       if (randomValue <= 0) {
-        winner = i;
+        winnerIndex = i;
         break;
       }
     }
     
+    // Find the winner's position in the original array
+    const winnerName = winnerLots[winnerIndex].name;
+    const winner = allLots.findIndex(lot => lot.name === winnerName);
+    
     // Calculate rotation to position the winning segment at the top
-    const segmentSize = 360 / displayLots.length;
+    const segmentSize = 360 / allLots.length;
     
     // Calculate correct degrees to rotate
     // Add more rotations for a more exciting spin (3-5 full rotations)
     const rotations = 3 + Math.floor(Math.random() * 2);
-    const indexToRotate = (displayLots.length - winner) % displayLots.length;
+    const indexToRotate = (allLots.length - winner) % allLots.length;
     const spinDegrees = (360 * rotations) + (indexToRotate * segmentSize);
     
     // Add a bit of randomness to the final position for more realism
@@ -575,12 +584,12 @@ const WheelGamePage = () => {
     // Set a timer to show the result
     setTimeout(() => {
       // Play win sound
-      const winSound = new Audio();
-      winSound.src = "https://assets.mixkit.co/active_storage/sfx/2008/2008-preview.mp3"; // Win sound
-      winSound.volume = 0.5;
-      winSound.play().catch(e => console.log("Audio play failed:", e));
+      // const winSound = new Audio();
+      // winSound.src = "https://assets.mixkit.co/active_storage/sfx/2008/2008-preview.mp3"; // Win sound
+      // winSound.volume = 0.5;
+      // winSound.play().catch(e => console.log("Audio play failed:", e));
       
-      setResult(displayLots[winner]);
+      setResult(allLots[winner]);
       setIsSpinning(false);
       setHasSpun(true);
       setShowResultModal(true);
@@ -1059,12 +1068,28 @@ const WheelGamePage = () => {
               transition={{ delay: 0.4, duration: 0.6 }}
               className="w-full"
             >
-              <h2 className="text-center text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2" style={{ color: wheel?.mainColors?.color1 || '#000000' }}>{t('congratulations')}</h2>
-              <div className="w-8 sm:w-12 md:w-14 h-1 mx-auto mb-2 sm:mb-3" style={{ backgroundColor: wheel?.mainColors?.color1 || '#000000' }}></div>
-              
-              <p className="text-center text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4" style={{ color: wheel?.mainColors?.color1 || '#000000' }}>
-                {t('youWon')}: <span className="font-bold" style={{ color: wheel?.mainColors?.color1 || '#000000' }}>{result.name}</span>
-              </p>
+              {/* Check if the result indicates a loss */}
+              {result.name.toLowerCase() === 'lost' || result.name.toLowerCase() === 'perdu' ? (
+                <div>
+                  <h2 className="text-center text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2" style={{ color: wheel?.mainColors?.color1 || '#000000' }}>
+                    {language === 'fr' ? 'Oups !' : 'Oops!'}
+                  </h2>
+                  <div className="w-8 sm:w-12 md:w-14 h-1 mx-auto mb-2 sm:mb-3" style={{ backgroundColor: wheel?.mainColors?.color1 || '#000000' }}></div>
+                  
+                  <p className="text-center text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4" style={{ color: wheel?.mainColors?.color1 || '#000000' }}>
+                    {language === 'fr' ? 'Meilleure chance la prochaine fois !' : 'Better luck next time!'}
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  <h2 className="text-center text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2" style={{ color: wheel?.mainColors?.color1 || '#000000' }}>{t('congratulations')}</h2>
+                  <div className="w-8 sm:w-12 md:w-14 h-1 mx-auto mb-2 sm:mb-3" style={{ backgroundColor: wheel?.mainColors?.color1 || '#000000' }}></div>
+                  
+                  <p className="text-center text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4" style={{ color: wheel?.mainColors?.color1 || '#000000' }}>
+                    {t('youWon')}: <span className="font-bold" style={{ color: wheel?.mainColors?.color1 || '#000000' }}>{result.name}</span>
+                  </p>
+                </div>
+              )}
               
               {result.promoCode && (
                 <motion.div 
