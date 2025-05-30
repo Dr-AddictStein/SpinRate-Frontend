@@ -15,6 +15,7 @@ const translations = {
   en: {
     title: "Wheel Game Configuration",
     previewGame: "Preview Game",
+    businessName: "Business Name",
     googleReviewLink: "Google Review Link",
     socialMediaLink: "Social Media Link (optional)",
     orSocialMediaLink: "or social media link",
@@ -52,6 +53,7 @@ const translations = {
     
     // Validation messages
     loginRequired: "You must be logged in to save a wheel",
+    businessNameRequired: "Business Name is required",
     googleReviewRequired: "Google Review Link is required",
     customerInstructionRequired: "Customer instruction is required",
     logoRequired: "Logo is required",
@@ -64,6 +66,7 @@ const translations = {
     loadConfigFailed: "Failed to load your wheel configuration",
     valuesReset: "Default values reset",
     linkCopied: "Google Review Link copied!",
+    enterBusinessName: "Please enter your business name",
     enterGoogleReview: "Please enter a Google Review Link",
     enterCustomerInstructions: "Please enter customer instructions",
     uploadLogo: "Please upload a logo for your wheel",
@@ -76,6 +79,7 @@ const translations = {
   fr: {
     title: "Configuration du Jeu de Roue",
     previewGame: "Aperçu du Jeu",
+    businessName: "Nom de l'Entreprise",
     googleReviewLink: "Lien Google Review",
     socialMediaLink: "Lien de Réseau social (optionnel)",
     orSocialMediaLink: "ou lien de réseau social",
@@ -113,6 +117,7 @@ const translations = {
     
     // Validation messages
     loginRequired: "Vous devez être connecté pour enregistrer une roue",
+    businessNameRequired: "Le nom de l'entreprise est requis",
     googleReviewRequired: "Le lien Google Review est requis",
     customerInstructionRequired: "L'instruction client est requise",
     logoRequired: "Le logo est requis",
@@ -125,6 +130,7 @@ const translations = {
     loadConfigFailed: "Échec du chargement de la configuration de votre roue",
     valuesReset: "Valeurs par défaut réinitialisées",
     linkCopied: "Lien Google Review copié!",
+    enterBusinessName: "Veuillez entrer le nom de votre entreprise",
     enterGoogleReview: "Veuillez entrer un lien Google Review",
     enterCustomerInstructions: "Veuillez entrer les instructions client",
     uploadLogo: "Veuillez télécharger un logo pour votre roue",
@@ -148,6 +154,7 @@ const WheelGameDashboard = () => {
 
   // State variables for wheel configuration
   const [wheelId, setWheelId] = useState(null);
+  const [businessName, setBusinessName] = useState('');
   const [googleReviewLink, setGoogleReviewLink] = useState('');
   const [socialMediaLink, setSocialMediaLink] = useState('');
   const [customerInstruction, setCustomerInstruction] = useState('');
@@ -172,6 +179,7 @@ const WheelGameDashboard = () => {
   const [isWheelSaved, setIsWheelSaved] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [validationErrors, setValidationErrors] = useState({
+    businessName: false,
     googleReviewLink: false,
     customerInstruction: false,
     logo: false,
@@ -179,6 +187,7 @@ const WheelGameDashboard = () => {
   });
 
   // Refs for scrolling to elements
+  const businessNameRef = React.useRef(null);
   const googleReviewRef = React.useRef(null);
   const customerInstructionRef = React.useRef(null);
   const logoRef = React.useRef(null);
@@ -225,6 +234,7 @@ const WheelGameDashboard = () => {
 
         // Update state with wheel data
         setWheelId(wheel._id);
+        setBusinessName(wheel.businessName || '');
         setGoogleReviewLink(wheel.googleReviewLink || '');
         setSocialMediaLink(wheel.socialMediaLink || '');
         setCustomerInstruction(wheel.customerInstruction || '');
@@ -297,6 +307,7 @@ const WheelGameDashboard = () => {
 
     // Reset validation errors
     setValidationErrors({
+      businessName: false,
       googleReviewLink: false,
       customerInstruction: false,
       logo: false,
@@ -306,11 +317,23 @@ const WheelGameDashboard = () => {
     // Validate required fields
     let hasErrors = false;
     let errors = {
+      businessName: false,
       googleReviewLink: false,
       customerInstruction: false,
       logo: false,
       lots: Array(8).fill(false)
     };
+    
+    // Check Business Name
+    if (!businessName.trim()) {
+      toast.error(t.businessNameRequired);
+      errors.businessName = true;
+      hasErrors = true;
+      // Scroll to the element
+      if (businessNameRef.current) {
+        businessNameRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
     
     // Check Google Review Link
     if (!googleReviewLink.trim()) {
@@ -328,8 +351,8 @@ const WheelGameDashboard = () => {
       toast.error(t.customerInstructionRequired);
       errors.customerInstruction = true;
       hasErrors = true;
-      // If Google Review Link wasn't an error, scroll to this element
-      if (!errors.googleReviewLink && customerInstructionRef.current) {
+      // If Business Name and Google Review Link weren't errors, scroll to this element
+      if (!errors.businessName && !errors.googleReviewLink && customerInstructionRef.current) {
         customerInstructionRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     }
@@ -340,7 +363,7 @@ const WheelGameDashboard = () => {
       errors.logo = true;
       hasErrors = true;
       // If previous fields weren't errors, scroll to this element
-      if (!errors.googleReviewLink && !errors.customerInstruction && logoRef.current) {
+      if (!errors.businessName && !errors.googleReviewLink && !errors.customerInstruction && logoRef.current) {
         logoRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     }
@@ -358,7 +381,7 @@ const WheelGameDashboard = () => {
       toast.error(t.lotsRequired);
       errors.lots = lotErrors;
       // If previous fields weren't errors, scroll to this element
-      if (!errors.googleReviewLink && !errors.customerInstruction && !errors.logo && lotsRef.current) {
+      if (!errors.businessName && !errors.googleReviewLink && !errors.customerInstruction && !errors.logo && lotsRef.current) {
         lotsRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     }
@@ -393,6 +416,7 @@ const WheelGameDashboard = () => {
       // Prepare wheel data
       const wheelData = {
         userId: user.user._id,
+        businessName,
         googleReviewLink,
         socialMediaLink,
         customerInstruction,
@@ -795,6 +819,61 @@ const WheelGameDashboard = () => {
           <Grid className="w-5 h-5" />
           <span>{t.previewGame}</span>
         </motion.button>
+      </motion.div>
+
+      {/* Business Name */}
+      <motion.div
+        ref={businessNameRef}
+        className={`bg-white p-4 sm:p-6 rounded-xl shadow-lg border ${validationErrors.businessName ? 'border-red-500 shadow-red-100' : 'border-gray-100'}`}
+        variants={itemVariants}
+        onMouseEnter={() => setActiveSection('businessName')}
+        whileHover={{ boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
+      >
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2">
+          <div className="flex items-center">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </div>
+            <label className="font-semibold text-gray-800 text-base sm:text-lg">{t.businessName} <span className="text-xs sm:text-sm font-normal text-gray-500">(25 character limit)</span> <span className="text-red-500">*</span></label>
+          </div>
+          <div className="relative flex items-center w-full sm:w-3/4">
+            <input
+              type="text"
+              value={businessName}
+              onChange={(e) => {
+                setBusinessName(e.target.value);
+                if (validationErrors.businessName) {
+                  setValidationErrors({...validationErrors, businessName: false});
+                }
+              }}
+              placeholder={language === 'fr' ? "Entrez le nom de votre entreprise" : "Enter your business name"}
+              className={`w-full p-2 sm:p-3 text-sm rounded-lg border ${validationErrors.businessName ? 'border-red-500 bg-red-50' : 'border-gray-300'} focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out`}
+              maxLength={25}
+              disabled={isLoading}
+              required
+            />
+            <span className="absolute right-10 sm:right-12 text-xs text-gray-500">
+              {businessName.length}/25
+            </span>
+            {businessName && (
+              <motion.div
+                className="absolute right-3"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: 'spring', stiffness: 500, damping: 15 }}
+              >
+                <Check className="text-green-500 w-4 h-4 sm:w-5 sm:h-5" />
+              </motion.div>
+            )}
+          </div>
+        </div>
+        {validationErrors.businessName && (
+          <div className="mt-2 text-red-500 text-xs sm:text-sm">
+            {t.enterBusinessName}
+          </div>
+        )}
       </motion.div>
 
       {/* Google Review Link */}

@@ -1116,12 +1116,12 @@ const WheelGamePage = () => {
               {result.name.toLowerCase() === 'lost' || result.name.toLowerCase() === 'perdu' ? (
                 <div>
                   <h2 className="text-center text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2" style={{ color: wheel?.mainColors?.color1 || '#000000' }}>
-                    {language === 'fr' ? 'Oups !' : 'Oops!'}
+                    {language === 'fr' ? 'Oops perdu !' : 'Oops!'}
                   </h2>
                   <div className="w-8 sm:w-12 md:w-14 h-1 mx-auto mb-2 sm:mb-3" style={{ backgroundColor: wheel?.mainColors?.color1 || '#000000' }}></div>
                   
                   <p className="text-center text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4" style={{ color: wheel?.mainColors?.color1 || '#000000' }}>
-                    {language === 'fr' ? 'Meilleure chance la prochaine fois !' : 'Better luck next time!'}
+                    {language === 'fr' ? 'Ce sera mieux la prochaine fois.' : 'Better luck next time!'}
                   </p>
                 </div>
               ) : (
@@ -1278,8 +1278,8 @@ const WheelGamePage = () => {
                 />
                 <label htmlFor="agreement" className="text-sm sm:text-base text-gray-700">
                   {language === 'fr' 
-                    ? 'J\'accepte de partager mes informations pour participer au jeu'
-                    : 'I agree to share my information to participate in the game'}
+                    ? `J'accepte de recevoir des offres de ${wheel?.businessName || 'Wheelix'}, avec possibilité de me désinscrire à tout moment.`
+                    : `I agree to receive offers from ${wheel?.businessName || 'Wheelix'}, with the possibility of unsubscribing at any time.`}
                 </label>
               </div>
               
