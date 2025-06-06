@@ -79,14 +79,39 @@ const DashboardCustomers = () => {
       setActiveMenu(null);
     } else {
       const rect = e.currentTarget.getBoundingClientRect();
-      // Adjust position for mobile
-      const isMobile = window.innerWidth < 640;
-      setMenuPosition({
-        top: rect.bottom + window.scrollY + 5,
-        left: isMobile ? 
-          Math.min(rect.left + window.scrollX - 80, window.innerWidth - 160) : 
-          rect.left + window.scrollX - 120, // Offset to position menu better
-      });
+      const menuWidth = 192; // 48 * 4 = 192px (w-48)
+      const menuHeight = 200; // Approximate height
+      
+      // Calculate initial position
+      let top = rect.bottom + 5;
+      let left = rect.left - menuWidth + rect.width;
+      
+      // Adjust if menu would go off the right edge
+      if (left + menuWidth > window.innerWidth) {
+        left = rect.left - menuWidth + rect.width;
+      }
+      
+      // Adjust if menu would go off the left edge
+      if (left < 0) {
+        left = rect.right - menuWidth;
+      }
+      
+      // If still off-screen on left, align to viewport edge
+      if (left < 0) {
+        left = 10;
+      }
+      
+      // Adjust if menu would go off the bottom edge
+      if (top + menuHeight > window.innerHeight) {
+        top = rect.top - menuHeight - 5;
+      }
+      
+      // If still off-screen on top, position at top of viewport
+      if (top < 0) {
+        top = rect.bottom + 5;
+      }
+
+      setMenuPosition({ top, left });
       setActiveMenu(customerId);
     }
   };
@@ -351,6 +376,12 @@ const DashboardCustomers = () => {
                     </th>
                     <th scope="col" className="px-3 sm:px-6 py-2 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       <div className="flex items-center space-x-1">
+                        <User className="h-3 w-3 sm:h-4 sm:w-4" />
+                        <span>{t('firstName')}</span>
+                      </div>
+                    </th>
+                    <th scope="col" className="px-3 sm:px-6 py-2 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <div className="flex items-center space-x-1">
                         <Phone className="h-3 w-3 sm:h-4 sm:w-4" />
                         <span>{t('phone')}</span>
                       </div>
@@ -371,6 +402,7 @@ const DashboardCustomers = () => {
                     <tr key={customer._id} className="bg-white">
                       <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">{formatDate(customer.createdAt)}</td>
                       <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-600">{customer.email}</td>
+                      <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-600">{customer.firstName || ''}</td>
                       <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-600">{customer.phone}</td>
                       <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
                         <span className="px-2 py-1 inline-flex text-xs sm:text-sm leading-5 font-medium rounded-full bg-indigo-100 text-indigo-800">
@@ -418,7 +450,7 @@ const DashboardCustomers = () => {
         {/* Floating Menu - Positioned outside the table */}
         {activeMenu && (
           <div
-            className="fixed z-50 w-40 sm:w-48 bg-white rounded-md shadow-lg border border-gray-200"
+            className="fixed z-50 w-48 bg-white rounded-md shadow-lg border border-gray-200"
             style={{
               top: `${menuPosition.top}px`,
               left: `${menuPosition.left}px`,

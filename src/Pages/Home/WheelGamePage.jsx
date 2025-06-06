@@ -54,6 +54,7 @@ const WheelGamePage = () => {
   const [showUserInfoModal, setShowUserInfoModal] = useState(false);
   const [isUserVerified, setIsUserVerified] = useState(false); // New state for user verification
   const [userInfo, setUserInfo] = useState({
+    firstName: '',
     email: '',
     phone: '',
     agreed: false
@@ -607,6 +608,7 @@ const WheelGamePage = () => {
         if (id && isUserVerified) {
           // Prepare the user data
           const userData = {
+            firstName: userInfo.firstName,
             email: userInfo.email,
             phone: userInfo.phone,
             wheelId: id,
@@ -693,6 +695,7 @@ const WheelGamePage = () => {
       if (id) {
         // Prepare the user data
         const userData = {
+          firstName: userInfo.firstName,
           email: userInfo.email,
           phone: userInfo.phone,
           wheelId: id
@@ -937,7 +940,9 @@ const WheelGamePage = () => {
                 {isUserVerified 
                   ? (hasSpun 
                     ? (wheel?.thankyouMessage || t('thankYouForReview'))
-                    : t('spinTheWheel'))
+                    : (language === 'fr' 
+                      ? "Merci d'avoir participé, c'est à votre tour maintenant 😉"
+                      : "Thanks for participating, it's your turn now 😉"))
                   : t('leaveReview')}
               </h2>
             </div>
@@ -1188,6 +1193,17 @@ const WheelGamePage = () => {
               backgroundImage: `linear-gradient(to right, ${wheel?.mainColors?.color1 || '#000000'}, ${wheel?.mainColors?.color2 || '#666666'}, ${wheel?.mainColors?.color1 || '#000000'})` 
             }}></div>
             
+            {/* Logo at top center */}
+            {wheel?.logoUrl && (
+              <div className="flex justify-center mb-4 mt-2">
+                <img 
+                  src={wheel.logoUrl} 
+                  alt="Logo" 
+                  className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 object-contain"
+                />
+              </div>
+            )}
+            
             {/* Language switcher in modal top right */}
             <div className="absolute right-2 sm:right-4 top-2 sm:top-4 z-10 flex items-center space-x-2">
               <button 
@@ -1212,7 +1228,7 @@ const WheelGamePage = () => {
               </button>
             </div>
             
-            <h2 className="text-center text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 mt-6" style={{ color: wheel?.mainColors?.color1 || '#000000' }}>
+            <h2 className={`text-center text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 ${wheel?.logoUrl ? 'mt-2' : 'mt-6'}`} style={{ color: wheel?.mainColors?.color1 || '#000000' }}>
               {language === 'fr' ? 'Vérification Requise' : 'Verification Required'}
             </h2>
             
@@ -1227,6 +1243,24 @@ const WheelGamePage = () => {
               console.log('Verification form submitted');
               verifyUser();
             }}>
+              <div>
+                <input
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  value={userInfo.firstName}
+                  onChange={handleUserInfoChange}
+                  className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border rounded-lg focus:ring-2 text-base sm:text-lg placeholder-gray-700"
+                  placeholder={language === 'fr' ? 'Prénom' : 'First Name'}
+                  required
+                  style={{ 
+                    borderColor: wheel?.mainColors?.color1 || '#000000',
+                    color: wheel?.mainColors?.color1 || '#000000',
+                    focusRingColor: wheel?.mainColors?.color1 || '#000000'
+                  }}
+                />
+              </div>
+              
               <div>
                 <input
                   type="email"
