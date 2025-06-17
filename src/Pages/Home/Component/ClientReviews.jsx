@@ -33,7 +33,7 @@ const ClientReviews = () => {
       ]
     },
     fr: {
-      title: "Clients à propos de Wheelix",
+      title: "Les Clients à propos de Wheelix",
       testimonials: [
         {
           id: 1,

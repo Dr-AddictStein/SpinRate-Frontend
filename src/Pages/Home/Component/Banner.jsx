@@ -24,7 +24,7 @@ const translations = {
         description: "Les entreprises augmentent en moyenne leurs avis Google de ",
         descriptionBold: "300 par mois",
         descriptionEnd: " avec nous.",
-        startNow: "START FREE TRIAL",
+        startNow: "COMMENCER L'ESSAI GRATUIT",
         learnMore: "En savoir plus",
         reviewsText: "Avis Google"
     }

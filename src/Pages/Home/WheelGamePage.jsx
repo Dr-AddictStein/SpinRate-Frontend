@@ -950,14 +950,14 @@ const WheelGamePage = () => {
           
           {/* Update footer to match image */}
           <div className="bg-gray-100 p-2 sm:p-3 md:p-4 text-center text-gray-500 text-xs sm:text-sm mt-auto">
-            <p>© {new Date().getFullYear()} {t('spinRateCopyright')}</p>
+            <p>© {new Date().getFullYear()} Wheelix. All rights reserved.</p>
           </div>
         </div>
       </div>
       
       {/* Initial Instruction Modal - updated for white with black text theme */}
       {wheel && showInstructionModal && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-[1px] flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
           <motion.div 
             className="bg-white rounded-2xl border-4 border-black shadow-2xl max-w-md w-[95%] sm:w-[90%] md:w-full p-4 sm:p-6 md:p-8 relative pointer-events-auto max-h-[90vh] overflow-y-auto my-auto"
             initial={{ opacity: 0, scale: 0.8 }}
@@ -1048,9 +1048,9 @@ const WheelGamePage = () => {
       
       {/* Result Modal - updated to use white background with black text */}
       {showResultModal && result && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-[1px] flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
           <motion.div 
-            className="bg-white rounded-2xl border-4 shadow-2xl max-w-md w-[95%] sm:w-[90%] md:w-full p-4 sm:p-6 md:p-8 relative pointer-events-auto max-h-[90vh] overflow-y-auto my-auto"
+            className="bg-white rounded-2xl border-4 border-black shadow-2xl max-w-md w-[95%] sm:w-[90%] md:w-full p-4 sm:p-6 md:p-8 relative pointer-events-auto max-h-[90vh] overflow-y-auto my-auto"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ 
@@ -1060,14 +1060,11 @@ const WheelGamePage = () => {
               damping: 25
             }}
             style={{
-              maxHeight: "calc(100vh - 2rem)",
-              borderColor: wheel?.mainColors?.color1 || '#000000'
+              maxHeight: "calc(100vh - 2rem)"
             }}
           >
             {/* Decorative elements */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r" style={{ 
-              backgroundImage: `linear-gradient(to right, ${wheel?.mainColors?.color1 || '#000000'}, ${wheel?.mainColors?.color2 || '#666666'}, ${wheel?.mainColors?.color1 || '#000000'})` 
-            }}></div>
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-black via-gray-700 to-black"></div>
             
             {/* Language switcher in modal top right */}
             <div className="absolute right-2 sm:right-4 top-2 sm:top-4 z-10 flex items-center space-x-2">
@@ -1104,7 +1101,7 @@ const WheelGamePage = () => {
               }}
               className="mx-auto mb-2 sm:mb-4 md:mb-5 relative"
             >
-              <div className="w-14 h-14 sm:w-18 sm:h-18 md:w-20 md:h-20 mx-auto rounded-full flex items-center justify-center shadow-lg" style={{ backgroundColor: wheel?.mainColors?.color1 || '#000000' }}>
+              <div className="w-14 h-14 sm:w-18 sm:h-18 md:w-20 md:h-20 mx-auto bg-black rounded-full flex items-center justify-center shadow-lg">
                 <svg className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" />
                 </svg>
@@ -1120,37 +1117,52 @@ const WheelGamePage = () => {
               {/* Check if the result indicates a loss */}
               {result.name.toLowerCase() === 'lost' || result.name.toLowerCase() === 'perdu' ? (
                 <div>
-                  <h2 className="text-center text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2" style={{ color: wheel?.mainColors?.color1 || '#000000' }}>
+                  <h2 className="text-center text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2 text-black">
                     {language === 'fr' ? 'Oops perdu !' : 'Oops!'}
                   </h2>
-                  <div className="w-8 sm:w-12 md:w-14 h-1 mx-auto mb-2 sm:mb-3" style={{ backgroundColor: wheel?.mainColors?.color1 || '#000000' }}></div>
+                  <div className="w-8 sm:w-12 md:w-14 h-1 bg-black mx-auto mb-2 sm:mb-3"></div>
                   
-                  <p className="text-center text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4" style={{ color: wheel?.mainColors?.color1 || '#000000' }}>
+                  <p className="text-center text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4 text-black">
                     {language === 'fr' ? 'Ce sera mieux la prochaine fois.' : 'Better luck next time!'}
                   </p>
                 </div>
               ) : (
                 <div>
-                  <h2 className="text-center text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2" style={{ color: wheel?.mainColors?.color1 || '#000000' }}>{t('congratulations')}</h2>
-                  <div className="w-8 sm:w-12 md:w-14 h-1 mx-auto mb-2 sm:mb-3" style={{ backgroundColor: wheel?.mainColors?.color1 || '#000000' }}></div>
+                  <h2 className="text-center text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2 text-black">{t('congratulations')}</h2>
+                  <div className="w-8 sm:w-12 md:w-14 h-1 bg-black mx-auto mb-2 sm:mb-3"></div>
                   
-                  <p className="text-center text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4" style={{ color: wheel?.mainColors?.color1 || '#000000' }}>
-                    {t('youWon')}: <span className="font-bold" style={{ color: wheel?.mainColors?.color1 || '#000000' }}>{result.name}</span>
+                  <p className="text-center text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4 text-black">
+                    {t('youWon')}: <span className="font-bold text-black">{result.name}</span>
                   </p>
                 </div>
               )}
               
               {result.promoCode && (
                 <motion.div 
-                  className="mt-3 sm:mt-4 p-2 sm:p-3 bg-gray-200 rounded-xl border-2 shadow-inner"
+                  className="mt-3 sm:mt-4 p-2 sm:p-3 bg-gray-200 rounded-xl border-2 border-black shadow-inner"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.7, duration: 0.5 }}
-                  style={{ borderColor: wheel?.mainColors?.color1 || '#000000' }}
                 >
-                  <p className="mb-1 sm:mb-2 font-medium text-center text-base sm:text-lg" style={{ color: wheel?.mainColors?.color1 || '#000000' }}>{t('yourPromoCode')}:</p>
-                  <p className="text-lg sm:text-xl md:text-2xl font-bold font-mono tracking-wider text-center bg-gray-100 py-2 rounded">
+                  <p className="mb-1 sm:mb-2 font-medium text-center text-base sm:text-lg text-black">{t('yourPromoCode')}:</p>
+                  <p className="text-lg sm:text-xl md:text-2xl font-bold font-mono tracking-wider text-center bg-gray-100 py-2 rounded text-black">
                     {result.promoCode}
+                  </p>
+                </motion.div>
+              )}
+              
+              {/* Prize collection message - only show for winners */}
+              {!(result.name.toLowerCase() === 'lost' || result.name.toLowerCase() === 'perdu') && (
+                <motion.div 
+                  className="mt-4 sm:mt-5 text-center"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8, duration: 0.5 }}
+                >
+                  <p className="text-sm sm:text-base md:text-lg text-black">
+                    {language === 'fr' 
+                      ? `Vous pourrez récupérer votre lot lors de votre prochaine visite chez ${wheel?.businessName || 'notre établissement'}!`
+                      : `You can collect your prize on your next visit at ${wheel?.businessName || 'our establishment'}!`}
                   </p>
                 </motion.div>
               )}
@@ -1172,9 +1184,9 @@ const WheelGamePage = () => {
       
       {/* User Info Modal - appears after review button click */}
       {showUserInfoModal && !isUserVerified && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-[1px] flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
           <motion.div 
-            className="bg-white rounded-2xl border-4 shadow-2xl max-w-md w-[95%] sm:w-[90%] md:w-full p-4 sm:p-6 md:p-8 relative pointer-events-auto max-h-[90vh] overflow-y-auto my-auto"
+            className="bg-white rounded-2xl border-4 border-black shadow-2xl max-w-md w-[95%] sm:w-[90%] md:w-full p-4 sm:p-6 md:p-8 relative pointer-events-auto max-h-[90vh] overflow-y-auto my-auto"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ 
@@ -1184,14 +1196,11 @@ const WheelGamePage = () => {
               damping: 25
             }}
             style={{
-              maxHeight: "calc(100vh - 2rem)",
-              borderColor: wheel?.mainColors?.color1 || '#000000'
+              maxHeight: "calc(100vh - 2rem)"
             }}
           >
             {/* Decorative elements */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r" style={{ 
-              backgroundImage: `linear-gradient(to right, ${wheel?.mainColors?.color1 || '#000000'}, ${wheel?.mainColors?.color2 || '#666666'}, ${wheel?.mainColors?.color1 || '#000000'})` 
-            }}></div>
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-black via-gray-700 to-black"></div>
             
             {/* Logo at top center */}
             {wheel?.logoUrl && (
@@ -1228,7 +1237,7 @@ const WheelGamePage = () => {
               </button>
             </div>
             
-            <h2 className={`text-center text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 ${wheel?.logoUrl ? 'mt-2' : 'mt-6'}`} style={{ color: wheel?.mainColors?.color1 || '#000000' }}>
+            <h2 className={`text-center text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 text-black ${wheel?.logoUrl ? 'mt-2' : 'mt-6'}`}>
               {language === 'fr' ? 'Vérification Requise' : 'Verification Required'}
             </h2>
             
@@ -1250,14 +1259,9 @@ const WheelGamePage = () => {
                   name="firstName"
                   value={userInfo.firstName}
                   onChange={handleUserInfoChange}
-                  className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border rounded-lg focus:ring-2 text-base sm:text-lg placeholder-gray-700"
+                  className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border border-black rounded-lg focus:ring-2 focus:ring-black text-base sm:text-lg placeholder-gray-700 text-black"
                   placeholder={language === 'fr' ? 'Prénom' : 'First Name'}
                   required
-                  style={{ 
-                    borderColor: wheel?.mainColors?.color1 || '#000000',
-                    color: wheel?.mainColors?.color1 || '#000000',
-                    focusRingColor: wheel?.mainColors?.color1 || '#000000'
-                  }}
                 />
               </div>
               
@@ -1268,14 +1272,9 @@ const WheelGamePage = () => {
                   name="email"
                   value={userInfo.email}
                   onChange={handleUserInfoChange}
-                  className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border rounded-lg focus:ring-2 text-base sm:text-lg placeholder-gray-700"
+                  className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border border-black rounded-lg focus:ring-2 focus:ring-black text-base sm:text-lg placeholder-gray-700 text-black"
                   placeholder={t('email')}
                   required
-                  style={{ 
-                    borderColor: wheel?.mainColors?.color1 || '#000000',
-                    color: wheel?.mainColors?.color1 || '#000000',
-                    focusRingColor: wheel?.mainColors?.color1 || '#000000'
-                  }}
                 />
               </div>
               
@@ -1286,13 +1285,9 @@ const WheelGamePage = () => {
                   name="phone"
                   value={userInfo.phone}
                   onChange={handleUserInfoChange}
-                  className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border rounded-lg focus:ring-2 text-base sm:text-lg placeholder-gray-700"
+                  className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white border border-black rounded-lg focus:ring-2 focus:ring-black text-base sm:text-lg placeholder-gray-700 text-black"
                   placeholder={t('phone')}
                   required
-                  style={{ 
-                    borderColor: wheel?.mainColors?.color1 || '#000000',
-                    color: wheel?.mainColors?.color1 || '#000000' 
-                  }}
                 />
               </div>
 
@@ -1304,11 +1299,7 @@ const WheelGamePage = () => {
                   name="agreed"
                   checked={userInfo.agreed}
                   onChange={handleUserInfoChange}
-                  className="mt-1 h-4 w-4 rounded border-gray-300 focus:ring-2 focus:ring-offset-0"
-                  style={{ 
-                    borderColor: wheel?.mainColors?.color1 || '#000000',
-                    accentColor: wheel?.mainColors?.color1 || '#000000'
-                  }}
+                  className="mt-1 h-4 w-4 rounded border-black focus:ring-2 focus:ring-black focus:ring-offset-0 accent-black"
                 />
                 <label htmlFor="agreement" className="text-sm sm:text-base text-gray-700">
                   {language === 'fr' 
@@ -1320,13 +1311,9 @@ const WheelGamePage = () => {
               <div className="mt-4 sm:mt-5 text-center">
                 <motion.button
                   type="submit"
-                  className="w-full px-4 py-2 sm:px-6 sm:py-3 text-white font-bold rounded-lg shadow-lg hover:opacity-90 transform transition-all duration-200 text-base sm:text-lg md:text-xl"
+                  className={`w-full px-4 py-2 sm:px-6 sm:py-3 bg-black text-white font-bold rounded-lg shadow-lg hover:opacity-90 transform transition-all duration-200 text-base sm:text-lg md:text-xl ${!userInfo.agreed ? 'opacity-70' : ''}`}
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
-                  style={{ 
-                    backgroundColor: wheel?.mainColors?.color1 || '#000000',
-                    opacity: userInfo.agreed ? 1 : 0.7
-                  }}
                 >
                   {language === 'fr' ? 'Vérifier' : 'Verify'}
                 </motion.button>
@@ -1348,7 +1335,7 @@ const WheelGamePage = () => {
       
       {/* Awaiting Validation Popup */}
       {showValidationPopup && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-[1px] flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
           <motion.div 
             className="bg-white rounded-2xl border-4 border-black shadow-2xl max-w-md w-[80%] sm:w-[60%] md:w-[50%] p-4 sm:p-6 md:p-8 relative pointer-events-auto text-center"
             initial={{ opacity: 0, scale: 0.8 }}
