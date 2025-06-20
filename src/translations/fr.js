@@ -29,7 +29,9 @@ export const fr = {
   loading: "Chargement...",
   
   // Footer
-  footerText: "Duis cursus, mi quis viverra ornare, eros dolor interdum nulla utimp erdiet commodo diam libero vitae nibh et jus cursus id rutrum lore imperdiet ut sem vitae risus tristique posuere",
+  navigation: "Navigation",
+  account: "Compte",
+  allRightsReserved: "Tous droits réservés.",
   company: "Entreprise",
   aboutUs: "À Propos de Nous",
   blog: "Blog",

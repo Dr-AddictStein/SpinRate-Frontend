@@ -29,7 +29,9 @@ export const en = {
   loading: "Loading...",
   
   // Footer
-  footerText: "Duis cursus, mi quis viverra ornare, eros dolor interdum nulla utimp erdiet commodo diam libero vitae nibh et jus cursus id rutrum lore imperdiet ut sem vitae risus tristique posuere",
+  navigation: "Navigation",
+  account: "Account",
+  allRightsReserved: "All rights reserved.",
   company: "Company",
   aboutUs: "About Us",
   blog: "Blog",

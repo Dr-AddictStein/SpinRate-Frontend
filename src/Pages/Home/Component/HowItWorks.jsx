@@ -87,29 +87,33 @@ const HowItWorks = () => {
   };
 
   return (
-    <section ref={sectionRef} className="py-12 md:py-20 bg-white relative overflow-hidden w-full" id="how-it-works">
+    <section ref={sectionRef} className="py-8 md:py-12 lg:py-20 bg-white relative overflow-hidden w-full" id="how-it-works">
       <div className="2xl:max-w-[78%] max-w-full mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12 md:mb-16"
+          className="text-center mb-8 md:mb-12 lg:mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">
             {t.howItWorks} <span className="text-blue-600">{t.workHighlight}</span>
           </h2>
         </motion.div>
 
         {/* Numbered steps at the top */}
-        <div className="mb-16 max-w-4xl mx-auto">
+        <div className="mb-8 md:mb-12 lg:mb-16 max-w-6xl mx-auto">
           {t.steps.map((step, index) => (
-            <div key={index} className="text-center mb-8 whitespace-nowrap">
-              <span className="font-normal mr-2 text-lg">{index + 1}.</span>
-              <span 
-                className="font-normal text-lg"
-                dangerouslySetInnerHTML={{ __html: step.title }}
-              />
+            <div key={index} className="text-center mb-6 md:mb-8 px-2">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-0">
+                <span className="font-normal text-base sm:text-lg md:text-lg flex-shrink-0">
+                  {index + 1}.
+                </span>
+                <span 
+                  className="font-normal text-base sm:text-lg md:text-lg leading-relaxed text-center sm:text-left sm:ml-2"
+                  dangerouslySetInnerHTML={{ __html: step.title }}
+                />
+              </div>
             </div>
           ))}
         </div>
@@ -119,24 +123,35 @@ const HowItWorks = () => {
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8"
         >
           {t.steps.map((step, index) => (
             <motion.div
               key={index}
               variants={itemVariants}
-              className="flex flex-col items-center bg-white rounded-xl shadow-lg p-8 transition-transform duration-300 hover:transform hover:scale-105 h-full"
+              className="flex flex-col items-center bg-white rounded-xl shadow-lg p-6 md:p-8 transition-transform duration-300 hover:transform hover:scale-105 h-full"
             >
               {/* Icon */}
-              <div className="mb-6 flex justify-center">
-                <div className="w-20 h-20 flex items-center justify-center">
-                  {boxIcons[index]}
+              <div className="mb-4 md:mb-6 flex justify-center">
+                <div className="w-16 h-16 md:w-20 md:h-20 flex items-center justify-center">
+                  <div className="block md:hidden">
+                    {React.cloneElement(boxIcons[index], {
+                      size: 40,
+                      className: boxIcons[index].props.className
+                    })}
+                  </div>
+                  <div className="hidden md:block">
+                    {React.cloneElement(boxIcons[index], {
+                      size: 48,
+                      className: boxIcons[index].props.className
+                    })}
+                  </div>
                 </div>
               </div>
 
               {/* Feature label */}
-              <div className="text-center mb-4">
-                <h3 className="text-xl font-extrabold text-gray-800" style={{ fontWeight: 900 }}>
+              <div className="text-center mb-3 md:mb-4">
+                <h3 className="text-lg md:text-xl font-extrabold text-gray-800" style={{ fontWeight: 900 }}>
                   {index === 0 ? 
                     (language === 'en' ? "Increase" : "Stimulez") : 
                     index === 1 ? 
@@ -147,7 +162,7 @@ const HowItWorks = () => {
               </div>
 
               {/* Description */}
-              <p className="text-gray-600 text-center" dangerouslySetInnerHTML={{ __html: step.description }} />
+              <p className="text-gray-600 text-center text-sm md:text-base leading-relaxed" dangerouslySetInnerHTML={{ __html: step.description }} />
             </motion.div>
           ))}
         </motion.div>

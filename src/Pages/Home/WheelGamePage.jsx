@@ -1128,7 +1128,7 @@ const WheelGamePage = () => {
                 </div>
               ) : (
                 <div>
-                  <h2 className="text-center text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2 text-black">{t('congratulations')}</h2>
+                  <h2 className="text-center text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2 text-black">{t('congratulations')} 🎉</h2>
                   <div className="w-8 sm:w-12 md:w-14 h-1 bg-black mx-auto mb-2 sm:mb-3"></div>
                   
                   <p className="text-center text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4 text-black">
