@@ -102,7 +102,7 @@ const HowItWorks = () => {
         </motion.div>
 
         {/* Numbered steps at the top */}
-        <div className="mb-8 md:mb-12 lg:mb-16 max-w-6xl mx-auto">
+        <div className="mb-8 md:mb-12 lg:mb-16 max-w-4xl mx-auto">
           {t.steps.map((step, index) => (
             <div key={index} className="text-center mb-6 md:mb-8 px-2">
               <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-0">

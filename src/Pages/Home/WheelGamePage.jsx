@@ -649,11 +649,11 @@ const WheelGamePage = () => {
       // Open the link immediately in a new tab
       window.open(wheel.googleReviewLink, '_blank');
       
-      // Set a timer to show the user info modal after 5 seconds
+      // Set a timer to show the user info modal after 10 seconds
       setTimeout(() => {
         setShowValidationPopup(false);
         setShowUserInfoModal(true);
-      }, 5000);
+      }, 10000);
     }
   };
   
