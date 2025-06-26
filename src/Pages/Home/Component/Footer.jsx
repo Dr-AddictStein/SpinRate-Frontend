@@ -1,6 +1,6 @@
 import React from "react";
 import { Instagram } from "lucide-react";
-import logo from "../../../assets/Wheelix final logo.png";
+import logo from "../../../assets/REVWHEELlogo.png";
 import { useTranslation } from "../../../hooks/useTranslation";
 import { Link } from "react-router-dom";
 
@@ -24,13 +24,13 @@ const Footer = () => {
                         <div className="mb-6">
                             <img
                                 src={logo}
-                                alt="Wheelix Logo"
+                                alt="RevWheel Logo"
                                 className="h-16 md:h-20 w-auto object-contain transition-transform duration-300 hover:scale-105"
                             />
                         </div>
                         <div className="flex space-x-3">
                             <a
-                                href="https://www.instagram.com/wheelix.fr/"
+                                href="https://www.instagram.com/RevWheel.fr/"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label="Instagram"
@@ -39,7 +39,7 @@ const Footer = () => {
                                 <Instagram size={20} />
                             </a>
                             <a
-                                href="https://www.tiktok.com/@wheelix.fr?is_from_webapp=1&sender_device=pc"
+                                href="https://www.tiktok.com/@RevWheel.fr?is_from_webapp=1&sender_device=pc"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label="TikTok"
@@ -161,7 +161,7 @@ const Footer = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col md:flex-row justify-center md:justify-between items-center">
                         <p className="text-gray-600 text-sm text-center md:text-left">
-                            © {new Date().getFullYear()} Wheelix. {t('allRightsReserved')}
+                            © {new Date().getFullYear()} RevWheel. {t('allRightsReserved')}
                         </p>
                         <div className="flex space-x-6 mt-4 md:mt-0">
                             <Link 

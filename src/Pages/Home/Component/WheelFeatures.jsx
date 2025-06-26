@@ -25,7 +25,7 @@ const translations = {
       {
         title: "<span class='font-bold'>Mobile, Marketing</span> Materials",
         description: [
-          "Wheelix is fully responsive, ensuring a smooth experience on all devices.",
+          "RevWheel is fully responsive, ensuring a smooth experience on all devices.",
           "We also provide printable marketing materials, with your QR code and logo automatically integrated, for counters or tables."
         ]
       }
@@ -52,7 +52,7 @@ const translations = {
       {
         title: "<span class='font-bold'>Mobile, Supports</span> marketing",
         description: [
-          "Wheelix est entièrement responsive, garantissant une expérience fluide sur tous les appareils.",
+          "RevWheel est entièrement responsive, garantissant une expérience fluide sur tous les appareils.",
           "Nous vous fournissons également des supports marketing imprimables, avec votre QR code et logo automatiquement intégrés, pour le comptoir ou sur les tables."
         ]
       }

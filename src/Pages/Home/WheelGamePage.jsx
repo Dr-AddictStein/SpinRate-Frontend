@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import spinRateLogo from "../../assets/Wheelix final logo.png";
+import spinRateLogo from "../../assets/REVWHEELlogo.png";
 import { useLanguage } from '../../context/LanguageContext';
 import { useTranslation } from '../../hooks/useTranslation';
 import ukFlag from "../../assets/flags/uk-flag.svg";
@@ -950,7 +950,7 @@ const WheelGamePage = () => {
           
           {/* Update footer to match image */}
           <div className="bg-gray-100 p-2 sm:p-3 md:p-4 text-center text-gray-500 text-xs sm:text-sm mt-auto">
-            <p>© {new Date().getFullYear()} Wheelix. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} RevWheel. All rights reserved.</p>
           </div>
         </div>
       </div>
@@ -1303,8 +1303,8 @@ const WheelGamePage = () => {
                 />
                 <label htmlFor="agreement" className="text-sm sm:text-base text-gray-700">
                   {language === 'fr' 
-                    ? `J'accepte de recevoir des offres de ${wheel?.businessName || 'Wheelix'}, avec possibilité de me désinscrire à tout moment.`
-                    : `I agree to receive offers from ${wheel?.businessName || 'Wheelix'}, with the possibility of unsubscribing at any time.`}
+                    ? `J'accepte de recevoir des offres de ${wheel?.businessName || 'RevWheel'}, avec possibilité de me désinscrire à tout moment.`
+                    : `I agree to receive offers from ${wheel?.businessName || 'RevWheel'}, with the possibility of unsubscribing at any time.`}
                 </label>
               </div>
               

@@ -9,15 +9,15 @@ const translations = {
   en: {
     title: "Privacy Policy",
     backToHome: "Back to Home",
-    heading: "Wheelix Privacy Policy",
+    heading: "RevWheel Privacy Policy",
     sections: [
       {
         title: "1. Introduction",
-        content: "At Wheelix, we take your privacy seriously. This privacy policy explains how we collect, use, and protect your personal information when you use our platform. By accessing our service, you agree to the terms of this policy."
+        content: "At RevWheel, we take your privacy seriously. This privacy policy explains how we collect, use, and protect your personal information when you use our platform. By accessing our service, you agree to the terms of this policy."
       },
       {
         title: "2. Information We Collect",
-        content: "We collect the following information when you use Wheelix:\n● Personal Information: Name, email, phone number.\n● Usage Information: Data about your use of our service, including information related to your participation in the prize wheel."
+        content: "We collect the following information when you use RevWheel:\n● Personal Information: Name, email, phone number.\n● Usage Information: Data about your use of our service, including information related to your participation in the prize wheel."
       },
       {
         title: "3. Use of Information",
@@ -48,15 +48,15 @@ const translations = {
   fr: {
     title: "Politique de Confidentialité",
     backToHome: "Retour à l'Accueil",
-    heading: "Politique de Confidentialité de Wheelix",
+    heading: "Politique de Confidentialité de RevWheel",
     sections: [
       {
         title: "1. Introduction",
-        content: "Chez Wheelix, nous prenons votre vie privée au sérieux. Cette politique de confidentialité explique comment nous recueillons, utilisons et protégeons vos informations personnelles lorsque vous utilisez notre plateforme. En accédant à notre service, vous acceptez les termes de cette politique."
+        content: "Chez RevWheel, nous prenons votre vie privée au sérieux. Cette politique de confidentialité explique comment nous recueillons, utilisons et protégeons vos informations personnelles lorsque vous utilisez notre plateforme. En accédant à notre service, vous acceptez les termes de cette politique."
       },
       {
         title: "2. Informations que nous collectons",
-        content: "Nous collectons les informations suivantes lorsque vous utilisez Wheelix :\n● Informations personnelles : Nom, prénom, email, numéro de téléphone.\n● Informations liées à l'utilisation : Données sur l'utilisation de notre service, y compris les informations relatives à votre participation à la roue de la chance."
+        content: "Nous collectons les informations suivantes lorsque vous utilisez RevWheel :\n● Informations personnelles : Nom, prénom, email, numéro de téléphone.\n● Informations liées à l'utilisation : Données sur l'utilisation de notre service, y compris les informations relatives à votre participation à la roue de la chance."
       },
       {
         title: "3. Utilisation des informations",

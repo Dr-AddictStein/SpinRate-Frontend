@@ -12,15 +12,15 @@ const translations = {
     questions: [
       {
         question: "Will it work for my business (restaurant, hair salon, shop, café, hotel, etc.)?",
-        answer: "Absolutely! Wheelix is designed for any type of local business. As long as your customers have a phone to scan a QR code, you're ready to go."
+        answer: "Absolutely! RevWheel is designed for any type of local business. As long as your customers have a phone to scan a QR code, you're ready to go."
       },
       {
-        question: "Why should you get Wheelix?",
-        answer: "It's simple! Wheelix helps you boost customer engagement, loyalty, and visibility with minimal effort.\n\nIncrease your Google reviews effortlessly — customers leave a review to spin the wheel, boosting your online visibility without you having to ask.\n\nDrive repeat visits and new customers — every prize claim brings people back: they return to redeem their reward, make another purchase, or bring friends. More visits, more sales, more reviews.\n\nGrow your marketing list with every spin — collect valuable data like emails, phone numbers, and customer profiles to re-engage them during events, promotions, or future campaigns to bring them back.\n\nAnalytics dashboard: view all your results in one place and track key metrics like QR code scans, prizes claimed, redemption rates, and enriched customer profiles. Use these insights to optimize your marketing and sales strategies.\n\nFair and secure: we make sure each customer can only spin once — no abuse, just real results."
+        question: "Why should you get RevWheel?",
+        answer: "It's simple! RevWheel helps you boost customer engagement, loyalty, and visibility with minimal effort.\n\nIncrease your Google reviews effortlessly — customers leave a review to spin the wheel, boosting your online visibility without you having to ask.\n\nDrive repeat visits and new customers — every prize claim brings people back: they return to redeem their reward, make another purchase, or bring friends. More visits, more sales, more reviews.\n\nGrow your marketing list with every spin — collect valuable data like emails, phone numbers, and customer profiles to re-engage them during events, promotions, or future campaigns to bring them back.\n\nAnalytics dashboard: view all your results in one place and track key metrics like QR code scans, prizes claimed, redemption rates, and enriched customer profiles. Use these insights to optimize your marketing and sales strategies.\n\nFair and secure: we make sure each customer can only spin once — no abuse, just real results."
       },
       {
         question: "How do I set it up?",
-        answer: "Super easy. Just create your Wheelix account, customize your prize wheel, and download your QR code. Stick the QR code on a poster in your shop, and you're all set!"
+        answer: "Super easy. Just create your RevWheel account, customize your prize wheel, and download your QR code. Stick the QR code on a poster in your shop, and you're all set!"
       },
       {
         question: "Can I customize the wheel?",
@@ -28,7 +28,7 @@ const translations = {
       },
       {
         question: "Do customers need to install an app?",
-        answer: "Nope. Everything runs in the browser. Customers just scan the QR code with their phone, and the Wheelix experience starts instantly."
+        answer: "Nope. Everything runs in the browser. Customers just scan the QR code with their phone, and the RevWheel experience starts instantly."
       },
       {
         question: "What data do I collect?",
@@ -40,7 +40,7 @@ const translations = {
       },
       {
         question: "Does it work on mobile?",
-        answer: "Definitely. Wheelix is built mobile-first and works perfectly on smartphones."
+        answer: "Definitely. RevWheel is built mobile-first and works perfectly on smartphones."
       },
       {
         question: "Will customers spin the wheel every time?",
@@ -52,7 +52,7 @@ const translations = {
       },
       {
         question: "How do customers claim their prize?",
-        answer: "During their next visit, customers can easily claim their prize. Just log in to Wheelix, go to the \"Clients\" tab, and find the person — either directly or by searching their name, phone number, or email. You'll instantly see if they've won a prize and which one. Then, simply mark it as \"claimed\" using our dedicated feature… and that's it!"
+        answer: "During their next visit, customers can easily claim their prize. Just log in to RevWheel, go to the \"Clients\" tab, and find the person — either directly or by searching their name, phone number, or email. You'll instantly see if they've won a prize and which one. Then, simply mark it as \"claimed\" using our dedicated feature… and that's it!"
       },
       {
         question: "Can I translate it?",
@@ -69,15 +69,15 @@ const translations = {
     questions: [
       {
         question: "Cela fonctionnera-t-il pour mon entreprise (restaurant, salon de coiffure, boutique, café, hôtel, etc.) ?",
-        answer: "Absolument ! Wheelix est conçu pour tout type d'entreprise locale ou de commerce de proximité. Tant que vos clients ont un téléphone, vous êtes prêt à démarrer."
+        answer: "Absolument ! RevWheel est conçu pour tout type d'entreprise locale ou de commerce de proximité. Tant que vos clients ont un téléphone, vous êtes prêt à démarrer."
       },
       {
-        question: "Pourquoi choisir Wheelix ?",
-        answer: "C'est simple : Wheelix vous aide à augmenter l'engagement, la fidélisation et la visibilité de vos clients avec un minimum d'effort.\n\nAugmentez vos avis Google sans même avoir à demander — les clients laissent un avis pour accéder à la roue, ce qui améliore instantanément votre visibilité en ligne.\n\nFaites revenir vos clients et attirez-en de nouveaux — chaque réclamation de prix génère du trafic : les clients reviennent pour récupérer leur gain, consomment à nouveau ou reviennent accompagnés. Résultat : plus de visites, plus de ventes, plus d'avis.\n\nCollectez des données précieuses à chaque spin — emails, numéros de téléphone, profils clients... Idéal pour les recontacter lors de vos événements, promotions ou campagnes marketing et les inciter à revenir.\n\nTableau de bord analytique : visualisez vos performances en un coup d'œil et suivez les métriques clés (scans de QR codes, prix distribués, taux de rédemption, profils enrichis). Utilisez ces insights pour affiner vos stratégies marketing et commerciales.\n\nJuste et sécurisé : un seul spin par client — pas de triche, pas d'abus."
+        question: "Pourquoi choisir RevWheel ?",
+        answer: "C'est simple : RevWheel vous aide à augmenter l'engagement, la fidélisation et la visibilité de vos clients avec un minimum d'effort.\n\nAugmentez vos avis Google sans même avoir à demander — les clients laissent un avis pour accéder à la roue, ce qui améliore instantanément votre visibilité en ligne.\n\nFaites revenir vos clients et attirez-en de nouveaux — chaque réclamation de prix génère du trafic : les clients reviennent pour récupérer leur gain, consomment à nouveau ou reviennent accompagnés. Résultat : plus de visites, plus de ventes, plus d'avis.\n\nCollectez des données précieuses à chaque spin — emails, numéros de téléphone, profils clients... Idéal pour les recontacter lors de vos événements, promotions ou campagnes marketing et les inciter à revenir.\n\nTableau de bord analytique : visualisez vos performances en un coup d'œil et suivez les métriques clés (scans de QR codes, prix distribués, taux de rédemption, profils enrichis). Utilisez ces insights pour affiner vos stratégies marketing et commerciales.\n\nJuste et sécurisé : un seul spin par client — pas de triche, pas d'abus."
       },
       {
         question: "Comment l'installer ?",
-        answer: "C'est super simple. Créez votre compte Wheelix, personnalisez votre roue à prix, et téléchargez votre QR code. Collez le QR code sur un poster dans votre magasin, et le tour est joué !"
+        answer: "C'est super simple. Créez votre compte RevWheel, personnalisez votre roue à prix, et téléchargez votre QR code. Collez le QR code sur un poster dans votre magasin, et le tour est joué !"
       },
       {
         question: "Puis-je personnaliser la roue ?",
@@ -85,7 +85,7 @@ const translations = {
       },
       {
         question: "Les clients doivent-ils installer une application ?",
-        answer: "Non. Tout fonctionne directement dans le navigateur. Les clients n'ont qu'à scanner le QR code avec leur téléphone, et l'expérience Wheelix commence immédiatement."
+        answer: "Non. Tout fonctionne directement dans le navigateur. Les clients n'ont qu'à scanner le QR code avec leur téléphone, et l'expérience RevWheel commence immédiatement."
       },
       {
         question: "Quelles données est-ce que je collecte ?",
@@ -97,7 +97,7 @@ const translations = {
       },
       {
         question: "Est-ce que ça fonctionne sur mobile ?",
-        answer: "Absolument. Wheelix est conçu en priorité pour mobile et fonctionne parfaitement sur les smartphones."
+        answer: "Absolument. RevWheel est conçu en priorité pour mobile et fonctionne parfaitement sur les smartphones."
       },
       {
         question: "Les clients vont-ils faire tourner la roue à chaque fois ?",
@@ -109,7 +109,7 @@ const translations = {
       },
       {
         question: "Comment les clients réclament-ils leur prix ?",
-        answer: "Lors de leur prochaine visite, les clients peuvent facilement réclamer leur lot. Il vous suffit de vous connecter à Wheelix, d'accéder à l'onglet \"Clients\", puis de retrouver la personne — soit directement, soit en effectuant une recherche par prénom, numéro de téléphone ou e-mail. Vous verrez immédiatement si un lot a été gagné, et lequel. Il ne vous reste plus qu'à le marquer comme \"pris\" grâce à notre fonctionnalité dédiée en un clic… et c'est terminé !"
+        answer: "Lors de leur prochaine visite, les clients peuvent facilement réclamer leur lot. Il vous suffit de vous connecter à RevWheel, d'accéder à l'onglet \"Clients\", puis de retrouver la personne — soit directement, soit en effectuant une recherche par prénom, numéro de téléphone ou e-mail. Vous verrez immédiatement si un lot a été gagné, et lequel. Il ne vous reste plus qu'à le marquer comme \"pris\" grâce à notre fonctionnalité dédiée en un clic… et c'est terminé !"
       },
       {
         question: "Puis-je le traduire ?",

@@ -8,7 +8,7 @@ import { useLanguage } from '../../../context/LanguageContext';
 const translations = {
   en: {
     howItWorks: "How does",
-    workHighlight: "Wheelix work?",
+    workHighlight: "RevWheel work?",
     steps: [
       {
         title: "Your customers scan a QR code and interact with a <strong>prize wheel</strong> that <strong>you customize</strong>.",
@@ -27,7 +27,7 @@ const translations = {
   },
   fr: {
     howItWorks: "Comment fonctionne",
-    workHighlight: "Wheelix ?",
+    workHighlight: "RevWheel ?",
     steps: [
       {
         title: "Vos clients scannent un QR code et interagissent avec une <strong>roue de la fortune</strong>, que <strong>vous personnalisez</strong>.",

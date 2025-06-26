@@ -7,13 +7,13 @@ const ClientReviews = () => {
   
   const translations = {
     en: {
-      title: "Customers about Wheelix",
+      title: "Customers about RevWheel",
       testimonials: [
         {
           id: 1,
           name: "Marie D.",
           role: "Manager, Le Bistrot Parisien",
-          quote: "Our customers finally leave reviews without us having to ask them. And what's more, they come back to try their luck at the wheel! Wheelix is a real game-changer.",
+          quote: "Our customers finally leave reviews without us having to ask them. And what's more, they come back to try their luck at the wheel! RevWheel is a real game-changer.",
           avatar: "https://randomuser.me/api/portraits/women/44.jpg"
         },
         {
@@ -27,19 +27,19 @@ const ClientReviews = () => {
           id: 3,
           name: "Jerome M.",
           role: "Manager, Burger Avenue",
-          quote: "Thanks to Wheelix, we've tripled our Google reviews in a month! Customers love the game concept and come back more often. Simple and effective!",
+          quote: "Thanks to RevWheel, we've tripled our Google reviews in a month! Customers love the game concept and come back more often. Simple and effective!",
           avatar: "https://randomuser.me/api/portraits/men/32.jpg"
         }
       ]
     },
     fr: {
-      title: "Les Clients à propos de Wheelix",
+      title: "Les Clients à propos de RevWheel",
       testimonials: [
         {
           id: 1,
           name: "Marie D.",
           role: "Gérant, Le Bistrot Parisien",
-          quote: "Nos clients laissent enfin des avis sans qu'on ait besoin de leur demander. Et en plus, ils reviennent pour tenter leur chance à la roue ! Wheelix est un vrai game-changer.",
+          quote: "Nos clients laissent enfin des avis sans qu'on ait besoin de leur demander. Et en plus, ils reviennent pour tenter leur chance à la roue ! RevWheel est un vrai game-changer.",
           avatar: "https://randomuser.me/api/portraits/women/44.jpg"
         },
         {
@@ -53,7 +53,7 @@ const ClientReviews = () => {
           id: 3,
           name: "Jerôme M.",
           role: "Gérant, Burger Avenue",
-          quote: "Grâce à Wheelix, nous avons triplé nos avis Google en un mois ! Les clients adorent le concept du jeu et reviennent plus souvent. Simple et efficace !",
+          quote: "Grâce à RevWheel, nous avons triplé nos avis Google en un mois ! Les clients adorent le concept du jeu et reviennent plus souvent. Simple et efficace !",
           avatar: "https://randomuser.me/api/portraits/men/32.jpg"
         }
       ]

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react"; // Icons for menu toggle
-import logo from "../../../assets/wheelix3500.png";
+import logo from "../../../assets/REVWHEELlogo.png";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../../../context/LanguageContext";
 import { useTranslation } from "../../../hooks/useTranslation";
@@ -54,7 +54,7 @@ const Navbar = () => {
                             <img 
                                 src={logo} 
                                 alt="Klane Logo" 
-                                className={`h-14 md:h-16 lg:h-20 xl:h-24 w-auto object-contain transition-transform duration-300 hover:scale-105 -my-6 md:-my-6 lg:-my-8 xl:-my-10 ${!scrolled ? 'brightness-110 contrast-125' : ''}`}
+                                className={`h-16 md:h-20 lg:h-24 xl:h-32 w-auto object-contain transition-transform duration-300 hover:scale-105 -my-6 md:-my-6 lg:-my-8 xl:-my-10 ${!scrolled ? 'brightness-110 contrast-125' : ''}`}
                             />
                         </Link>
                     </div>

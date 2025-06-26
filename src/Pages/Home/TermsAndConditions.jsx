@@ -9,15 +9,15 @@ const translations = {
   en: {
     title: "Terms and Conditions",
     backToHome: "Back to Home",
-    heading: "Terms and Conditions of Wheelix",
+    heading: "Terms and Conditions of RevWheel",
     sections: [
       {
         title: "1. Introduction",
-        content: "Welcome to Wheelix. By accessing and using our service, you agree to comply with these Terms and Conditions (the \"Terms\"). These Terms govern the use of the Wheelix platform, which allows businesses to collect Google reviews in a fun and engaging way by offering rewards through a prize wheel.\n\nIf you do not agree with these Terms, you must not use our services."
+        content: "Welcome to RevWheel. By accessing and using our service, you agree to comply with these Terms and Conditions (the \"Terms\"). These Terms govern the use of the RevWheel platform, which allows businesses to collect Google reviews in a fun and engaging way by offering rewards through a prize wheel.\n\nIf you do not agree with these Terms, you must not use our services."
       },
       {
         title: "2. Service Description",
-        content: "Wheelix allows businesses to:\n● Collect Google reviews in a simple and non-intrusive way,\n● Offer rewards via a prize wheel after customers leave a review,\n● Collect user contact information (name, phone, email) to follow up if needed.\n\nUsing Wheelix requires creating a user account and agreeing to these Terms."
+        content: "RevWheel allows businesses to:\n● Collect Google reviews in a simple and non-intrusive way,\n● Offer rewards via a prize wheel after customers leave a review,\n● Collect user contact information (name, phone, email) to follow up if needed.\n\nUsing RevWheel requires creating a user account and agreeing to these Terms."
       },
       {
         title: "3. User Responsibilities",
@@ -25,15 +25,15 @@ const translations = {
       },
       {
         title: "4. Business Responsibilities",
-        content: "The business using Wheelix is responsible for:\n● Managing and customizing its rewards and prize wheel,\n● Obtaining consent from customers to collect and use their data (name, email, phone),\n● Complying with applicable laws regarding customer reviews, including data protection regulations (GDPR)."
+        content: "The business using RevWheel is responsible for:\n● Managing and customizing its rewards and prize wheel,\n● Obtaining consent from customers to collect and use their data (name, email, phone),\n● Complying with applicable laws regarding customer reviews, including data protection regulations (GDPR)."
       },
       {
         title: "5. Personal Data",
-        content: "Wheelix collects certain personal information from users (name, email, phone number) during the use of its services. This information is necessary for the proper functioning of the platform, including managing rewards.\n\nWe are committed to respecting your privacy and processing your personal data in accordance with our Privacy Policy, available on our website."
+        content: "RevWheel collects certain personal information from users (name, email, phone number) during the use of its services. This information is necessary for the proper functioning of the platform, including managing rewards.\n\nWe are committed to respecting your privacy and processing your personal data in accordance with our Privacy Policy, available on our website."
       },
       {
         title: "6. Intellectual Property",
-        content: "All content available on Wheelix, including logos, images, texts, videos, and other materials, is protected by intellectual property rights. No part of this content may be reproduced, distributed, or used without the explicit permission of Wheelix."
+        content: "All content available on RevWheel, including logos, images, texts, videos, and other materials, is protected by intellectual property rights. No part of this content may be reproduced, distributed, or used without the explicit permission of RevWheel."
       },
       {
         title: "7. Modifications to the Terms",
@@ -45,7 +45,7 @@ const translations = {
       },
       {
         title: "9. Limitations of Liability",
-        content: "Wheelix will not be held responsible for any direct or indirect damages resulting from the use or inability to use the service. We do not guarantee that the service will be free from errors, interruptions, or failures."
+        content: "RevWheel will not be held responsible for any direct or indirect damages resulting from the use or inability to use the service. We do not guarantee that the service will be free from errors, interruptions, or failures."
       },
       {
         title: "10. Force Majeure",
@@ -64,15 +64,15 @@ const translations = {
   fr: {
     title: "Conditions Générales",
     backToHome: "Retour à l'Accueil",
-    heading: "Conditions Générales d'Utilisation (CGU) de Wheelix",
+    heading: "Conditions Générales d'Utilisation (CGU) de RevWheel",
     sections: [
       {
         title: "1. Introduction",
-        content: "Bienvenue sur Wheelix. En accédant et en utilisant notre service, vous acceptez de vous conformer aux présentes Conditions Générales d'Utilisation (les \"Conditions\"). Ces conditions régissent l'utilisation de la plateforme Wheelix, qui permet aux entreprises de recueillir des avis Google de manière ludique en offrant des récompenses via une roue de la chance.\n\nSi vous n'acceptez pas ces conditions, vous ne devez pas utiliser nos services."
+        content: "Bienvenue sur RevWheel. En accédant et en utilisant notre service, vous acceptez de vous conformer aux présentes Conditions Générales d'Utilisation (les \"Conditions\"). Ces conditions régissent l'utilisation de la plateforme RevWheel, qui permet aux entreprises de recueillir des avis Google de manière ludique en offrant des récompenses via une roue de la chance.\n\nSi vous n'acceptez pas ces conditions, vous ne devez pas utiliser nos services."
       },
       {
         title: "2. Description du service",
-        content: "Wheelix permet aux entreprises de :\n● Collecter des avis Google de manière simple et non intrusive,\n● Offrir des récompenses via une roue de la chance après que les clients ont laissé un avis,\n● Collecter les informations de contact des utilisateurs (nom, téléphone, email) pour les recontacter en cas de besoin.\n\nL'utilisation de Wheelix implique la création d'un compte utilisateur et l'acceptation des présentes conditions."
+        content: "RevWheel permet aux entreprises de :\n● Collecter des avis Google de manière simple et non intrusive,\n● Offrir des récompenses via une roue de la chance après que les clients ont laissé un avis,\n● Collecter les informations de contact des utilisateurs (nom, téléphone, email) pour les recontacter en cas de besoin.\n\nL'utilisation de RevWheel implique la création d'un compte utilisateur et l'acceptation des présentes conditions."
       },
       {
         title: "3. Obligations des utilisateurs",
@@ -80,15 +80,15 @@ const translations = {
       },
       {
         title: "4. Responsabilités de l'entreprise",
-        content: "L'entreprise qui utilise Wheelix est responsable de :\n● L'édition et de la gestion de ses récompenses et de sa roue de la chance,\n● L'obtention de l'autorisation des clients pour collecter et utiliser leurs données (nom, email, téléphone),\n● Le respect de la législation applicable concernant les avis clients, y compris les lois sur la protection des données personnelles (RGPD)."
+        content: "L'entreprise qui utilise RevWheel est responsable de :\n● L'édition et de la gestion de ses récompenses et de sa roue de la chance,\n● L'obtention de l'autorisation des clients pour collecter et utiliser leurs données (nom, email, téléphone),\n● Le respect de la législation applicable concernant les avis clients, y compris les lois sur la protection des données personnelles (RGPD)."
       },
       {
         title: "5. Données personnelles",
-        content: "Wheelix collecte certaines informations personnelles des utilisateurs (nom, email, numéro de téléphone) lors de l'utilisation de ses services. Ces informations sont nécessaires pour permettre le bon fonctionnement de la plateforme, notamment pour la gestion des récompenses.\n\nNous nous engageons à respecter votre vie privée et à traiter vos informations personnelles conformément à notre Politique de Confidentialité, disponible sur notre site."
+        content: "RevWheel collecte certaines informations personnelles des utilisateurs (nom, email, numéro de téléphone) lors de l'utilisation de ses services. Ces informations sont nécessaires pour permettre le bon fonctionnement de la plateforme, notamment pour la gestion des récompenses.\n\nNous nous engageons à respecter votre vie privée et à traiter vos informations personnelles conformément à notre Politique de Confidentialité, disponible sur notre site."
       },
       {
         title: "6. Propriété intellectuelle",
-        content: "Tout le contenu disponible sur Wheelix, y compris les logos, images, textes, vidéos, et autres matériaux, est protégé par les droits de propriété intellectuelle. Aucune partie de ce contenu ne peut être reproduite, distribuée ou utilisée sans l'autorisation explicite de Wheelix."
+        content: "Tout le contenu disponible sur RevWheel, y compris les logos, images, textes, vidéos, et autres matériaux, est protégé par les droits de propriété intellectuelle. Aucune partie de ce contenu ne peut être reproduite, distribuée ou utilisée sans l'autorisation explicite de RevWheel."
       },
       {
         title: "7. Modifications des conditions",
@@ -100,7 +100,7 @@ const translations = {
       },
       {
         title: "9. Limitations de responsabilité",
-        content: "Wheelix ne pourra être tenue responsable des dommages directs ou indirects résultant de l'utilisation ou de l'incapacité d'utiliser le service. Nous ne garantissons pas que le service sera exempt d'erreurs, d'interruptions ou de défaillances."
+        content: "RevWheel ne pourra être tenue responsable des dommages directs ou indirects résultant de l'utilisation ou de l'incapacité d'utiliser le service. Nous ne garantissons pas que le service sera exempt d'erreurs, d'interruptions ou de défaillances."
       },
       {
         title: "10. Force majeure",

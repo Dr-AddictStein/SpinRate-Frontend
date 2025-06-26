@@ -30,7 +30,7 @@ import { motion } from 'framer-motion';
 import { useAuthContext } from '../../../hooks/useAuthContext';
 import { useLogout } from '../../../hooks/useLogout';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import logo from '../../../assets/Wheelix final logo.png';
+import logo from '../../../assets/REVWHEELlogo.png';
 import { useTranslation } from '../../../hooks/useTranslation';
 
 const MenuItem = ({ icon: Icon, text, translationKey, path, active, collapsed, badge, onClick }) => {
