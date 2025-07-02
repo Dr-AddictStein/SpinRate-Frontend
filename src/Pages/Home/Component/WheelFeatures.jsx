@@ -120,7 +120,7 @@ const ImageCarousel = ({ images }) => {
   
   // For multiple images, create a carousel
   return (
-    <div className="relative overflow-hidden rounded-xl shadow-xl h-[400px] md:h-[500px] bg-gray-50 md:w-[450px]">
+    <div className="relative overflow-hidden rounded-xl shadow-xl h-[350px] md:h-[450px] bg-gray-50 w-full max-w-[400px] mx-auto">
       <div className="relative w-full h-full">
         {images.map((image, index) => (
           <motion.div
@@ -237,57 +237,59 @@ const WheelFeatureSection = ({ title, description, images, index }) => {
           transition: { duration: 0.8, delay: 0.2 }
         }
       }}
-      className={`flex flex-col ${isReversed ? 'md:flex-row-reverse' : 'md:flex-row'} items-center justify-center gap-12 py-16 max-w-6xl mx-auto`}
+      className="py-16 w-full flex justify-center"
     >
-      {/* Text Content - Styled to match the image design */}
-      <div className="w-full md:w-2/5 space-y-6 px-4">
-        <motion.h2
+      <div className={`flex flex-col ${isReversed ? 'md:flex-row-reverse' : 'md:flex-row'} items-center justify-center gap-8 md:gap-12 max-w-5xl w-full px-4 mx-auto`}>
+        {/* Text Content - Styled to match the image design */}
+        <div className="w-full md:w-5/12 space-y-6 flex flex-col justify-center">
+          <motion.h2
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: { 
+                opacity: 1, 
+                y: 0,
+                transition: { duration: 0.6 }
+              }
+            }}
+            className="text-3xl md:text-4xl font-normal text-gray-800"
+            dangerouslySetInnerHTML={{ __html: title }}
+          />
+          
+          <div className="space-y-5">
+            {description.map((paragraph, i) => (
+              <motion.div
+                key={i}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { 
+                    opacity: 1, 
+                    y: 0,
+                    transition: { duration: 0.6, delay: 0.1 * (i + 1) }
+                  }
+                }}
+                className="text-gray-600 text-lg leading-relaxed"
+              >
+                <StylizedText text={paragraph} />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Image Carousel */}
+        <motion.div
           variants={{
-            hidden: { opacity: 0, y: 20 },
+            hidden: { opacity: 0, x: isReversed ? -30 : 30 },
             visible: { 
               opacity: 1, 
-              y: 0,
-              transition: { duration: 0.6 }
+              x: 0,
+              transition: { duration: 0.8, delay: 0.4 }
             }
           }}
-          className="text-3xl md:text-4xl font-normal text-gray-800"
-          dangerouslySetInnerHTML={{ __html: title }}
-        />
-        
-        <div className="space-y-5">
-          {description.map((paragraph, i) => (
-            <motion.div
-              key={i}
-              variants={{
-                hidden: { opacity: 0, y: 20 },
-                visible: { 
-                  opacity: 1, 
-                  y: 0,
-                  transition: { duration: 0.6, delay: 0.1 * (i + 1) }
-                }
-              }}
-              className="text-gray-600 text-lg leading-relaxed"
-            >
-              <StylizedText text={paragraph} />
-            </motion.div>
-          ))}
-        </div>
+          className="w-full md:w-7/12 flex justify-center"
+        >
+          <ImageCarousel images={images} />
+        </motion.div>
       </div>
-
-      {/* Image Carousel */}
-      <motion.div
-        variants={{
-          hidden: { opacity: 0, x: isReversed ? -30 : 30 },
-          visible: { 
-            opacity: 1, 
-            x: 0,
-            transition: { duration: 0.8, delay: 0.4 }
-          }
-        }}
-        className="w-full md:w-3/5 px-4"
-      >
-        <ImageCarousel images={images} />
-      </motion.div>
     </motion.div>
   );
 };
@@ -326,9 +328,9 @@ const WheelFeatures = () => {
         transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center">
+      <div className="w-full flex flex-col items-center">
         {/* Section title */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 px-4">
           {/* <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -353,7 +355,7 @@ const WheelFeatures = () => {
         </div>
 
         {/* Features sections */}
-        <div className="space-y-20 w-full">
+        <div className="w-full">
           {t.features.map((feature, index) => (
             <WheelFeatureSection
               key={index}
