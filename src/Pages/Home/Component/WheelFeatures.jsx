@@ -2,6 +2,18 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion, useAnimation, useInView } from 'framer-motion';
 import { useLanguage } from '../../../context/LanguageContext';
 
+// Import images from assets
+import image1_1 from '../../../assets/1.1 (2).png';
+import image1_2 from '../../../assets/1.2.png';
+import image1_3 from '../../../assets/1.3.png';
+import image2_1 from '../../../assets/2.1.png';
+import image2_2 from '../../../assets/2.2.png';
+import image3_1 from '../../../assets/3.1.png';
+import image3_2_1 from '../../../assets/3.2 (2).png';
+import image3_2_2 from '../../../assets/3.2.png';
+import revwheelMainFrontEN from '../../../assets/RevwheelMainFront.png';
+import revwheelMainFrontFR from '../../../assets/RevwheelMainFrontFR.png';
+
 // Translations object
 const translations = {
   en: {
@@ -60,13 +72,22 @@ const translations = {
   }
 };
 
-// Sample images - add more images here as needed
-const carouselImages = [
-  "https://uploads-ssl.webflow.com/5b58d2d41b566c4d997e0882/5b82d9792b7a395005b4a0b4_lootcrateWheel.png",
-  "https://uploads-ssl.webflow.com/5b58d2d41b566c4d997e0882/5b82d9792b7a395005b4a0b4_lootcrateWheel.png",
-  "https://uploads-ssl.webflow.com/5b58d2d41b566c4d997e0882/5b82d9792b7a395005b4a0b4_lootcrateWheel.png",
-  "https://uploads-ssl.webflow.com/5b58d2d41b566c4d997e0882/5b82d9792b7a395005b4a0b4_lootcrateWheel.png",
-];
+// Function to get feature images based on language
+const getFeatureImages = (language) => ({
+  // Feature 1: Fully Customized for your brand
+  customization: [
+    language === 'fr' ? revwheelMainFrontFR : revwheelMainFrontEN,
+    image1_1, 
+    image1_2, 
+    image1_3
+  ],
+  
+  // Feature 2: Get Results - Emails, Sales & Analytics
+  analytics: [image2_1, image2_2],
+  
+  // Feature 3: Mobile, Marketing Materials
+  marketing: [image3_1, image3_2_1, image3_2_2]
+});
 
 // Image carousel component
 const ImageCarousel = ({ images }) => {
@@ -99,7 +120,7 @@ const ImageCarousel = ({ images }) => {
   
   // For multiple images, create a carousel
   return (
-    <div className="relative overflow-hidden rounded-xl shadow-xl h-[400px] md:h-[500px]">
+    <div className="relative overflow-hidden rounded-xl shadow-xl h-[400px] md:h-[500px] bg-gray-50 md:w-[450px]">
       <div className="relative w-full h-full">
         {images.map((image, index) => (
           <motion.div
@@ -116,7 +137,7 @@ const ImageCarousel = ({ images }) => {
             <img 
               src={image}
               alt={`Feature showcase ${index + 1}`}
-              className="w-full h-full object-cover rounded-xl"
+              className="w-full h-full object-contain rounded-xl"
             />
           </motion.div>
         ))}
@@ -274,6 +295,7 @@ const WheelFeatureSection = ({ title, description, images, index }) => {
 const WheelFeatures = () => {
   const { language } = useLanguage();
   const t = translations[language] || translations.en;
+  const featureImages = getFeatureImages(language);
   const titleControls = useAnimation();
   const titleRef = useRef(null);
   const isTitleInView = useInView(titleRef, { once: true });
@@ -337,7 +359,7 @@ const WheelFeatures = () => {
               key={index}
               title={feature.title}
               description={feature.description}
-              images={carouselImages}
+              images={featureImages[Object.keys(featureImages)[index]]}
               index={index}
             />
           ))}
