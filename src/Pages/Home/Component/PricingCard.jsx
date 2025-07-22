@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../../../context/LanguageContext";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 import logo from "../../../assets/REVWHEELlogo.png";
 
 // Translations object
@@ -36,11 +36,35 @@ const translations = {
   }
 };
 
+// Payment configuration
+const paymentConfig = {
+  monthly: {
+    payment_link: "https://buy.stripe.com/test_9B6eVcarm8Slf1G0Ca7kc00",
+    price_id: "price_1RnlaDC46ht2WWU6pal70Tka"
+  },
+  yearly: {
+    payment_link: "https://buy.stripe.com/test_14A5kCdDy3y18DigB87kc01", 
+    price_id: "price_1RnlfCC46ht2WWU6lQrqOvgt"
+  }
+};
+
 const PricingSection = () => {
-  const navigate = useNavigate();
   const { language } = useLanguage();
+  const { user } = useAuthContext();
   const t = translations[language] || translations.en;
   const [isYearly, setIsYearly] = useState(false);
+
+  const handleStartTrial = () => {
+    const plan = isYearly ? 'yearly' : 'monthly';
+    const config = paymentConfig[plan];
+    const userEmail = user?.user?.email || '';
+    
+    // Construct the payment URL with prefilled email
+    const paymentUrl = `${config.payment_link}?prefilled_email=${encodeURIComponent(userEmail)}`;
+    
+    // Open in new tab
+    window.open(paymentUrl, '_blank');
+  };
 
   return (
     <section id="pricing" className="py-12 bg-gray-50 overflow-hidden relative">
@@ -251,7 +275,7 @@ const PricingSection = () => {
 
             {/* CTA Button */}
             <motion.button 
-              onClick={() => navigate('/dashboard/subscription')}
+              onClick={handleStartTrial}
               className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 shadow-md relative overflow-hidden"
               whileHover={{ 
                 scale: 1.02,
