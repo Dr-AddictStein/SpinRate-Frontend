@@ -10,14 +10,11 @@ export const useLogin = () => {
   const login = async (userName, password) => {
     setError(null);
 
-    const response = await fetch(
-      `https://spin-rate-backend.vercel.app/api/user/login`,
-      {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ userName, password }),
-      }
-    );
+    const response = await fetch(`https://api.revwheel.fr/api/user/login`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ userName, password }),
+    });
 
     const json = await response.json();
 
@@ -29,11 +26,9 @@ export const useLogin = () => {
 
       dispatch({ type: "LOGIN", payload: json });
 
-      navigate('/dashboard');
-
+      navigate("/dashboard");
     }
   };
-
 
   return { login, error };
 };
