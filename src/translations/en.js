@@ -117,5 +117,43 @@ export const en = {
   spin: "SPIN",
   now: "NOW",
   
+  // Auth Modals
+  // Login Modal
+  welcomeBack: "Welcome Back",
+  signInToAccount: "Sign in to your account",
+  username: "Username",
+  enterUsername: "Enter your username",
+  enterPassword: "Enter your password",
+  rememberMe: "Remember me",
+  forgotPassword: "Forgot password?",
+  signIn: "Sign In",
+  orContinueWith: "Or continue with",
+  dontHaveAccount: "Don't have an account?",
+  signUpNow: "Sign up now",
+  authenticating: "Authenticating...",
+  
+  // Signup Modal
+  createAccount: "Create Account",
+  joinCommunity: "Join our community today",
+  fullName: "Full Name",
+  enterFullName: "Enter your full name",
+  chooseUsername: "Choose a username",
+  enterEmail: "Enter your email",
+  phoneNumber: "Phone Number",
+  enterPhoneNumber: "Enter your phone number",
+  createPassword: "Create a password",
+  passwordRequirement: "Password must be at least 8 characters long",
+  alreadyHaveAccount: "Already have an account?",
+  creatingAccount: "Creating your account...",
+  
+  // Auth Messages
+  emailAlreadyExists: "Email already exists",
+  usernameAlreadyTaken: "Username already taken", 
+  allFieldsMustBeFilled: "All fields must be filled",
+  registrationSuccessful: "Registration successful!",
+  incorrectUsername: "Incorrect username",
+  incorrectPassword: "Incorrect password",
+  successfullyLoggedIn: "Successfully logged in!",
+  
   // Add more translations as needed for your website
 }; 

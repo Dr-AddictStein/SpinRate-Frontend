@@ -117,5 +117,43 @@ export const fr = {
   spin: "TOURNER",
   now: "MAINTENANT",
   
+  // Auth Modals
+  // Login Modal
+  welcomeBack: "Bon Retour",
+  signInToAccount: "Connectez-vous à votre compte",
+  username: "Nom d'utilisateur",
+  enterUsername: "Entrez votre nom d'utilisateur",
+  enterPassword: "Entrez votre mot de passe",
+  rememberMe: "Se souvenir de moi",
+  forgotPassword: "Mot de passe oublié?",
+  signIn: "Se Connecter",
+  orContinueWith: "Ou continuez avec",
+  dontHaveAccount: "Vous n'avez pas de compte?",
+  signUpNow: "Inscrivez-vous maintenant",
+  authenticating: "Authentification...",
+  
+  // Signup Modal
+  createAccount: "Créer un Compte",
+  joinCommunity: "Rejoignez notre communauté aujourd'hui",
+  fullName: "Nom Complet",
+  enterFullName: "Entrez votre nom complet",
+  chooseUsername: "Choisissez un nom d'utilisateur",
+  enterEmail: "Entrez votre email",
+  phoneNumber: "Numéro de Téléphone",
+  enterPhoneNumber: "Entrez votre numéro de téléphone",
+  createPassword: "Créez un mot de passe",
+  passwordRequirement: "Le mot de passe doit contenir au moins 8 caractères",
+  alreadyHaveAccount: "Vous avez déjà un compte?",
+  creatingAccount: "Création de votre compte...",
+  
+  // Auth Messages
+  emailAlreadyExists: "L'email existe déjà",
+  usernameAlreadyTaken: "Nom d'utilisateur déjà pris",
+  allFieldsMustBeFilled: "Tous les champs doivent être remplis",
+  registrationSuccessful: "Inscription réussie!",
+  incorrectUsername: "Nom d'utilisateur incorrect",
+  incorrectPassword: "Mot de passe incorrect",
+  successfullyLoggedIn: "Connexion réussie!",
+  
   // Add more translations as needed for your website
 }; 

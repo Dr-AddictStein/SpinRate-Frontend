@@ -43,7 +43,7 @@ const paymentConfig = {
     price_id: "price_1RnlaDC46ht2WWU6pal70Tka"
   },
   yearly: {
-    payment_link: "https://buy.stripe.com/test_14A5kCdDy3y18DigB87kc01", 
+    payment_link: "https://buy.stripe.com/test_14A5kCdDy3y18DigB87kc01",
     price_id: "price_1RnlfCC46ht2WWU6lQrqOvgt"
   }
 };
@@ -58,10 +58,10 @@ const PricingSection = () => {
     const plan = isYearly ? 'yearly' : 'monthly';
     const config = paymentConfig[plan];
     const userEmail = user?.user?.email || '';
-    
+
     // Construct the payment URL with prefilled email
     const paymentUrl = `${config.payment_link}?prefilled_email=${encodeURIComponent(userEmail)}`;
-    
+
     // Open in new tab
     window.open(paymentUrl, '_blank');
   };
@@ -70,26 +70,26 @@ const PricingSection = () => {
     <section id="pricing" className="py-12 bg-gray-50 overflow-hidden relative">
       <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
-          <motion.h2 
+          <motion.h2
             className="text-2xl md:text-3xl font-bold text-gray-900 mb-2"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            {t.oneAffordablePlan}
+            {t.revwheelProPlan}
           </motion.h2>
-          
-          <motion.p 
+
+          <motion.p
             className="text-lg font-semibold text-gray-800 mb-6"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            {t.revwheelProPlan}
+            {t.oneAffordablePlan}
           </motion.p>
         </div>
 
-        <motion.div 
+        <motion.div
           className="bg-white rounded-2xl shadow-lg overflow-hidden max-w-sm mx-auto"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -102,9 +102,9 @@ const PricingSection = () => {
                 whileHover={{ scale: 1.05, rotate: 5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <img 
-                  src={logo} 
-                  alt="RevWheel Logo" 
+                <img
+                  src={logo}
+                  alt="RevWheel Logo"
                   className="h-28 md:h-32 lg:h-36 w-auto object-contain"
                 />
               </motion.div>
@@ -127,29 +127,27 @@ const PricingSection = () => {
                     damping: 30
                   }}
                 />
-                
+
                 {/* Toggle buttons */}
                 <div className="relative z-10 flex">
                   <motion.button
                     onClick={() => setIsYearly(false)}
-                    className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                      !isYearly 
-                        ? 'text-white' 
+                    className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${!isYearly
+                        ? 'text-white'
                         : 'text-gray-600 hover:text-gray-800'
-                    }`}
+                      }`}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
                     {t.monthly}
                   </motion.button>
-                  
+
                   <motion.button
                     onClick={() => setIsYearly(true)}
-                    className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                      isYearly 
-                        ? 'text-white' 
+                    className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${isYearly
+                        ? 'text-white'
                         : 'text-gray-600 hover:text-gray-800'
-                    }`}
+                      }`}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -182,102 +180,102 @@ const PricingSection = () => {
 
             {/* Features */}
             <div className="space-y-4 mb-8 text-left">
-              <motion.div 
+              <motion.div
                 className="flex items-center"
                 whileHover={{ x: 5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <motion.svg 
-                  className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" 
-                  fill="currentColor" 
+                <motion.svg
+                  className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0"
+                  fill="currentColor"
                   viewBox="0 0 20 20"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.3, type: "spring", stiffness: 500 }}
                 >
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </motion.svg>
-                <span className="text-gray-700 text-sm">{t.noCommitment}</span>
+                <span className="text-gray-700 text-lg">{t.noCommitment}</span>
               </motion.div>
-              
-              <motion.div 
+
+              <motion.div
                 className="flex items-center"
                 whileHover={{ x: 5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <motion.svg 
-                  className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" 
-                  fill="currentColor" 
+                <motion.svg
+                  className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0"
+                  fill="currentColor"
                   viewBox="0 0 20 20"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.4, type: "spring", stiffness: 500 }}
                 >
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </motion.svg>
-                <span className="text-gray-700 text-sm">{t.setUp}</span>
+                <span className="text-gray-700 text-lg">{t.setUp}</span>
               </motion.div>
-              
-              <motion.div 
+
+              <motion.div
                 className="flex items-center"
                 whileHover={{ x: 5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <motion.svg 
-                  className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" 
-                  fill="currentColor" 
+                <motion.svg
+                  className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0"
+                  fill="currentColor"
                   viewBox="0 0 20 20"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.5, type: "spring", stiffness: 500 }}
                 >
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </motion.svg>
-                <span className="text-gray-700 text-sm font-semibold">{t.boostReviews}</span>
+                <span className="text-gray-700 text-lg font-semibold">{t.boostReviews}</span>
               </motion.div>
-              
-              <motion.div 
+
+              <motion.div
                 className="flex items-center"
                 whileHover={{ x: 5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <motion.svg 
-                  className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" 
-                  fill="currentColor" 
+                <motion.svg
+                  className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0"
+                  fill="currentColor"
                   viewBox="0 0 20 20"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.6, type: "spring", stiffness: 500 }}
                 >
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </motion.svg>
-                <span className="text-gray-700 text-sm">{t.driveRepeatBusiness}</span>
+                <span className="text-gray-700 text-lg">{t.driveRepeatBusiness}</span>
               </motion.div>
-              
-              <motion.div 
+
+              <motion.div
                 className="flex items-center"
                 whileHover={{ x: 5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <motion.svg 
-                  className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" 
-                  fill="currentColor" 
+                <motion.svg
+                  className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0"
+                  fill="currentColor"
                   viewBox="0 0 20 20"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.7, type: "spring", stiffness: 500 }}
                 >
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </motion.svg>
-                <span className="text-gray-700 text-sm">{t.support247}</span>
+                <span className="text-gray-700 text-lg">{t.support247}</span>
               </motion.div>
             </div>
 
             {/* CTA Button */}
-            <motion.button 
+            <motion.button
               onClick={handleStartTrial}
               className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 shadow-md relative overflow-hidden"
-              whileHover={{ 
+              whileHover={{
                 scale: 1.02,
                 boxShadow: "0 10px 25px -5px rgba(59, 130, 246, 0.5)"
               }}

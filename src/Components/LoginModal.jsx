@@ -7,11 +7,13 @@ import { X, LogIn, User, Lock, ArrowRight, Mail } from 'lucide-react';
 import SignupModal from './SignupModal.jsx';
 import AuthLoader from './Loader.jsx';
 import Loader from './Loader.jsx';
+import { useTranslation } from '../hooks/useTranslation.jsx';
 
 const LoginModal = ({ closeModal }) => {
     const { signup } = useSignup();
     const { login } = useLogin();
     const { logout } = useLogout();
+    const { t } = useTranslation();
 
     const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
     const [userInfo, setUserInfo] = useState(null);
@@ -27,25 +29,25 @@ const LoginModal = ({ closeModal }) => {
         try {
             const response = await login(loginData.userName, loginData.password);
             if (response === "Incorrect userName.!.") {
-                toast.error("Incorrect username");
+                toast.error(t('incorrectUsername'));
                 setTimeout(() => {
                     setAuthLoader(false);
                 }, [1000])
             }
             else if (response === "Incorrect password.!.") {
-                toast.error("Incorrect password");
+                toast.error(t('incorrectPassword'));
                 setTimeout(() => {
                     setAuthLoader(false);
                 }, [1000])
             }
             else if (response === "All fields must be filled...") {
-                toast.error("All fields must be filled");
+                toast.error(t('allFieldsMustBeFilled'));
                 setTimeout(() => {
                     setAuthLoader(false);
                 }, [1000])
             }
             else {
-                toast.success("Successfully logged in!");
+                toast.success(t('successfullyLoggedIn'));
                 setAuthLoader(false);
                 setUserLoader(true);
                 setUserLoader(false);
@@ -75,14 +77,14 @@ const LoginModal = ({ closeModal }) => {
                 <div className="relative w-full max-w-md mx-4">
                     {authLoader ? (
                         <div className="bg-white rounded-2xl shadow-2xl p-8 flex flex-col items-center justify-center">
-                            <Loader text={"Authenticating..."} />
+                            <Loader text={t('authenticating')} />
                         </div>
                     ) : (
                         <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
                             {/* Header with gradient */}
                             <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-white">
                                 <div className="flex justify-between items-center">
-                                    <h2 className="text-2xl font-bold">Welcome Back</h2>
+                                    <h2 className="text-2xl font-bold">{t('welcomeBack')}</h2>
                                     <button 
                                         onClick={closeModal}
                                         className="p-1 rounded-full hover:bg-white hover:bg-opacity-20 transition-colors"
@@ -90,7 +92,7 @@ const LoginModal = ({ closeModal }) => {
                                         <X size={20} />
                                     </button>
                                 </div>
-                                <p className="mt-1 text-blue-100 text-sm">Sign in to your account</p>
+                                <p className="mt-1 text-blue-100 text-sm">{t('signInToAccount')}</p>
                             </div>
                             
                             {/* Form */}
@@ -99,7 +101,7 @@ const LoginModal = ({ closeModal }) => {
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-700 flex items-center">
                                             <User size={16} className="mr-2 text-blue-500" />
-                                            Username
+                                            {t('username')}
                                         </label>
                                         <div className="relative">
                                             <input
@@ -107,7 +109,7 @@ const LoginModal = ({ closeModal }) => {
                                                 value={loginData.userName}
                                                 onChange={(e) => setLoginData({ ...loginData, userName: e.target.value })}
                                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                                placeholder="Enter your username"
+                                                placeholder={t('enterUsername')}
                                                 required
                                             />
                                         </div>
@@ -116,7 +118,7 @@ const LoginModal = ({ closeModal }) => {
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-700 flex items-center">
                                             <Lock size={16} className="mr-2 text-blue-500" />
-                                            Password
+                                            {t('password')}
                                         </label>
                                         <div className="relative">
                                             <input
@@ -124,7 +126,7 @@ const LoginModal = ({ closeModal }) => {
                                                 value={loginData.password}
                                                 onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                                placeholder="Enter your password"
+                                                placeholder={t('enterPassword')}
                                                 required
                                             />
                                         </div>
@@ -138,11 +140,11 @@ const LoginModal = ({ closeModal }) => {
                                                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                                             />
                                             <label htmlFor="remember" className="ml-2 text-gray-600">
-                                                Remember me
+                                                {t('rememberMe')}
                                             </label>
                                         </div>
                                         <a href="#" className="text-blue-600 hover:text-blue-800 font-medium">
-                                            Forgot password?
+                                            {t('forgotPassword')}
                                         </a>
                                     </div>
                                     
@@ -151,7 +153,7 @@ const LoginModal = ({ closeModal }) => {
                                         className="w-full flex items-center justify-center py-3 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-lg hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-md transition-all"
                                     >
                                         <LogIn size={18} className="mr-2" />
-                                        Sign In
+                                        {t('signIn')}
                                     </button>
                                 </form>
                                 
@@ -162,20 +164,20 @@ const LoginModal = ({ closeModal }) => {
                                         </div>
                                         <div className="relative flex justify-center text-sm">
                                             <span className="px-2 bg-white text-gray-500">
-                                                Or continue with
+                                                {t('orContinueWith')}
                                             </span>
                                         </div>
                                     </div>
                                     
                                     <div className="mt-6">
                                         <p className="text-sm text-gray-600">
-                                            Don't have an account?{' '}
+                                            {t('dontHaveAccount')}{' '}
                                             <button
                                                 type="button"
                                                 className="text-blue-600 hover:text-blue-800 font-medium inline-flex items-center"
                                                 onClick={() => setIsSignupModalOpen(true)}
                                             >
-                                                Sign up now
+                                                {t('signUpNow')}
                                                 <ArrowRight size={16} className="ml-1" />
                                             </button>
                                         </p>
