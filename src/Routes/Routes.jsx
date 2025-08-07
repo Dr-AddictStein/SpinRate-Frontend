@@ -37,15 +37,15 @@ const routes = [
     children: [
       {
         path: "",
-        element: <DashboardCustomers />,
+        element: <DashboardAnalytics />,
+      },
+      {
+        path: "home",
+        element: <DashboardHome />,
       },
       {
         path: "analytics",
         element: <DashboardAnalytics />,
-      },
-      {
-        path: "customers",
-        element: <DashboardCustomers />,
       },
       {
         path: "customers",

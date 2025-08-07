@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Outlet, Navigate } from "react-router-dom";
+import { Outlet, Navigate, useNavigate } from "react-router-dom";
 import Sidebar from "./Component/Sidebar";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import Loader from "../../Components/Loader";
-import { Menu, X } from 'lucide-react';
+import { Menu, X, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SignupModal from "../../Components/SignupModal";
+import SubscriptionGuard from "../../Components/SubscriptionGuard";
 import { useTranslation } from "../../hooks/useTranslation";
 import { useLanguage } from "../../context/LanguageContext";
+import { useRefreshUser } from "../../hooks/useRefreshUser";
 import ukFlag from "../../assets/flags/uk-flag.svg";
 import franceFlag from "../../assets/flags/france-flag.svg";
 
@@ -16,9 +18,12 @@ const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const { t } = useTranslation();
   const { language, changeLanguage } = useLanguage();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const navigate = useNavigate();
+  const { refreshUserData } = useRefreshUser();
 
   useEffect(() => {
     // Show signup modal if user is not authenticated
@@ -28,6 +33,8 @@ const DashboardLayout = () => {
       setShowSignupModal(false);
     }
   }, [user]);
+
+
 
   useEffect(() => {
     // Handle resize events to determine if we're on mobile
@@ -48,12 +55,45 @@ const DashboardLayout = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, [sidebarOpen]);
 
+  // Auto-refresh user data when window gains focus
+  useEffect(() => {
+    const handleFocus = () => {
+      if (user?.user?._id) {
+        refreshUserData();
+      }
+    };
+
+    window.addEventListener('focus', handleFocus);
+    
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [user, refreshUserData]);
+
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+
+
+  const handleRefreshUserData = async () => {
+    setIsRefreshing(true);
+    try {
+      const success = await refreshUserData();
+      if (success) {
+        console.log('User data refreshed successfully');
+        // Show a brief success message
+        setTimeout(() => setIsRefreshing(false), 1000);
+      } else {
+        console.error('Failed to refresh user data');
+        setIsRefreshing(false);
+      }
+    } catch (error) {
+      console.error('Error refreshing user data:', error);
+      setIsRefreshing(false);
+    }
   };
 
   // Show loading state while auth is initializing
@@ -67,9 +107,18 @@ const DashboardLayout = () => {
 
   // If we're here, we're authenticated
   return (
-    <div className="w-full min-h-screen bg-gray-50 flex overflow-hidden">
-      {/* Language Selector - fixed position with improved mobile positioning */}
+    <SubscriptionGuard>
+      <div className="w-full min-h-screen bg-gray-50 flex overflow-hidden">
+        {/* Language Selector and Refresh Button - fixed position with improved mobile positioning */}
       <div className="fixed top-4 right-4 z-50 flex items-center space-x-2">
+        <button 
+          onClick={handleRefreshUserData}
+          disabled={isRefreshing}
+          className={`p-2 rounded-md bg-white shadow-md text-gray-600 hover:bg-gray-100 transition-all duration-200 ${isRefreshing ? 'opacity-50 cursor-not-allowed' : ''}`}
+          aria-label="Refresh user data"
+        >
+          <RefreshCw size={20} className={isRefreshing ? 'animate-spin' : ''} />
+        </button>
         <button 
           onClick={() => changeLanguage('fr')}
           className={`transition-all duration-200 transform hover:scale-110 ${language === 'fr' ? 'ring-2 ring-indigo-600 scale-110' : 'opacity-75'}`}
@@ -161,7 +210,8 @@ const DashboardLayout = () => {
           </div>
         </div>
       </main>
-    </div>
+      </div>
+    </SubscriptionGuard>
   );
 };
 

@@ -155,5 +155,11 @@ export const en = {
   incorrectPassword: "Incorrect password",
   successfullyLoggedIn: "Successfully logged in!",
   
+  // Subscription
+  freeTrialWarning: "Free trial expires in {days} days",
+  freeTrialExpiresToday: "Free trial expires today",
+  freeTrialExpired: "Free trial expired",
+  upgradeNow: "Upgrade Now",
+  
   // Add more translations as needed for your website
 }; 

@@ -24,7 +24,8 @@ import {
     GroupIcon,
     UserRound,
     Wallet2,
-    GitGraph
+    GitGraph,
+    AlertTriangle
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuthContext } from '../../../hooks/useAuthContext';
@@ -32,6 +33,7 @@ import { useLogout } from '../../../hooks/useLogout';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import logo from '../../../assets/REVWHEELlogo.png';
 import { useTranslation } from '../../../hooks/useTranslation';
+import { isOnFreeTrial, getFreeTrialRemainingDays } from '../../../utils/subscriptionUtils';
 
 const MenuItem = ({ icon: Icon, text, translationKey, path, active, collapsed, badge, onClick }) => {
     const navigate = useNavigate();
@@ -119,10 +121,26 @@ const Sidebar = ({ collapsed = false, toggleSidebar }) => {
     const location = useLocation();
     const currentPath = location.pathname;
     const { t } = useTranslation();
+    const navigate = useNavigate();
+
+    // Check if user is on free trial
+    const onFreeTrial = isOnFreeTrial(user);
+    const remainingDays = getFreeTrialRemainingDays(user);
+
+    // Subscription alert translations
+    const getTrialMessage = () => {
+        if (remainingDays === 0) {
+            return t('freeTrialExpired') || "Free trial expired";
+        } else if (remainingDays === 1) {
+            return t('freeTrialExpiresToday') || "Free trial expires today";
+        } else {
+            return (t('freeTrialWarning') || "Free trial expires in {days} days").replace('{days}', remainingDays);
+        }
+    };
 
     // Define all menu items with their paths
     const menuItems = [
-        { translationKey: "Analytics", icon: GitGraph, path: "/dashboard/analytics", badge: false },
+        { translationKey: "Analytics", icon: GitGraph, path: "/dashboard", badge: false },
         { translationKey: "customers", icon: UserRound, path: "/dashboard/customers", badge: false },
         { translationKey: "settings", icon: Settings, path: "/dashboard/settings" },
         { translationKey: "subscription", icon: Wallet2, path: "/dashboard/subscription", badge: false },
@@ -208,6 +226,35 @@ const Sidebar = ({ collapsed = false, toggleSidebar }) => {
                     />
                 ))}
             </div>
+
+            {/* Free Trial Alert */}
+            {onFreeTrial && !collapsed && (
+                <div className="px-4 py-3 border-t border-gray-100">
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="bg-orange-50 border border-orange-200 rounded-lg p-3"
+                    >
+                        <div className="flex items-start">
+                            <AlertTriangle className="h-4 w-4 text-orange-500 mt-0.5 flex-shrink-0" />
+                            <div className="ml-2 flex-1">
+                                                                 <p className="text-xs font-medium text-orange-800">
+                                     {getTrialMessage()}
+                                 </p>
+                                 <button
+                                     onClick={() => {
+                                         navigate('/dashboard/subscription');
+                                         if (toggleSidebar) toggleSidebar();
+                                     }}
+                                     className="mt-2 text-xs bg-orange-600 hover:bg-orange-700 text-white px-2 py-1 rounded font-medium transition-colors"
+                                 >
+                                     {t('upgradeNow') || "Upgrade Now"}
+                                 </button>
+                            </div>
+                        </div>
+                    </motion.div>
+                </div>
+            )}
 
             {/* Sign Out Button at the bottom */}
             <div className={`${collapsed ? 'px-2' : 'px-4'} py-4 border-t border-gray-100`}>

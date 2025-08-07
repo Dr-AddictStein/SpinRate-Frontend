@@ -12,13 +12,14 @@ const translations = {
     monthly: "Monthly",
     yearly: "Yearly",
     euroMonth: "9€/MONTH",
-    euroYear: "81€/YEAR",
+    euroYear: "84€/YEAR",
     noCommitment: "No commitment",
     setUp: "Set up in 5 minutes",
     boostReviews: "BOOST YOUR GOOGLE REVIEWS",
     driveRepeatBusiness: "Drive repeat business",
     support247: "Support 24/7",
     startFreeTrial: "Start your free trial",
+    creatingSession: "Creating session...",
   },
   fr: {
     oneAffordablePlan: "Un forfait abordable",
@@ -26,44 +27,67 @@ const translations = {
     monthly: "Mensuel",
     yearly: "Annuel",
     euroMonth: "9€/MOIS",
-    euroYear: "81€/AN",
+    euroYear: "84€/AN",
     noCommitment: "Aucun engagement",
     setUp: "Configuration en 5 minutes",
     boostReviews: "BOOSTEZ VOS AVIS GOOGLE",
     driveRepeatBusiness: "Stimulez les affaires récurrentes",
     support247: "Support 24/7",
     startFreeTrial: "Commencez votre essai gratuit",
+    creatingSession: "Création de la session...",
   }
 };
 
-// Payment configuration
-const paymentConfig = {
-  monthly: {
-    payment_link: "https://buy.stripe.com/test_9B6eVcarm8Slf1G0Ca7kc00",
-    price_id: "price_1RnlaDC46ht2WWU6pal70Tka"
-  },
-  yearly: {
-    payment_link: "https://buy.stripe.com/test_14A5kCdDy3y18DigB87kc01",
-    price_id: "price_1RnlfCC46ht2WWU6lQrqOvgt"
-  }
-};
+
 
 const PricingSection = () => {
   const { language } = useLanguage();
   const { user } = useAuthContext();
   const t = translations[language] || translations.en;
   const [isYearly, setIsYearly] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleStartTrial = () => {
-    const plan = isYearly ? 'yearly' : 'monthly';
-    const config = paymentConfig[plan];
-    const userEmail = user?.user?.email || '';
+  const handleStartTrial = async () => {
+    try {
+      setIsLoading(true);
+      const subscriptionType = isYearly ? 'yearly' : 'monthly';
+      const userEmail = user?.user?.email || '';
+      const userId = user?.user?._id;
 
-    // Construct the payment URL with prefilled email
-    const paymentUrl = `${config.payment_link}?prefilled_email=${encodeURIComponent(userEmail)}`;
+      if (!userId) {
+        console.error('User ID not found');
+        setIsLoading(false);
+        return;
+      }
 
-    // Open in new tab
-    window.open(paymentUrl, '_blank');
+      // Create checkout session
+      const response = await fetch('http://localhost:4000/api/webhooks/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: userId,
+          subscriptionType: subscriptionType,
+          userEmail: userEmail
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.url) {
+        // Redirect to Stripe checkout
+        window.open(data.url, '_blank');
+      } else {
+        console.error('Failed to create checkout session:', data.error);
+        // You might want to show a toast notification here
+      }
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+      // You might want to show a toast notification here
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -274,22 +298,38 @@ const PricingSection = () => {
             {/* CTA Button */}
             <motion.button
               onClick={handleStartTrial}
-              className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 shadow-md relative overflow-hidden"
-              whileHover={{
+              disabled={isLoading}
+              className={`w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 shadow-md relative overflow-hidden ${
+                isLoading ? 'opacity-75 cursor-not-allowed' : ''
+              }`}
+              whileHover={!isLoading ? {
                 scale: 1.02,
                 boxShadow: "0 10px 25px -5px rgba(59, 130, 246, 0.5)"
-              }}
-              whileTap={{ scale: 0.98 }}
+              } : {}}
+              whileTap={!isLoading ? { scale: 0.98 } : {}}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
             >
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-500 opacity-0"
-                whileHover={{ opacity: 1 }}
+                whileHover={!isLoading ? { opacity: 1 } : {}}
                 transition={{ duration: 0.3 }}
               />
-              <span className="relative z-10">{t.startFreeTrial}</span>
+              <span className="relative z-10 flex items-center justify-center">
+                {isLoading ? (
+                  <>
+                    <motion.div
+                      className="w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2"
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    />
+                    {t.creatingSession || "Creating session..."}
+                  </>
+                ) : (
+                  t.startFreeTrial
+                )}
+              </span>
             </motion.button>
           </div>
         </motion.div>
