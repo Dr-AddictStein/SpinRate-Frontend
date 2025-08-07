@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLanguage } from "../../context/LanguageContext";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 // Translations object
 const translations = {
@@ -38,6 +39,11 @@ const translations = {
     name: "Name",
     username: "Username",
     email: "Email",
+    role: "Role",
+    phone: "Phone",
+    subscription: "Subscription",
+    lastPayment: "Last Payment",
+    status: "Status",
     // Table headers - Wheels
     instructions: "Instructions",
     createdDate: "Created Date",
@@ -55,6 +61,13 @@ const translations = {
     pending: "Pending",
     yes: "Yes",
     no: "No",
+    active: "Active",
+    expired: "Expired",
+    freeTrial: "Free Trial",
+    monthly: "Monthly",
+    yearly: "Yearly",
+    admin: "Admin",
+    user: "User",
   },
   fr: {
     pageTitle: "Tableau de Bord Analytique",
@@ -78,6 +91,11 @@ const translations = {
     name: "Nom",
     username: "Nom d'utilisateur",
     email: "Email",
+    role: "Rôle",
+    phone: "Téléphone",
+    subscription: "Abonnement",
+    lastPayment: "Dernier Paiement",
+    status: "Statut",
     // Table headers - Wheels
     instructions: "Instructions",
     createdDate: "Date de Création",
@@ -95,12 +113,23 @@ const translations = {
     pending: "En attente",
     yes: "Oui",
     no: "Non",
+    active: "Actif",
+    expired: "Expiré",
+    freeTrial: "Essai Gratuit",
+    monthly: "Mensuel",
+    yearly: "Annuel",
+    admin: "Admin",
+    user: "Utilisateur",
   },
 };
 
 const DashboardAnalytics = () => {
   const { language } = useLanguage();
+  const { user } = useAuthContext();
   const t = translations[language] || translations.en;
+
+  // Check if user is admin
+  const isAdmin = user?.user?.role === "admin";
 
   const [adminData, setAdminData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -108,7 +137,7 @@ const DashboardAnalytics = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [userSearchTerm, setUserSearchTerm] = useState("");
   const [customerSearchTerm, setCustomerSearchTerm] = useState("");
-  const [activeTab, setActiveTab] = useState("users"); // 'users', 'wheels', 'customers'
+  const [activeTab, setActiveTab] = useState(isAdmin ? "users" : "wheels"); // 'users', 'wheels', 'customers'
   const [statsAnimated, setStatsAnimated] = useState(false);
 
   useEffect(() => {
@@ -116,7 +145,7 @@ const DashboardAnalytics = () => {
       try {
         setIsLoading(true);
         const response = await axios.get(
-          "http://localhost:4000/api/adminData/adminData"
+          "https://api.revwheel.fr/api/adminData/adminData"
         );
         setAdminData(response.data);
       } catch (err) {
@@ -184,6 +213,31 @@ const DashboardAnalytics = () => {
   const getEnrichedCount = () => {
     if (!adminData?.customers) return 0;
     return adminData.customers.filter((customer) => customer.enriched).length;
+  };
+
+  // Helper function to get subscription status
+  const getSubscriptionStatus = (user) => {
+    if (!user.subscriptionRemaining) return { status: 'none', type: 'none' };
+    
+    if (user.subscriptionRemaining === 7) {
+      return { status: 'freeTrial', type: 'freeTrial' };
+    } else if (user.subscriptionRemaining === 30) {
+      return { status: 'active', type: 'monthly' };
+    } else if (user.subscriptionRemaining === 365) {
+      return { status: 'active', type: 'yearly' };
+    } else {
+      return { status: 'expired', type: 'expired' };
+    }
+  };
+
+  // Helper function to format date
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    return new Date(dateString).toLocaleDateString(language === 'fr' ? 'fr-FR' : 'en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
   };
 
   const StatCard = ({ title, value, icon: Icon, color, subtext, id }) => {
@@ -281,14 +335,16 @@ const DashboardAnalytics = () => {
       </div>
 
       {/* Stats grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
-        <StatCard
-          id="users-count"
-          title={t.totalUsers}
-          value={adminData?.usersCount || 0}
-          icon={Users}
-          color="blue"
-        />
+      <div className={`grid grid-cols-1 sm:grid-cols-2 ${isAdmin ? 'lg:grid-cols-4' : 'lg:grid-cols-3'} gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8`}>
+        {isAdmin && (
+          <StatCard
+            id="users-count"
+            title={t.totalUsers}
+            value={adminData?.usersCount || 0}
+            icon={Users}
+            color="blue"
+          />
+        )}
         <StatCard
           id="wheels-count"
           title={t.totalWheels}
@@ -340,13 +396,15 @@ const DashboardAnalytics = () => {
       {/* Tabs navigation */}
       <div className="bg-white rounded-t-xl shadow-sm border border-gray-100 p-0">
         <div className="flex flex-wrap md:flex-nowrap border-b border-gray-200">
-          <TabButton
-            id="users"
-            label={t.usersTab}
-            icon={User}
-            active={activeTab === "users"}
-            onClick={setActiveTab}
-          />
+          {isAdmin && (
+            <TabButton
+              id="users"
+              label={t.usersTab}
+              icon={User}
+              active={activeTab === "users"}
+              onClick={setActiveTab}
+            />
+          )}
           <TabButton
             id="wheels"
             label={t.wheelsTab}
@@ -429,32 +487,92 @@ const DashboardAnalytics = () => {
                     <th className="px-3 sm:px-6 py-2 sm:py-3 text-left">
                       {t.email}
                     </th>
+                    <th className="px-3 sm:px-6 py-2 sm:py-3 text-left">
+                      {t.role}
+                    </th>
+                    <th className="px-3 sm:px-6 py-2 sm:py-3 text-left">
+                      {t.phone}
+                    </th>
+                    <th className="px-3 sm:px-6 py-2 sm:py-3 text-center">
+                      {t.subscription}
+                    </th>
+                    <th className="px-3 sm:px-6 py-2 sm:py-3 text-center">
+                      {t.lastPayment}
+                    </th>
+                    <th className="px-3 sm:px-6 py-2 sm:py-3 text-center">
+                      {t.status}
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {filteredUsers.map((user, index) => (
-                    <tr key={user._id} className="hover:bg-gray-50">
-                      <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-gray-500 text-xs sm:text-sm">
-                        {index + 1}
-                      </td>
-                      <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <div className="h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-gray-200 flex items-center justify-center mr-2 sm:mr-3">
-                            <User size={14} className="text-gray-500" />
+                  {filteredUsers.map((user, index) => {
+                    const subscriptionInfo = getSubscriptionStatus(user);
+                    return (
+                      <tr key={user._id} className="hover:bg-gray-50">
+                        <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-gray-500 text-xs sm:text-sm">
+                          {index + 1}
+                        </td>
+                        <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-gray-200 flex items-center justify-center mr-2 sm:mr-3">
+                              <User size={14} className="text-gray-500" />
+                            </div>
+                            <span className="font-medium text-gray-900 text-xs sm:text-sm">
+                              {user.fullName}
+                            </span>
                           </div>
-                          <span className="font-medium text-gray-900 text-xs sm:text-sm">
-                            {user.fullName}
+                        </td>
+                        <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-gray-500 text-xs sm:text-sm">
+                          {user.userName}
+                        </td>
+                        <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-gray-500 text-xs sm:text-sm">
+                          {user.email}
+                        </td>
+                        <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-center">
+                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                            user.role === 'admin' 
+                              ? 'bg-purple-100 text-purple-800' 
+                              : 'bg-blue-100 text-blue-800'
+                          }`}>
+                            {user.role === 'admin' ? t.admin : t.user}
                           </span>
-                        </div>
-                      </td>
-                      <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-gray-500 text-xs sm:text-sm">
-                        {user.userName}
-                      </td>
-                      <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-gray-500 text-xs sm:text-sm">
-                        {user.email}
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-gray-500 text-xs sm:text-sm">
+                          {user.phoneNumber || 'N/A'}
+                        </td>
+                        <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-center">
+                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                            subscriptionInfo.status === 'active' 
+                              ? 'bg-green-100 text-green-800'
+                              : subscriptionInfo.status === 'freeTrial'
+                              ? 'bg-orange-100 text-orange-800'
+                              : 'bg-red-100 text-red-800'
+                          }`}>
+                            {subscriptionInfo.type === 'monthly' ? t.monthly :
+                             subscriptionInfo.type === 'yearly' ? t.yearly :
+                             subscriptionInfo.type === 'freeTrial' ? t.freeTrial :
+                             t.expired}
+                          </span>
+                        </td>
+                        <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-center text-gray-500 text-xs sm:text-sm">
+                          {formatDate(user.lastPaymentDate)}
+                        </td>
+                        <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-center">
+                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                            subscriptionInfo.status === 'active' 
+                              ? 'bg-green-100 text-green-800'
+                              : subscriptionInfo.status === 'freeTrial'
+                              ? 'bg-orange-100 text-orange-800'
+                              : 'bg-red-100 text-red-800'
+                          }`}>
+                            {subscriptionInfo.status === 'active' ? t.active :
+                             subscriptionInfo.status === 'freeTrial' ? t.freeTrial :
+                             t.expired}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

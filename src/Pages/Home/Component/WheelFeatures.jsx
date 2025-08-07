@@ -11,6 +11,15 @@ import image2_2 from '../../../assets/2.2.png';
 import image3_1 from '../../../assets/3.1.png';
 import image3_2_1 from '../../../assets/3.2 (2).png';
 import image3_2_2 from '../../../assets/3.2.png';
+
+import imagee1_1 from '../../../assets/E 1.1 (2).png';
+import imagee1_2 from '../../../assets/E 1.2.png';
+import imagee1_3 from '../../../assets/E 1.3.png';
+import imagee2_1 from '../../../assets/E 2.1.png';
+import imagee2_2 from '../../../assets/E 2.2.png';
+import imagee3_1 from '../../../assets/E 3.1.png';
+import imagee3_2_1 from '../../../assets/E 3.2 (2).png';
+import imagee3_2_2 from '../../../assets/E 3.2.png';
 import revwheelMainFrontEN from '../../../assets/RevwheelMainFront.png';
 import revwheelMainFrontFR from '../../../assets/RevwheelMainFrontFR.png';
 
@@ -76,17 +85,17 @@ const translations = {
 const getFeatureImages = (language) => ({
   // Feature 1: Fully Customized for your brand
   customization: [
-    language === 'fr' ? revwheelMainFrontFR : revwheelMainFrontEN,
-    image1_1, 
-    image1_2, 
-    image1_3
+    language !== 'fr' ? revwheelMainFrontEN : revwheelMainFrontFR,
+    language !== 'fr' ? imagee1_1 : image1_1, 
+    language !== 'fr' ? imagee1_2 : image1_2, 
+    language !== 'fr' ? imagee1_3 : image1_3
   ],
   
   // Feature 2: Get Results - Emails, Sales & Analytics
-  analytics: [image2_1, image2_2],
+  analytics: [language !== 'fr' ? imagee2_1 : image2_1, language !== 'fr' ? imagee2_2 : image2_2],
   
   // Feature 3: Mobile, Marketing Materials
-  marketing: [image3_1, image3_2_1, image3_2_2]
+  marketing: [language !== 'fr' ? imagee3_1 : image3_1, language !== 'fr' ? imagee3_2_1 : image3_2_1, language !== 'fr' ? imagee3_2_2 : image3_2_2]
 });
 
 // Image carousel component

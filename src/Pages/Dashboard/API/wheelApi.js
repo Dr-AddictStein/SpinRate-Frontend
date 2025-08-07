@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Base API URL from environment or default
-const API_URL = "http://localhost:4000/api";
+const API_URL = "https://api.revwheel.fr/api";
 
 const wheelApi = {
   // Upload a file (using the existing file upload route)

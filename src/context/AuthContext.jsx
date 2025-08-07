@@ -27,7 +27,7 @@ export const validateUser = async (dispatch) => {
 
   try {
     // First, validate the user exists
-    const checkResponse = await fetch("http://localhost:4000/api/user/checkUser", {
+    const checkResponse = await fetch("https://api.revwheel.fr/api/user/checkUser", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -44,7 +44,7 @@ export const validateUser = async (dispatch) => {
     }
 
     // If validation passes, fetch the most updated user data
-    const fetchResponse = await fetch(`http://localhost:4000/api/user/getUserById/${storedUser.user._id}`, {
+    const fetchResponse = await fetch(`https://api.revwheel.fr/api/user/getUserById/${storedUser.user._id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -94,7 +94,7 @@ export const refreshUserData = async (dispatch) => {
   }
 
   try {
-    const response = await fetch(`http://localhost:4000/api/user/getUserById/${storedUser.user._id}`, {
+    const response = await fetch(`https://api.revwheel.fr/api/user/getUserById/${storedUser.user._id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

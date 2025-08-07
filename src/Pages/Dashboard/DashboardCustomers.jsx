@@ -57,7 +57,7 @@ const DashboardCustomers = () => {
     try {
       setIsLoading(true);
       const response = await axios.get(
-        `http://localhost:4000/api/customer/getCustomerByUserId/${user?.user?._id}`
+        `https://api.revwheel.fr/api/customer/getCustomerByUserId/${user?.user?._id}`
       );
 
       if (response.data && response.data.customers) {
@@ -142,7 +142,7 @@ const DashboardCustomers = () => {
     try {
       // API call
       await axios.put(
-        `http://localhost:4000/api/customer/updateStatus/${customerId}`
+        `https://api.revwheel.fr/api/customer/updateStatus/${customerId}`
       );
 
       // Refresh customer data
@@ -195,7 +195,7 @@ const DashboardCustomers = () => {
     try {
       // API call
       await axios.put(
-        `http://localhost:4000/api/customer/enrichCustomer/${currentCustomer._id}`,
+        `https://api.revwheel.fr/api/customer/enrichCustomer/${currentCustomer._id}`,
         {
           firstName: enrichData.firstName,
           lastName: enrichData.lastName,
@@ -221,7 +221,7 @@ const DashboardCustomers = () => {
       try {
         // API call
         await axios.delete(
-          `http://localhost:4000/api/customer/delete/${customerId}`
+          `https://api.revwheel.fr/api/customer/delete/${customerId}`
         );
 
         // Refresh data
