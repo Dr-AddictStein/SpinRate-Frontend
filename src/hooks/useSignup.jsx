@@ -6,13 +6,13 @@ export const useSignup = () => {
   const [error, setError] = useState(null);
   const { dispatch } = useAuthContext();
 
-  const signup = async (fullName, userName, email, phoneNumber, password) => {
+  const signup = async (fullName, email, phoneNumber, password) => {
     setError(null);
 
     const response = await fetch(`https://api.revwheel.fr/api/user/signup`, {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ fullName, userName, email, phoneNumber, password }),
+      body: JSON.stringify({ fullName, email, phoneNumber, password }),
     });
 
     const json = await response.json();

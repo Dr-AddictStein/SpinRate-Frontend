@@ -25,6 +25,11 @@ const WheelGamePage = () => {
   const { language, changeLanguage } = useLanguage();
   const { t } = useTranslation();
 
+  // Subscription check state
+  const [wheelOwner, setWheelOwner] = useState(null);
+  const [isSubscriptionExpired, setIsSubscriptionExpired] = useState(false);
+  const [isCheckingSubscription, setIsCheckingSubscription] = useState(false);
+
   // Force French as default language on component mount - only runs once
   useEffect(() => {
     // If there's no language set in localStorage or it's not French, set it to French
@@ -90,6 +95,20 @@ const WheelGamePage = () => {
     showUserInfoModal,
   ]);
 
+  // Check subscription status
+  const checkSubscriptionStatus = (userData) => {
+    if (!userData || !userData.lastPaymentDate || !userData.subscriptionRemaining) {
+      return false;
+    }
+
+    const lastPaymentDate = new Date(userData.lastPaymentDate);
+    const currentDate = new Date();
+    const daysSinceLastPayment = Math.floor((currentDate - lastPaymentDate) / (1000 * 60 * 60 * 24));
+    
+    // If days since last payment is greater than subscription remaining, subscription is expired
+    return daysSinceLastPayment > userData.subscriptionRemaining;
+  };
+
   // Fetch wheel data from backend
   useEffect(() => {
     const fetchWheel = async () => {
@@ -101,6 +120,41 @@ const WheelGamePage = () => {
 
         if (response.data.data) {
           setWheel(response.data.data);
+          
+          // Fetch user data after getting wheel data
+          if (response.data.data.userId) {
+            setIsCheckingSubscription(true);
+            try {
+              const userResponse = await axios.get(
+                `${API_URL}/user/getUserById/${response.data.data.userId}`
+              );
+              
+              if (userResponse.data.data) {
+                setWheelOwner(userResponse.data.data);
+                const isExpired = checkSubscriptionStatus(userResponse.data.data);
+                setIsSubscriptionExpired(isExpired);
+                
+                console.log("Subscription check:", {
+                  lastPaymentDate: userResponse.data.data.lastPaymentDate,
+                  subscriptionRemaining: userResponse.data.data.subscriptionRemaining,
+                  isExpired: isExpired
+                });
+                
+                if (isExpired) {
+                  console.log("Wheel owner subscription is expired");
+                  // Don't update scan count if subscription is expired
+                  return;
+                }
+              }
+            } catch (userErr) {
+              console.error("Error fetching user data:", userErr);
+              // Continue with wheel loading even if user fetch fails
+              // Set subscription as not expired by default if we can't verify
+              setIsSubscriptionExpired(false);
+            } finally {
+              setIsCheckingSubscription(false);
+            }
+          }
         } else {
           setError("Wheel not found");
         }
@@ -118,11 +172,11 @@ const WheelGamePage = () => {
     }
   }, [id]);
 
-  // Update wheel scan count when page loads
+  // Update wheel scan count when page loads - only if subscription is not expired
   useEffect(() => {
     const updateScanCount = async () => {
       try {
-        if (id) {
+        if (id && !isSubscriptionExpired) {
           await axios.put(`${API_URL}/wheel/updateWheelScans/${id}`);
           console.log("Wheel scan count updated");
         }
@@ -133,7 +187,7 @@ const WheelGamePage = () => {
     };
 
     updateScanCount();
-  }, [id]);
+  }, [id, isSubscriptionExpired]);
 
   // Add custom animation classes
   useEffect(() => {
@@ -549,7 +603,7 @@ const WheelGamePage = () => {
 
   // Handle wheel spin with enhanced animation
   const spinWheel = () => {
-    if (isSpinning || !wheel || hasSpun || !isUserVerified) return;
+    if (isSpinning || !wheel || hasSpun || !isUserVerified || isSubscriptionExpired) return;
 
     setIsSpinning(true);
     setResult(null);
@@ -820,7 +874,7 @@ const WheelGamePage = () => {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || isCheckingSubscription) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="text-center">
@@ -831,8 +885,37 @@ const WheelGamePage = () => {
             </div>
           </div>
           <p className="text-xl font-medium text-black mt-6">
-            Loading your prize wheel...
+            {isCheckingSubscription 
+              ? (language === "fr" ? "Vérification de l'abonnement..." : "Checking subscription...")
+              : (language === "fr" ? "Chargement de votre roue..." : "Loading your prize wheel...")
+            }
           </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show subscription expired interface
+  if (isSubscriptionExpired && wheelOwner) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white px-4">
+        <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full text-center border-2 border-black">
+          <div className="text-red-500 text-5xl mb-4">⚠️</div>
+          <h2 className="text-2xl font-bold text-black mb-2">
+            {language === "fr" ? "Abonnement Expiré" : "Subscription Expired"}
+          </h2>
+          <p className="text-black mb-6">
+            {language === "fr" 
+              ? "Le propriétaire de cette roue a un abonnement expiré. Veuillez contacter le propriétaire pour renouveler son abonnement."
+              : "The owner of this wheel has an expired subscription. Please contact the owner to renew their subscription."
+            }
+          </p>
+          <Link
+            to="/"
+            className="inline-block bg-black hover:bg-gray-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200"
+          >
+            {language === "fr" ? "Retour à l'accueil" : "Go Home"}
+          </Link>
         </div>
       </div>
     );
@@ -914,7 +997,7 @@ const WheelGamePage = () => {
           )}
 
           {/* Wheel game - now always visible */}
-          {showWheelGame && (
+          {showWheelGame && !isSubscriptionExpired && (
             <div className="pt-32 sm:pt-40 md:pt-52 pb-2 sm:pb-6 md:pb-8 overflow-visible flex-1 flex flex-col justify-center">
               <div className="mx-auto w-full lg:w-[95%]">
                 {/* Spin button above wheel */}
@@ -926,7 +1009,8 @@ const WheelGamePage = () => {
                         !isUserVerified ||
                         isSpinning ||
                         showInstructionModal ||
-                        showUserInfoModal
+                        showUserInfoModal ||
+                        isSubscriptionExpired
                           ? "bg-gray-400 text-gray-200 cursor-not-allowed"
                           : "text-white hover:opacity-90"
                       }`}
@@ -935,7 +1019,8 @@ const WheelGamePage = () => {
                       !isUserVerified ||
                       isSpinning ||
                       showInstructionModal ||
-                      showUserInfoModal
+                      showUserInfoModal ||
+                      isSubscriptionExpired
                         ? {}
                         : { scale: 1.05 }
                     }
@@ -944,7 +1029,8 @@ const WheelGamePage = () => {
                       !isUserVerified ||
                       isSpinning ||
                       showInstructionModal ||
-                      showUserInfoModal
+                      showUserInfoModal ||
+                      isSubscriptionExpired
                         ? {}
                         : { scale: 0.95 }
                     }
@@ -954,14 +1040,16 @@ const WheelGamePage = () => {
                       hasSpun ||
                       !isUserVerified ||
                       showInstructionModal ||
-                      showUserInfoModal
+                      showUserInfoModal ||
+                      isSubscriptionExpired
                     }
                     style={
                       hasSpun ||
                       !isUserVerified ||
                       isSpinning ||
                       showInstructionModal ||
-                      showUserInfoModal
+                      showUserInfoModal ||
+                      isSubscriptionExpired
                         ? {}
                         : {
                             backgroundColor:
@@ -1054,7 +1142,7 @@ const WheelGamePage = () => {
       </div>
 
       {/* Initial Instruction Modal - updated for white with black text theme */}
-      {wheel && showInstructionModal && (
+      {wheel && showInstructionModal && !isSubscriptionExpired && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-[1px] flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
           <motion.div
             className="bg-white rounded-2xl border-4 border-black shadow-2xl max-w-md w-[95%] sm:w-[90%] md:w-full p-4 sm:p-6 md:p-8 relative pointer-events-auto max-h-[90vh] overflow-y-auto my-auto"
@@ -1348,7 +1436,7 @@ const WheelGamePage = () => {
       )}
 
       {/* User Info Modal - appears after review button click */}
-      {showUserInfoModal && !isUserVerified && (
+      {showUserInfoModal && !isUserVerified && !isSubscriptionExpired && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-[1px] flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
           <motion.div
             className="bg-white rounded-2xl border-4 border-black shadow-2xl max-w-md w-[95%] sm:w-[90%] md:w-full p-4 sm:p-6 md:p-8 relative pointer-events-auto max-h-[90vh] overflow-y-auto my-auto"
@@ -1533,7 +1621,7 @@ const WheelGamePage = () => {
       )}
 
       {/* Awaiting Validation Popup */}
-      {showValidationPopup && (
+      {showValidationPopup && !isSubscriptionExpired && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-[1px] flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
           <motion.div
             className="bg-white rounded-2xl border-4 border-black shadow-2xl max-w-md w-[80%] sm:w-[60%] md:w-[50%] p-4 sm:p-6 md:p-8 relative pointer-events-auto text-center"

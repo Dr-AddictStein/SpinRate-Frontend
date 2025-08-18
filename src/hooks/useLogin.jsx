@@ -7,13 +7,13 @@ export const useLogin = () => {
   const [error, setError] = useState(null);
   const { dispatch } = useAuthContext();
 
-  const login = async (userName, password) => {
+  const login = async (email, password) => {
     setError(null);
 
     const response = await fetch(`https://api.revwheel.fr/api/user/login`, {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ userName, password }),
+      body: JSON.stringify({ email, password }),
     });
 
     const json = await response.json();

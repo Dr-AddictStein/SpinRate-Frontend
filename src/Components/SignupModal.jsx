@@ -3,7 +3,7 @@ import { useSignup } from "../hooks/useSignup";
 import { useLogin } from "../hooks/useLogin";
 import { useLogout } from '../hooks/useLogout.js';
 import { toast, Toaster } from "react-hot-toast";
-import { X, User, Lock, Mail, UserPlus, Users, Phone } from 'lucide-react';
+import { X, User, Lock, UserPlus, Users, Phone } from 'lucide-react';
 import Loader from './Loader.jsx';
 import LoginModal from './LoginModal.jsx';
 import { Link } from 'react-router-dom';
@@ -21,21 +21,15 @@ const SignupModal = ({ closeModal }) => {
     const [authLoader, setAuthLoader] = useState(false);
     const [showLoginModal, setShowLoginModal] = useState(false);
 
-    const [signUpData, setSignUpData] = useState({ fullName: '', userName: '', email: '', phoneNumber: '', password: '' });
+    const [signUpData, setSignUpData] = useState({ fullName: '', email: '', phoneNumber: '', password: '' });
 
     const handleSignup = async (e) => {
         e.preventDefault();
         setAuthLoader(true);
         try {
-            const response = await signup(signUpData.fullName, signUpData.userName, signUpData.email, signUpData.phoneNumber, signUpData.password);
+            const response = await signup(signUpData.fullName, signUpData.email, signUpData.phoneNumber, signUpData.password);
             if (response === "Email already exists.!.") {
                 toast.error(t('emailAlreadyExists'));
-                setTimeout(() => {
-                    setAuthLoader(false);
-                }, [1000])
-            }
-            else if (response === "Username already taken.!.") {
-                toast.error(t('usernameAlreadyTaken'));
                 setTimeout(() => {
                     setAuthLoader(false);
                 }, [1000])
@@ -124,23 +118,6 @@ const SignupModal = ({ closeModal }) => {
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-700 flex items-center">
                                             <Users size={16} className="mr-2 text-indigo-500" />
-                                            {t('username')}
-                                        </label>
-                                        <div className="relative">
-                                            <input
-                                                type="text"
-                                                value={signUpData.userName}
-                                                onChange={(e) => setSignUpData({ ...signUpData, userName: e.target.value })}
-                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                                                placeholder={t('chooseUsername')}
-                                                required
-                                            />
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-700 flex items-center">
-                                            <Mail size={16} className="mr-2 text-indigo-500" />
                                             {t('email')}
                                         </label>
                                         <div className="relative">

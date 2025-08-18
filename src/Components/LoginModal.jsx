@@ -1,35 +1,26 @@
 import React, { useState } from 'react'
-import { useSignup } from "../hooks/useSignup";
 import { useLogin } from "../hooks/useLogin";
-import { useLogout } from '../hooks/useLogout.js';
 import { toast, Toaster } from "react-hot-toast";
-import { X, LogIn, User, Lock, ArrowRight, Mail } from 'lucide-react';
+import { X, LogIn, User, Lock, ArrowRight } from 'lucide-react';
 import SignupModal from './SignupModal.jsx';
-import AuthLoader from './Loader.jsx';
 import Loader from './Loader.jsx';
 import { useTranslation } from '../hooks/useTranslation.jsx';
 
 const LoginModal = ({ closeModal }) => {
-    const { signup } = useSignup();
     const { login } = useLogin();
-    const { logout } = useLogout();
     const { t } = useTranslation();
 
     const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
-    const [userInfo, setUserInfo] = useState(null);
-    const [userSubmissions, setUserSubmissions] = useState(null);
-    const [userLoader, setUserLoader] = useState(false);
     const [authLoader, setAuthLoader] = useState(false);
-    const [loginData, setLoginData] = useState({ userName: '', password: '' });
-    const [signUpData, setSignUpData] = useState({ userName: '', email: '', password: '' });
+    const [loginData, setLoginData] = useState({ email: '', password: '' });
 
     const handleLogin = async (e) => {
         e.preventDefault();
         setAuthLoader(true);
         try {
-            const response = await login(loginData.userName, loginData.password);
-            if (response === "Incorrect userName.!.") {
-                toast.error(t('incorrectUsername'));
+            const response = await login(loginData.email, loginData.password);
+            if (response === "Incorrect email.!.") {
+                toast.error(t('incorrectEmail'));
                 setTimeout(() => {
                     setAuthLoader(false);
                 }, [1000])
@@ -49,8 +40,6 @@ const LoginModal = ({ closeModal }) => {
             else {
                 toast.success(t('successfullyLoggedIn'));
                 setAuthLoader(false);
-                setUserLoader(true);
-                setUserLoader(false);
                 setIsSignupModalOpen(false);
                 if (closeModal) closeModal();
             }
@@ -101,15 +90,15 @@ const LoginModal = ({ closeModal }) => {
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-700 flex items-center">
                                             <User size={16} className="mr-2 text-blue-500" />
-                                            {t('username')}
+                                            {t('email')}
                                         </label>
                                         <div className="relative">
                                             <input
-                                                type="text"
-                                                value={loginData.userName}
-                                                onChange={(e) => setLoginData({ ...loginData, userName: e.target.value })}
+                                                type="email"
+                                                value={loginData.email}
+                                                onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
                                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                                placeholder={t('enterUsername')}
+                                                placeholder={t('enterEmail')}
                                                 required
                                             />
                                         </div>
