@@ -20,8 +20,8 @@ import imagee2_2 from '../../../assets/E 2.2.png';
 import imagee3_1 from '../../../assets/E 3.1.png';
 import imagee3_2_1 from '../../../assets/E 3.2 (2).png';
 import imagee3_2_2 from '../../../assets/E 3.2.png';
-import revwheelMainFrontEN from '../../../assets/RevwheelMainFront.png';
-import revwheelMainFrontFR from '../../../assets/RevwheelMainFrontFR.png';
+import revwheelMainFrontEN from '../../../assets/E 1.1.png';
+import revwheelMainFrontFR from '../../../assets/1.1.png';
 
 // Translations object
 const translations = {

@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../../../context/LanguageContext";
 import heroBG from "../../../../public/hero-bg-scaled.jpg"
+import revwheelVideo from "../../../../public/Revwheel_Presentation.mp4"
 
 // Translations object
 const translations = {
@@ -32,9 +33,22 @@ const translations = {
 
 const Hero = () => {
     const taglineRef = useRef(null);
+    const videoRef = useRef(null);
     const navigate = useNavigate();
     const { language } = useLanguage();
     const t = translations[language] || translations.en;
+
+    const handleVideoClick = () => {
+        if (videoRef.current) {
+            if (videoRef.current.paused) {
+                videoRef.current.play();
+                // Unmute after user interaction
+                videoRef.current.muted = false;
+            } else {
+                videoRef.current.pause();
+            }
+        }
+    };
 
     return (
         <section className="relative bg-white 2xl:pt-20 pb-16 md:pb-24 overflow-hidden flex flex-col items-center">
@@ -117,25 +131,24 @@ const Hero = () => {
                             {/* Video glow effect */}
                             <div className="absolute inset-0 bg-blue-400 rounded-2xl filter blur-xl opacity-20"></div>
                             
-                            {/* Video wrapper with aspect ratio */}
-                            <div className="relative aspect-video bg-gray-900 rounded-2xl overflow-hidden">
-                                {/* Actual video element */}
-                                <motion.video
-                                    initial={{ scale: 1.1 }}
-                                    animate={{ scale: 1 }}
-                                    transition={{ duration: 1.5 }}
-                                    className="w-full h-full object-cover"
+                            {/* Simple Video Element */}
+                            <div className="relative bg-gray-900 rounded-2xl overflow-hidden">
+                                <video
+                                    ref={videoRef}
+                                    className="w-full h-auto object-contain cursor-pointer"
+                                    controls
                                     autoPlay
                                     muted
                                     loop
                                     playsInline
+                                    onClick={handleVideoClick}
                                 >
-                                    <source src="https://s3.eu-west-2.amazonaws.com/wheelysales/landing/wheely-sales.mp4" type="video/mp4" />
+                                    <source src={revwheelVideo} type="video/mp4" />
                                     Your browser does not support the video tag.
-                                </motion.video>
+                                </video>
                                 
                                 {/* Optional overlay gradient for better text contrast if needed */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-40"></div>
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-40 pointer-events-none"></div>
                             </div>
                             
                             {/* Decorative border */}

@@ -107,15 +107,6 @@ const PrivacyPolicy = () => {
   return (
     <div className="py-10 bg-gray-50 min-h-screen">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Back button */}
-        <Link 
-          to="/" 
-          className="inline-flex items-center text-blue-500 hover:text-blue-700 mb-6 group"
-        >
-          <ChevronLeft size={18} className="mr-1 group-hover:-translate-x-0.5 transition-transform" />
-          <span>{t.backToHome}</span>
-        </Link>
-
         {/* Header */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -132,6 +123,17 @@ const PrivacyPolicy = () => {
             {t.heading}
           </p>
         </motion.div>
+
+        {/* Back button - moved to just above content */}
+        <div className="mb-4">
+          <Link 
+            to="/" 
+            className="inline-flex items-center text-blue-500 hover:text-blue-700 group transition-colors duration-200"
+          >
+            <ChevronLeft size={18} className="mr-1 group-hover:-translate-x-0.5 transition-transform duration-200" />
+            <span className="font-medium">{t.backToHome}</span>
+          </Link>
+        </div>
 
         {/* Content */}
         <div 

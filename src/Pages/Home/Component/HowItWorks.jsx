@@ -4,6 +4,12 @@ import { QrCode, Star, RotateCw, Database, Smartphone, BarChart, Users, IndentIn
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../../context/LanguageContext';
 
+// Import images
+import englishPC from '../../../assets/English - PC.png';
+import englishMobile from '../../../assets/English - Mobile.png';
+import frenchPC from '../../../assets/French - PC.png';
+import frenchMobile from '../../../assets/French - Mobile.png';
+
 // Translations object
 const translations = {
   en: {
@@ -54,12 +60,22 @@ const HowItWorks = () => {
   const { language } = useLanguage();
   const t = translations[language] || translations.en;
 
-  // Steps data with icons
-  const boxIcons = [
-    <TrendingUp size={48} className="text-blue-500" />,
-    <ChartSpline size={48} className="text-green-500" />,
-    <DatabaseBackup size={48} className="text-purple-500" />
-  ];
+  // Get the appropriate image based on language and device type
+  const getImageSource = () => {
+    if (language === 'en') {
+      return {
+        pc: englishPC,
+        mobile: englishMobile
+      };
+    } else {
+      return {
+        pc: frenchPC,
+        mobile: frenchMobile
+      };
+    }
+  };
+
+  const images = getImageSource();
 
   // Animation variants
   const containerVariants = {
@@ -118,53 +134,35 @@ const HowItWorks = () => {
           ))}
         </div>
 
-        {/* Feature boxes below */}
+        {/* Images section - replacing the feature boxes */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8"
+          className="flex justify-center"
         >
-          {t.steps.map((step, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              className="flex flex-col items-center bg-white rounded-xl shadow-lg p-6 md:p-8 transition-transform duration-300 hover:transform hover:scale-105 h-full"
-            >
-              {/* Icon */}
-              <div className="mb-4 md:mb-6 flex justify-center">
-                <div className="w-16 h-16 md:w-20 md:h-20 flex items-center justify-center">
-                  <div className="block md:hidden">
-                    {React.cloneElement(boxIcons[index], {
-                      size: 40,
-                      className: boxIcons[index].props.className
-                    })}
-                  </div>
-                  <div className="hidden md:block">
-                    {React.cloneElement(boxIcons[index], {
-                      size: 48,
-                      className: boxIcons[index].props.className
-                    })}
-                  </div>
-                </div>
-              </div>
-
-              {/* Feature label */}
-              <div className="text-center mb-3 md:mb-4">
-                <h3 className="text-lg md:text-xl font-extrabold text-gray-800" style={{ fontWeight: 900 }}>
-                  {index === 0 ? 
-                    (language === 'en' ? "Increase" : "Stimulez") : 
-                    index === 1 ? 
-                    (language === 'en' ? "Boost" : "Boostez") : 
-                    (language === 'en' ? "Collect" : "Collectez")
-                  }
-                </h3>
-              </div>
-
-              {/* Description */}
-              <p className="text-gray-600 text-center text-sm md:text-base leading-relaxed" dangerouslySetInnerHTML={{ __html: step.description }} />
-            </motion.div>
-          ))}
+          <motion.div
+            variants={itemVariants}
+            className="w-full max-w-6xl"
+          >
+            {/* Mobile image - shown on mobile devices */}
+            <div className="block md:hidden">
+              <img 
+                src={images.mobile} 
+                alt={language === 'en' ? 'RevWheel Mobile Interface' : 'Interface Mobile RevWheel'}
+                className="w-full h-auto rounded-lg shadow-lg"
+              />
+            </div>
+            
+            {/* Desktop image - shown on desktop devices */}
+            <div className="hidden md:block">
+              <img 
+                src={images.pc} 
+                alt={language === 'en' ? 'RevWheel Desktop Interface' : 'Interface Bureau RevWheel'}
+                className="w-full h-auto rounded-lg shadow-lg"
+              />
+            </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>
