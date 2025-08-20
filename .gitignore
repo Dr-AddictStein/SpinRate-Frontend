@@ -24,6 +24,6 @@ dist-ssr
 *.sw?
 
 # Media files
-public/Revwheel_Presentation.mp4
+# public/Revwheel_Presentation.mp4
 public/Revwheel-Presentation.mp4
-*.mp4
+# *.mp4
