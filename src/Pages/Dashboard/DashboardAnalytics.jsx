@@ -4,6 +4,7 @@ import {
   ArrowUp,
   BarChart2,
   ExternalLink,
+  Eye,
   Gift,
   PieChart,
   Scan,
@@ -11,6 +12,7 @@ import {
   User,
   UserCheck,
   Users,
+  X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLanguage } from "../../context/LanguageContext";
@@ -44,11 +46,30 @@ const translations = {
     lastPayment: "Last Payment",
     status: "Status",
     // Table headers - Wheels
+    businessName: "Business Name",
     instructions: "Instructions",
     createdDate: "Created Date",
     scans: "Scans",
     lots: "Lots",
     reviewLink: "Review Link",
+    viewDetails: "View Details",
+    // Modal content
+    wheelDetails: "Wheel Details",
+    close: "Close",
+    wheelId: "Wheel ID",
+    userId: "User ID",
+    socialMediaLink: "Social Media Link",
+    logoUrl: "Logo URL",
+    mainColors: "Main Colors",
+    color1: "Color 1",
+    color2: "Color 2",
+    color3: "Color 3",
+    lotName: "Lot Name",
+    odds: "Odds",
+    promoCode: "Promo Code",
+    updatedDate: "Updated Date",
+    noLogo: "No logo uploaded",
+    noSocialMedia: "No social media link",
     // Table headers - Customers
     phone: "Phone",
     prize: "Prize",
@@ -95,11 +116,30 @@ const translations = {
     lastPayment: "Dernier Paiement",
     status: "Statut",
     // Table headers - Wheels
+    businessName: "Nom d'Entreprise",
     instructions: "Instructions",
     createdDate: "Date de Création",
     scans: "Scans",
     lots: "Lots",
     reviewLink: "Lien d'Avis",
+    viewDetails: "Voir Détails",
+    // Modal content
+    wheelDetails: "Détails de la Roue",
+    close: "Fermer",
+    wheelId: "ID de la Roue",
+    userId: "ID Utilisateur",
+    socialMediaLink: "Lien Réseaux Sociaux",
+    logoUrl: "URL du Logo",
+    mainColors: "Couleurs Principales",
+    color1: "Couleur 1",
+    color2: "Couleur 2",
+    color3: "Couleur 3",
+    lotName: "Nom du Lot",
+    odds: "Cotes",
+    promoCode: "Code Promo",
+    updatedDate: "Date de Mise à Jour",
+    noLogo: "Aucun logo téléchargé",
+    noSocialMedia: "Aucun lien de réseaux sociaux",
     // Table headers - Customers
     phone: "Téléphone",
     prize: "Prix",
@@ -135,8 +175,10 @@ const DashboardAnalytics = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [userSearchTerm, setUserSearchTerm] = useState("");
   const [customerSearchTerm, setCustomerSearchTerm] = useState("");
-  const [activeTab, setActiveTab] = useState(isAdmin ? "users" : "wheels"); // 'users', 'wheels', 'customers'
+  const [activeTab, setActiveTab] = useState(isAdmin ? "users" : "customers"); // 'users', 'wheels', 'customers'
   const [statsAnimated, setStatsAnimated] = useState(false);
+  const [selectedWheel, setSelectedWheel] = useState(null);
+  const [isWheelModalOpen, setIsWheelModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchAdminData = async () => {
@@ -164,16 +206,23 @@ const DashboardAnalytics = () => {
     }
   }, [isLoading, adminData]);
 
-  // Filter wheels based on search term
+  // Filter wheels based on search term (admins see all wheels, no instruction filtering for admins)
   const filteredWheels =
-    adminData?.wheels?.filter(
-      (wheel) =>
+    adminData?.wheels?.filter((wheel) => {
+      // Apply search filter if search term exists
+      if (searchTerm.trim() === '') {
+        return true;
+      }
+      
+      return (
         wheel._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
         wheel.userId.toLowerCase().includes(searchTerm.toLowerCase()) ||
         wheel.customerInstruction
           .toLowerCase()
-          .includes(searchTerm.toLowerCase())
-    ) || [];
+          .includes(searchTerm.toLowerCase()) ||
+        (wheel.businessName || '').toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }) || [];
 
   // Filter users based on search term
   const filteredUsers =
@@ -235,6 +284,17 @@ const DashboardAnalytics = () => {
       month: 'short',
       day: 'numeric'
     });
+  };
+
+  // Modal functions
+  const openWheelModal = (wheel) => {
+    setSelectedWheel(wheel);
+    setIsWheelModalOpen(true);
+  };
+
+  const closeWheelModal = () => {
+    setSelectedWheel(null);
+    setIsWheelModalOpen(false);
   };
 
   const StatCard = ({ title, value, icon: Icon, color, subtext, id }) => {
@@ -342,13 +402,15 @@ const DashboardAnalytics = () => {
             color="blue"
           />
         )}
-        <StatCard
-          id="wheels-count"
-          title={t.totalWheels}
-          value={adminData?.wheelsCount || 0}
-          icon={BarChart2}
-          color="indigo"
-        />
+        {isAdmin && (
+          <StatCard
+            id="wheels-count"
+            title={t.totalWheels}
+            value={adminData?.wheelsCount || 0}
+            icon={BarChart2}
+            color="indigo"
+          />
+        )}
         <StatCard
           id="scans-count"
           title={t.totalScans}
@@ -402,13 +464,15 @@ const DashboardAnalytics = () => {
               onClick={setActiveTab}
             />
           )}
-          <TabButton
-            id="wheels"
-            label={t.wheelsTab}
-            icon={BarChart2}
-            active={activeTab === "wheels"}
-            onClick={setActiveTab}
-          />
+          {isAdmin && (
+            <TabButton
+              id="wheels"
+              label={t.wheelsTab}
+              icon={BarChart2}
+              active={activeTab === "wheels"}
+              onClick={setActiveTab}
+            />
+          )}
           <TabButton
             id="customers"
             label={t.customersTab}
@@ -434,7 +498,7 @@ const DashboardAnalytics = () => {
                 />
               </div>
             )}
-            {activeTab === "wheels" && (
+            {activeTab === "wheels" && isAdmin && (
               <div className="relative">
                 <input
                   type="text"
@@ -570,14 +634,17 @@ const DashboardAnalytics = () => {
           </div>
         )}
 
-        {/* Wheels Table - only visible when activeTab is 'wheels' */}
-        {activeTab === "wheels" && (
+        {/* Wheels Table - only visible when activeTab is 'wheels' and user is admin */}
+        {activeTab === "wheels" && isAdmin && (
           <div className="p-2 sm:p-4 md:p-6">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr className="text-xs text-gray-500 uppercase tracking-wider">
                     <th className="px-3 sm:px-6 py-2 sm:py-3 text-left">#</th>
+                    <th className="px-3 sm:px-6 py-2 sm:py-3 text-left">
+                      {t.businessName}
+                    </th>
                     <th className="px-3 sm:px-6 py-2 sm:py-3 text-left">
                       {t.instructions}
                     </th>
@@ -593,6 +660,9 @@ const DashboardAnalytics = () => {
                     <th className="px-3 sm:px-6 py-2 sm:py-3 text-center">
                       {t.reviewLink}
                     </th>
+                    <th className="px-3 sm:px-6 py-2 sm:py-3 text-center">
+                      {t.viewDetails}
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
@@ -600,6 +670,9 @@ const DashboardAnalytics = () => {
                     <tr key={wheel._id} className="hover:bg-gray-50">
                       <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-gray-500 text-xs sm:text-sm">
                         {index + 1}
+                      </td>
+                      <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-gray-900 text-xs sm:text-sm font-medium">
+                        {wheel.businessName || 'N/A'}
                       </td>
                       <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-gray-500 text-xs sm:text-sm">
                         {wheel.customerInstruction.length > 30
@@ -630,6 +703,15 @@ const DashboardAnalytics = () => {
                         ) : (
                           <span className="text-gray-400">N/A</span>
                         )}
+                      </td>
+                      <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-center">
+                        <button
+                          onClick={() => openWheelModal(wheel)}
+                          className="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-colors duration-200"
+                        >
+                          <Eye size={14} className="mr-1" />
+                          {t.viewDetails}
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -717,6 +799,259 @@ const DashboardAnalytics = () => {
           </div>
         )}
       </div>
+
+      {/* Wheel Details Modal */}
+      {isWheelModalOpen && selectedWheel && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <h2 className="text-xl font-semibold text-gray-900">
+                {t.wheelDetails}
+              </h2>
+              <button
+                onClick={closeWheelModal}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <X size={20} className="text-gray-500" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Basic Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium text-gray-900 mb-3">
+                    Basic Information
+                  </h3>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      {t.wheelId}
+                    </label>
+                    <p className="text-sm text-gray-900 font-mono bg-gray-50 p-2 rounded">
+                      {selectedWheel._id}
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      {t.userId}
+                    </label>
+                    <p className="text-sm text-gray-900 font-mono bg-gray-50 p-2 rounded">
+                      {selectedWheel.userId}
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      {t.businessName}
+                    </label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-2 rounded">
+                      {selectedWheel.businessName || 'N/A'}
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      {t.instructions}
+                    </label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-2 rounded">
+                      {selectedWheel.customerInstruction}
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Google Review Link
+                    </label>
+                    {selectedWheel.googleReviewLink ? (
+                      <a
+                        href={selectedWheel.googleReviewLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-blue-600 hover:text-blue-800 bg-gray-50 p-2 rounded block break-all"
+                      >
+                        {selectedWheel.googleReviewLink}
+                      </a>
+                    ) : (
+                      <p className="text-sm text-gray-500 bg-gray-50 p-2 rounded">N/A</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      {t.socialMediaLink}
+                    </label>
+                    {selectedWheel.socialMediaLink ? (
+                      <a
+                        href={selectedWheel.socialMediaLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-blue-600 hover:text-blue-800 bg-gray-50 p-2 rounded block break-all"
+                      >
+                        {selectedWheel.socialMediaLink}
+                      </a>
+                    ) : (
+                      <p className="text-sm text-gray-500 bg-gray-50 p-2 rounded">{t.noSocialMedia}</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Colors and Stats */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium text-gray-900 mb-3">
+                    Colors & Statistics
+                  </h3>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      {t.mainColors}
+                    </label>
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-3">
+                        <div
+                          className="w-8 h-8 rounded border border-gray-300"
+                          style={{ backgroundColor: selectedWheel.mainColors?.color1 || '#fb1313' }}
+                        ></div>
+                        <span className="text-sm text-gray-900">
+                          {t.color1}: {selectedWheel.mainColors?.color1 || '#fb1313'}
+                        </span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <div
+                          className="w-8 h-8 rounded border border-gray-300"
+                          style={{ backgroundColor: selectedWheel.mainColors?.color2 || '#05f020' }}
+                        ></div>
+                        <span className="text-sm text-gray-900">
+                          {t.color2}: {selectedWheel.mainColors?.color2 || '#05f020'}
+                        </span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <div
+                          className="w-8 h-8 rounded border border-gray-300"
+                          style={{ backgroundColor: selectedWheel.mainColors?.color3 || '#e8d611' }}
+                        ></div>
+                        <span className="text-sm text-gray-900">
+                          {t.color3}: {selectedWheel.mainColors?.color3 || '#e8d611'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      {t.scans}
+                    </label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-2 rounded">
+                      {selectedWheel.scans || 0}
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      {t.createdDate}
+                    </label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-2 rounded">
+                      {formatDate(selectedWheel.createdAt)}
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      {t.updatedDate}
+                    </label>
+                    <p className="text-sm text-gray-900 bg-gray-50 p-2 rounded">
+                      {formatDate(selectedWheel.updatedAt)}
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      {t.logoUrl}
+                    </label>
+                    {selectedWheel.logoUrl ? (
+                      <div className="bg-gray-50 p-2 rounded">
+                        <a
+                          href={selectedWheel.logoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm text-blue-600 hover:text-blue-800 break-all"
+                        >
+                          {selectedWheel.logoUrl}
+                        </a>
+                      </div>
+                    ) : (
+                      <p className="text-sm text-gray-500 bg-gray-50 p-2 rounded">{t.noLogo}</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Lots Section */}
+              <div className="mt-8">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">
+                  {t.lots} ({selectedWheel.lots?.length || 0})
+                </h3>
+                <div className="overflow-x-auto">
+                  <table className="w-full border border-gray-200 rounded-lg">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                          #
+                        </th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                          {t.lotName}
+                        </th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                          {t.odds}
+                        </th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                          {t.promoCode}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {selectedWheel.lots?.map((lot, index) => (
+                        <tr key={lot._id || index} className="hover:bg-gray-50">
+                          <td className="px-4 py-2 text-sm text-gray-900">
+                            {index + 1}
+                          </td>
+                          <td className="px-4 py-2 text-sm text-gray-900">
+                            {lot.name || 'N/A'}
+                          </td>
+                          <td className="px-4 py-2 text-sm text-gray-900">
+                            {lot.odds || 'N/A'}
+                          </td>
+                          <td className="px-4 py-2 text-sm text-gray-900">
+                            {lot.promoCode || 'N/A'}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="flex justify-end p-6 border-t border-gray-200">
+              <button
+                onClick={closeWheelModal}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+              >
+                {t.close}
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };

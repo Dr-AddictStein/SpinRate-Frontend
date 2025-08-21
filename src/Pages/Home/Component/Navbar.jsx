@@ -7,8 +7,10 @@ import { useTranslation } from "../../../hooks/useTranslation";
 import ukFlag from "../../../assets/flags/uk-flag.svg";
 import franceFlag from "../../../assets/flags/france-flag.svg";
 import LoginModal from "../../../Components/LoginModal";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 
 const Navbar = () => {
+    const { user } = useAuthContext(); 
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);

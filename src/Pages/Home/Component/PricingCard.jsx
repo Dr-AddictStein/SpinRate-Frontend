@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../../../context/LanguageContext";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 import logo from "../../../assets/REVWHEELlogo.png";
@@ -19,6 +20,7 @@ const translations = {
     driveRepeatBusiness: "Drive repeat business",
     support247: "Support 24/7",
     startFreeTrial: "Start your free trial",
+    chooseYourPlan: "Choose your plan",
     creatingSession: "Creating session...",
   },
   fr: {
@@ -34,6 +36,7 @@ const translations = {
     driveRepeatBusiness: "Stimulez les affaires récurrentes",
     support247: "Support 24/7",
     startFreeTrial: "Commencez votre essai gratuit",
+    chooseYourPlan: "Choisissez votre formule",
     creatingSession: "Création de la session...",
   }
 };
@@ -43,6 +46,7 @@ const translations = {
 const PricingSection = () => {
   const { language } = useLanguage();
   const { user } = useAuthContext();
+  const navigate = useNavigate();
   const t = translations[language] || translations.en;
   const [isYearly, setIsYearly] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -50,6 +54,15 @@ const PricingSection = () => {
   const handleStartTrial = async () => {
     try {
       setIsLoading(true);
+      
+      // Check if user is logged in
+      if (!user?.user) {
+        // If user is not logged in, navigate to dashboard
+        navigate('/dashboard');
+        setIsLoading(false);
+        return;
+      }
+
       const subscriptionType = isYearly ? 'yearly' : 'monthly';
       const userEmail = user?.user?.email || '';
       const userId = user?.user?._id;
@@ -327,7 +340,7 @@ const PricingSection = () => {
                     {t.creatingSession || "Creating session..."}
                   </>
                 ) : (
-                  t.startFreeTrial
+                  user?.user ? t.chooseYourPlan : t.startFreeTrial
                 )}
               </span>
             </motion.button>
