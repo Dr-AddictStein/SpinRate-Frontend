@@ -37,7 +37,6 @@ const translations = {
     searchCustomers: "Search customers...",
     // Table headers - Users
     name: "Name",
-    username: "Username",
     email: "Email",
     role: "Role",
     phone: "Phone",
@@ -89,7 +88,6 @@ const translations = {
     searchCustomers: "Rechercher clients...",
     // Table headers - Users
     name: "Nom",
-    username: "Nom d'utilisateur",
     email: "Email",
     role: "Rôle",
     phone: "Téléphone",
@@ -182,7 +180,6 @@ const DashboardAnalytics = () => {
     adminData?.users?.filter(
       (user) =>
         user.fullName.toLowerCase().includes(userSearchTerm.toLowerCase()) ||
-        user.userName.toLowerCase().includes(userSearchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(userSearchTerm.toLowerCase())
     ) || [];
 
@@ -482,9 +479,6 @@ const DashboardAnalytics = () => {
                       {t.name}
                     </th>
                     <th className="px-3 sm:px-6 py-2 sm:py-3 text-left">
-                      {t.username}
-                    </th>
-                    <th className="px-3 sm:px-6 py-2 sm:py-3 text-left">
                       {t.email}
                     </th>
                     <th className="px-3 sm:px-6 py-2 sm:py-3 text-left">
@@ -521,9 +515,6 @@ const DashboardAnalytics = () => {
                               {user.fullName}
                             </span>
                           </div>
-                        </td>
-                        <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-gray-500 text-xs sm:text-sm">
-                          {user.userName}
                         </td>
                         <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-gray-500 text-xs sm:text-sm">
                           {user.email}

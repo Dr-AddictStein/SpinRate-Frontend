@@ -199,7 +199,7 @@ const Sidebar = ({ collapsed = false, toggleSidebar }) => {
             <div className={`px-4 py-3 border-b border-gray-100 ${collapsed ? 'flex justify-center items-center' : ''}`}>
                 <div className={`${collapsed ? '' : 'flex items-start'}`}>
                     <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center text-white font-medium text-sm flex-shrink-0">
-                        {user ? user?.user?.userName.charAt(0).toUpperCase() : 'U'}
+                        {user ? user?.user?.fullName.charAt(0).toUpperCase() : 'U'}
                     </div>
                     {!collapsed && (
                         <div className="ml-2 flex-1">
