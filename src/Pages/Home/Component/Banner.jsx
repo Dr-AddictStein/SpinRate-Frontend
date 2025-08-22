@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../../../context/LanguageContext";
 import heroBG from "../../../../public/hero-bg-scaled.jpg"
-import revwheelVideo from "../../../../public/Revwheel_Presentation.mp4"
+import revwheelVideo from "../../../../public/Revwheel_Presentation_Compressed.mp4"
 
 // Translations object
 const translations = {

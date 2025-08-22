@@ -9,7 +9,7 @@ export const useSignup = () => {
   const signup = async (fullName, email, phoneNumber, password) => {
     setError(null);
 
-    const response = await fetch(`https://api.revwheel.fr/api/user/signup`, {
+    const response = await fetch(`http://localhost:4000/api/user/signup`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ fullName, email, phoneNumber, password }),

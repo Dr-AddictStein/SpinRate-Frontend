@@ -74,7 +74,7 @@ const PricingSection = () => {
       }
 
       // Create checkout session
-      const response = await fetch('https://api.revwheel.fr/api/webhooks/create-checkout-session', {
+      const response = await fetch('http://localhost:4000/api/webhooks/create-checkout-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

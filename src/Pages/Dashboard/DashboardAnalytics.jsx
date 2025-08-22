@@ -185,7 +185,7 @@ const DashboardAnalytics = () => {
       try {
         setIsLoading(true);
         const response = await axios.get(
-          "https://api.revwheel.fr/api/adminData/adminData"
+          "http://localhost:4000/api/adminData/adminData"
         );
         setAdminData(response.data);
       } catch (err) {
