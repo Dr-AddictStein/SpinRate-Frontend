@@ -270,7 +270,8 @@ const WheelGamePage = () => {
 
   // Draw the wheel on canvas
   useEffect(() => {
-    if (!wheel || !canvasRef.current) return;
+    // Ensure canvas exists and page is done loading before drawing
+    if (isLoading || !wheel || !canvasRef.current) return;
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
@@ -599,7 +600,7 @@ const WheelGamePage = () => {
     return () => {
       window.removeEventListener("resize", calculateSize);
     };
-  }, [wheel, rotationDegrees, language]); // Added language as dependency
+  }, [isLoading, wheel, rotationDegrees, language]); // Re-run after loading completes as well
 
   // Handle wheel spin with enhanced animation
   const spinWheel = () => {
