@@ -9,6 +9,7 @@ import wheelApi from './API/wheelApi.js';
 import { toast } from 'react-toastify';
 import { useLanguage } from '../../context/LanguageContext';
 import LinkAssist from "../../../public/LinkAssist.png"
+import SignupModal from '../../Components/SignupModal.jsx'
 
 // Translations object
 const translations = {
@@ -151,6 +152,30 @@ const WheelGameDashboard = () => {
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   const openPreviewModal = () => setIsPreviewModalOpen(true);
   const closePreviewModal = () => setIsPreviewModalOpen(false);
+
+  // Email verification modal state
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
+  const [sendingVerification, setSendingVerification] = useState(false);
+
+  const sendVerificationAndOpen = async () => {
+    if (sendingVerification) return;
+    setSendingVerification(true);
+    try {
+      await fetch(`https://api.revwheel.fr/api/user/send-verification-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fullName: user?.user?.fullName || '',
+          email: user?.user?.email || ''
+        })
+      });
+    } catch (e) {
+      // no-op; still open modal to guide user
+    } finally {
+      setSendingVerification(false);
+      setShowVerifyModal(true);
+    }
+  };
 
   // State variables for wheel configuration
   const [wheelId, setWheelId] = useState(null);
@@ -302,6 +327,12 @@ const WheelGameDashboard = () => {
   const handleSubmit = async () => {
     if (!user?.user?._id) {
       toast.error(t.loginRequired);
+      return;
+    }
+
+    // Gate by email verification
+    if (user?.user?.emailVerified === false) {
+      await sendVerificationAndOpen();
       return;
     }
 
@@ -1479,6 +1510,16 @@ const WheelGameDashboard = () => {
           customerInstruction
         }}
       />
+
+      {showVerifyModal && (
+        <SignupModal
+          closeModal={() => setShowVerifyModal(false)}
+          openToVerificationNotice={true}
+          initialEmail={user?.user?.email || ''}
+          initialFullName={user?.user?.fullName || ''}
+          closeTo={'/dashboard/settings'}
+        />
+      )}
     </motion.div>
   );
 };

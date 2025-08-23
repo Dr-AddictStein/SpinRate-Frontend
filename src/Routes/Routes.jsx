@@ -10,6 +10,7 @@ import WheelGamePage from "../Pages/Home/WheelGamePage";
 import TermsAndConditions from "../Pages/Home/TermsAndConditions";
 import PrivacyPolicy from "../Pages/Home/PrivacyPolicy";
 import DashboardAnalytics from "../Pages/Dashboard/DashboardAnalytics";
+import VerifyEmail from "../Pages/Auth/VerifyEmail";
 
 // Define your route objects
 const routes = [
@@ -64,6 +65,10 @@ const routes = [
   {
     path: "/wheelGame/:id",
     element: <WheelGamePage />,
+  },
+  {
+    path: "/verify-email",
+    element: <VerifyEmail />,
   },
 
 ];

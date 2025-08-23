@@ -25,7 +25,9 @@ import {
     UserRound,
     Wallet2,
     GitGraph,
-    AlertTriangle
+    AlertTriangle,
+    Mail,
+    Info
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuthContext } from '../../../hooks/useAuthContext';
@@ -34,11 +36,19 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import logo from '../../../assets/REVWHEELlogo.png';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { isOnFreeTrial, getFreeTrialRemainingDays } from '../../../utils/subscriptionUtils';
+import SignupModal from '../../../Components/SignupModal.jsx';
 
 const MenuItem = ({ icon: Icon, text, translationKey, path, active, collapsed, badge, onClick }) => {
     const navigate = useNavigate();
     const { logout } = useLogout();
-    const { t } = useTranslation();
+    const { t, language } = useTranslation();
+    const tr = (key, enFallback, frFallback) => {
+        const val = t(key);
+        if (!val || val === key) {
+            return language === 'fr' ? (frFallback || enFallback) : enFallback;
+        }
+        return val;
+    };
     const displayText = translationKey ? t(translationKey) : text;
 
     const handleClick = () => {
@@ -84,7 +94,14 @@ const MenuItem = ({ icon: Icon, text, translationKey, path, active, collapsed, b
 
 const SearchBox = ({ collapsed }) => {
     const [isExpanded, setIsExpanded] = useState(false);
-    const { t } = useTranslation();
+    const { t, language } = useTranslation();
+    const tr = (key, enFallback, frFallback) => {
+        const val = t(key);
+        if (!val || val === key) {
+            return language === 'fr' ? (frFallback || enFallback) : enFallback;
+        }
+        return val;
+    };
     
     if (collapsed && !isExpanded) {
         return (
@@ -120,12 +137,23 @@ const Sidebar = ({ collapsed = false, toggleSidebar }) => {
     const { logout } = useLogout();
     const location = useLocation();
     const currentPath = location.pathname;
-    const { t } = useTranslation();
+    const { t, language } = useTranslation();
+    const tr = (key, enFallback, frFallback) => {
+        const val = t(key);
+        if (!val || val === key) {
+            return language === 'fr' ? (frFallback || enFallback) : enFallback;
+        }
+        return val;
+    };
     const navigate = useNavigate();
 
     // Check if user is on free trial
     const onFreeTrial = isOnFreeTrial(user);
     const remainingDays = getFreeTrialRemainingDays(user);
+
+    // Email verification modal state
+    const [showVerifyModal, setShowVerifyModal] = useState(false);
+    const [sendingVerification, setSendingVerification] = useState(false);
 
     // Subscription alert translations
     const getTrialMessage = () => {
@@ -135,6 +163,26 @@ const Sidebar = ({ collapsed = false, toggleSidebar }) => {
             return t('freeTrialExpiresToday') || "Free trial expires today";
         } else {
             return (t('freeTrialWarning') || "Free trial expires in {days} days").replace('{days}', remainingDays);
+        }
+    };
+
+    const handleSendVerification = async () => {
+        if (sendingVerification) return;
+        setSendingVerification(true);
+        try {
+            await fetch(`https://api.revwheel.fr/api/user/send-verification-email`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    fullName: user?.user?.fullName || '',
+                    email: user?.user?.email || ''
+                })
+            });
+        } catch (e) {
+            // no-op; still open modal to guide user
+        } finally {
+            setSendingVerification(false);
+            setShowVerifyModal(true);
         }
     };
 
@@ -227,6 +275,38 @@ const Sidebar = ({ collapsed = false, toggleSidebar }) => {
                 ))}
             </div>
 
+            {/* Email Verification Alert - shown above Free Trial */}
+            {!collapsed && user?.user && user?.user?.email && user?.user?.emailVerified === false && (
+                <div className="px-4 py-3 border-t border-gray-100">
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="bg-blue-50 border border-blue-200 rounded-lg p-3"
+                    >
+                        <div className="flex items-start">
+                            <Info className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                            <div className="ml-2 flex-1">
+                                <p className="text-xs font-medium text-blue-800">
+                                    {tr('pleaseVerifyEmailForFullAccess', 'Please verify your email to gain full access to the dashboard.', 'Veuillez vérifier votre e-mail pour un accès complet au tableau de bord.')}
+                                </p>
+                                <button
+                                    onClick={handleSendVerification}
+                                    disabled={sendingVerification}
+                                    className={`mt-2 text-xs bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded font-medium transition-colors ${sendingVerification ? 'opacity-70 cursor-not-allowed' : ''}`}
+                                >
+                                    <span className="inline-flex items-center">
+                                        <Mail className="h-3.5 w-3.5 mr-1.5" />
+                                        {sendingVerification 
+                                            ? tr('resending', 'Sending...', 'Envoi...') 
+                                            : tr('sendVerificationEmail', 'Send verification email', "Envoyer l'e-mail de vérification")}
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </motion.div>
+                </div>
+            )}
+
             {/* Free Trial Alert */}
             {onFreeTrial && !collapsed && (
                 <div className="px-4 py-3 border-t border-gray-100">
@@ -254,6 +334,17 @@ const Sidebar = ({ collapsed = false, toggleSidebar }) => {
                         </div>
                     </motion.div>
                 </div>
+            )}
+
+            {/* Verification Modal */}
+            {showVerifyModal && (
+                <SignupModal
+                    closeModal={() => setShowVerifyModal(false)}
+                    openToVerificationNotice={true}
+                    initialEmail={user?.user?.email || ''}
+                    initialFullName={user?.user?.fullName || ''}
+                    closeTo={currentPath}
+                />
             )}
 
             {/* Sign Out Button at the bottom */}

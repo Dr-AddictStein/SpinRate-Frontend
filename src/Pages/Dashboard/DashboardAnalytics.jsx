@@ -185,7 +185,7 @@ const DashboardAnalytics = () => {
       try {
         setIsLoading(true);
         const response = await axios.get(
-          "http://localhost:4000/api/adminData/adminData"
+          isAdmin ? "https://api.revwheel.fr/api/adminData/adminData" : `https://api.revwheel.fr/api/adminData/userData/${user?.user?._id}`
         );
         setAdminData(response.data);
       } catch (err) {
@@ -197,7 +197,7 @@ const DashboardAnalytics = () => {
     };
 
     fetchAdminData();
-  }, []);
+  }, [isAdmin]);
 
   // Mark stats as animated once data is loaded
   useEffect(() => {

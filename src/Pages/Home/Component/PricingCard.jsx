@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../../../context/LanguageContext";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 import logo from "../../../assets/REVWHEELlogo.png";
+import SignupModal from "../../../Components/SignupModal.jsx";
 
 // Translations object
 const translations = {
@@ -50,6 +51,28 @@ const PricingSection = () => {
   const t = translations[language] || translations.en;
   const [isYearly, setIsYearly] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
+  const [sendingVerification, setSendingVerification] = useState(false);
+
+  const sendVerificationAndOpen = async () => {
+    if (sendingVerification) return;
+    setSendingVerification(true);
+    try {
+      await fetch(`https://api.revwheel.fr/api/user/send-verification-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fullName: user?.user?.fullName || '',
+          email: user?.user?.email || ''
+        })
+      });
+    } catch (e) {
+      // no-op; still open modal to guide user
+    } finally {
+      setSendingVerification(false);
+      setShowVerifyModal(true);
+    }
+  };
 
   const handleStartTrial = async () => {
     try {
@@ -73,8 +96,15 @@ const PricingSection = () => {
         return;
       }
 
+      // Gate by email verification
+      if (user?.user?.emailVerified === false) {
+        await sendVerificationAndOpen();
+        setIsLoading(false);
+        return;
+      }
+
       // Create checkout session
-      const response = await fetch('http://localhost:4000/api/webhooks/create-checkout-session', {
+      const response = await fetch('https://api.revwheel.fr/api/webhooks/create-checkout-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

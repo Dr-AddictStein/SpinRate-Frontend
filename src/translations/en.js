@@ -161,5 +161,10 @@ export const en = {
   freeTrialExpired: "Free trial expired",
   upgradeNow: "Upgrade Now",
   
+  // Email verification notice
+  pleaseVerifyEmailForFullAccess: "Please verify your email to gain full access to the dashboard.",
+  sendVerificationEmail: "Send verification email",
+  resending: "Sending...",
+  
   // Add more translations as needed for your website
 }; 

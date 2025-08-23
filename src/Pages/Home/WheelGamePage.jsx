@@ -12,7 +12,7 @@ import spinRateLogo from "../../assets/REVWHEELlogo.png";
 import { useLanguage } from "../../context/LanguageContext";
 import { useTranslation } from "../../hooks/useTranslation";
 
-const API_URL = "http://localhost:4000/api";
+const API_URL = "https://api.revwheel.fr/api";
 
 const WheelGamePage = () => {
   const { id } = useParams(); // Get wheel ID from URL

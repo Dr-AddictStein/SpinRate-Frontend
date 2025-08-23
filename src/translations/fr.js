@@ -161,5 +161,10 @@ export const fr = {
   freeTrialExpired: "L'essai gratuit a expiré",
   upgradeNow: "Mettre à niveau maintenant",
   
+  // Email verification notice
+  pleaseVerifyEmailForFullAccess: "Veuillez vérifier votre e-mail pour un accès complet au tableau de bord.",
+  sendVerificationEmail: "Envoyer l'e-mail de vérification",
+  resending: "Envoi...",
+  
   // Add more translations as needed for your website
 }; 
