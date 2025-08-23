@@ -163,7 +163,7 @@ const translations = {
 
 const DashboardAnalytics = () => {
   const { language } = useLanguage();
-  const { user } = useAuthContext();
+  const { user, isInitialized } = useAuthContext();
   const t = translations[language] || translations.en;
 
   // Check if user is admin
@@ -181,12 +181,16 @@ const DashboardAnalytics = () => {
   const [isWheelModalOpen, setIsWheelModalOpen] = useState(false);
 
   useEffect(() => {
+    if (!isInitialized) return; // wait until auth state is resolved
+    if (!isAdmin && !user?.user?._id) return; // for non-admins, wait for user id
+
     const fetchAdminData = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get(
-          isAdmin ? "https://api.revwheel.fr/api/adminData/adminData" : `https://api.revwheel.fr/api/adminData/userData/${user?.user?._id}`
-        );
+        const endpoint = isAdmin
+          ? "https://api.revwheel.fr/api/adminData/adminData"
+          : `https://api.revwheel.fr/api/adminData/userData/${user.user._id}`;
+        const response = await axios.get(endpoint);
         setAdminData(response.data);
       } catch (err) {
         console.error("Error fetching admin data:", err);
@@ -197,7 +201,7 @@ const DashboardAnalytics = () => {
     };
 
     fetchAdminData();
-  }, [isAdmin]);
+  }, [isInitialized, isAdmin, user?.user?._id]);
 
   // Mark stats as animated once data is loaded
   useEffect(() => {
