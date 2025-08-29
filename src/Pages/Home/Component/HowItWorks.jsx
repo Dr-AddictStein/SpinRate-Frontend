@@ -159,7 +159,7 @@ const HowItWorks = () => {
               <img 
                 src={images.pc} 
                 alt={language === 'en' ? 'RevWheel Desktop Interface' : 'Interface Bureau RevWheel'}
-                className="w-full h-auto rounded-lg shadow-lg"
+                className="w-full h-auto rounded-lg shadow-lg lg:w-3/4 mx-auto"
               />
             </div>
           </motion.div>
