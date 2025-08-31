@@ -19,6 +19,7 @@ const DashboardLayout = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const { t } = useTranslation();
   const { language, changeLanguage } = useLanguage();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -68,6 +69,17 @@ const DashboardLayout = () => {
     return () => window.removeEventListener('focus', handleFocus);
   }, [user, refreshUserData]);
 
+  // Handle scroll to hide/show navigation buttons
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      setIsScrolled(scrollTop > 50); // Hide buttons after scrolling 50px
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
@@ -109,12 +121,14 @@ const DashboardLayout = () => {
   return (
     <SubscriptionGuard>
       <div className="w-full min-h-screen bg-gray-50 flex overflow-hidden">
-        {/* Language Selector and Refresh Button - fixed position with improved mobile positioning */}
-      <div className="fixed top-4 right-4 z-50 flex items-center space-x-2">
+        {/* Language Selector and Refresh Button - hidden when scrolled */}
+      <div className={`fixed top-4 right-4 z-[60] flex items-center space-x-2 bg-white/90 backdrop-blur-sm rounded-lg p-1 shadow-lg transition-all duration-300 ${
+        isScrolled ? 'opacity-0 pointer-events-none transform translate-y-[-100%]' : 'opacity-100'
+      }`}>
         <button 
           onClick={handleRefreshUserData}
           disabled={isRefreshing}
-          className={`p-2 rounded-md bg-white shadow-md text-gray-600 hover:bg-gray-100 transition-all duration-200 ${isRefreshing ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`p-2 rounded-md bg-white shadow-sm text-gray-600 hover:bg-gray-100 transition-all duration-200 ${isRefreshing ? 'opacity-50 cursor-not-allowed' : ''}`}
           aria-label="Refresh user data"
         >
           <RefreshCw size={20} className={isRefreshing ? 'animate-spin' : ''} />
@@ -140,20 +154,24 @@ const DashboardLayout = () => {
         <SignupModal closeModal={() => setShowSignupModal(false)} />
       )}
 
-      {/* Mobile menu toggle button - improved positioning and visibility */}
+      {/* Mobile menu toggle button - hidden when scrolled */}
       <button 
         onClick={toggleMobileMenu}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2.5 rounded-md bg-white shadow-md text-gray-600 hover:bg-gray-100 flex items-center justify-center"
+        className={`lg:hidden fixed top-4 left-4 z-[60] p-2.5 rounded-md bg-white/90 backdrop-blur-sm shadow-lg text-gray-600 hover:bg-gray-100 flex items-center justify-center transition-all duration-300 ${
+          isScrolled ? 'opacity-0 pointer-events-none transform translate-y-[-100%]' : 'opacity-100'
+        }`}
         aria-label="Toggle mobile menu"
       >
         {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
       </button>
       
-      {/* Desktop sidebar toggle button - only visible when sidebar is collapsed */}
+      {/* Desktop sidebar toggle button - hidden when scrolled */}
       {!sidebarOpen && (
         <button 
           onClick={toggleSidebar}
-          className="hidden lg:flex fixed top-4 left-4 z-30 p-2 rounded-md bg-white shadow-md text-gray-600 hover:bg-gray-100"
+          className={`hidden lg:flex fixed top-4 left-4 z-[60] p-2 rounded-md bg-white/90 backdrop-blur-sm shadow-lg text-gray-600 hover:bg-gray-100 transition-all duration-300 ${
+            isScrolled ? 'opacity-0 pointer-events-none transform translate-y-[-100%]' : 'opacity-100'
+          }`}
           aria-label="Expand sidebar"
         >
           <Menu size={20} />
@@ -175,7 +193,7 @@ const DashboardLayout = () => {
               onClick={toggleMobileMenu}
               aria-hidden="true"
             ></div>
-            <div className="relative flex-1 flex flex-col max-w-[280px] w-full h-full bg-white overflow-y-auto">
+            <div className="relative flex-1 flex flex-col max-w-[280px] w-full h-full bg-white border-r border-gray-200 overflow-y-auto">
               <div className="absolute top-0 right-0 pt-2 -mr-12">
                 <button
                   className="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
@@ -204,8 +222,8 @@ const DashboardLayout = () => {
       <main className={`flex-1 overflow-y-auto bg-gray-50 transition-all duration-300 
                         px-3 py-4 sm:p-5 md:p-6 lg:p-8`}>
         <div className="max-w-7xl mx-auto">
-          {/* Add appropriate padding on mobile to account for menu button */}
-          <div className="pt-12 lg:pt-0">
+          {/* Add appropriate padding to prevent content from being blocked by fixed buttons */}
+          <div className="pt-16">
             <Outlet />
           </div>
         </div>

@@ -1507,7 +1507,8 @@ const WheelGameDashboard = () => {
         gameData={{
           lots,
           mainColors,
-          customerInstruction
+          customerInstruction,
+          logoUrl: logoPreview
         }}
       />
 

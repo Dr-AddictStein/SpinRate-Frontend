@@ -210,7 +210,7 @@ const Sidebar = ({ collapsed = false, toggleSidebar }) => {
     };
 
     return (
-        <div className={`fixed h-screen bg-white border-r border-gray-200 flex flex-col transition-all duration-300 z-30 ${collapsed ? 'w-20' : 'w-64'}`}>
+        <div className={`fixed h-screen bg-white md:border-r border-gray-200 flex flex-col transition-all duration-300 z-30 ${collapsed ? 'w-20' : 'w-64'}`}>
             {/* Logo Section with toggle button - compact space but larger logo */}
             <div className={`${collapsed ? 'py-2' : 'py-3 px-4'} flex items-center border-b border-gray-100 relative`}>
                 {!collapsed ? (

@@ -3,4 +3,17 @@
 
 body {
   font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Ensure fixed elements stay on top */
+.fixed {
+  position: fixed !important;
+}
+
+/* Prevent any scroll interference */
+html, body {
+  scroll-behavior: smooth;
 }
